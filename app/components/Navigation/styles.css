@@ -1,0 +1,15 @@
+
+.dropdownLink {
+  color: black;
+	text-transform: uppercase;
+  text-decoration: none;
+}
+
+.title {
+	text-transform: uppercase;
+}
+
+.navLink {
+	color: white;
+	text-decoration: none;
+}

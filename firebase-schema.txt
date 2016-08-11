@@ -1,0 +1,42 @@
+Home/Items List & Items Detail (Sub Views)
+	Items Info
+	People Info
+	Hardware Info
+
+People List & People Detail (Sub Views)
+	People Info
+	Items Info
+
+Hardware List (Sub View)
+	Hardware Info
+
+SPA – All Views
+	Items Info
+	People Info
+	Hardware Info
+
+/items
+	uid
+	createdAt
+	assignedAt
+	status
+	itemPhotos
+	itemNotes
+	hardwareId
+		hardwarePhoto
+		make
+		model
+		description
+	personId
+		personPhoto
+		fname
+		lname
+		email
+
+/users
+	uid
+	name
+	email
+	password
+
+### I was going to have a separate people end point. I realized however, it would be better to just add sorting and filtering on the main view in order to see which items are assigned to certain people
