@@ -1,0 +1,17 @@
+.container {
+	max-width: 400px;
+	margin: 6em auto 0;
+	border-radius: 2px;
+	padding: 2em;
+}
+
+.title {
+	text-transform: uppercase;
+	text-align: center;
+	font-size: 18px;
+	padding: 1.5em 1.5em 0;
+}
+
+.button {
+	margin: 30px 12px 10px;
+}

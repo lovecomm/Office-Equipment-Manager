@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "description": "Equipment Manager Application built with React, Redux, Material-UI, Firebase",
   "main": "index.js",
-  "scripts": git add --all{
+  "scripts": {
     "start": "webpack-dev-server",
     "production": "webpack -p",
     "lint": "eslint app/.; exit 0",
     "fix": "eslint --fix app/.; exit 0"
   },
   "repository": {
-    "type": "git",
+    "type": "git"
   },
   "keywords": [],
   "author": "Logan Call <lcall@lovecomm.net>",

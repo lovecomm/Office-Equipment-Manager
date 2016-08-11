@@ -18,7 +18,7 @@ function NavItems ({isAuthed}) {
 			<IconButton><Link to='/'><ContactsIcon color='white'/></Link></IconButton>
 			<IconButton><Link to='/'><StreamIcon color='white'/></Link></IconButton>
 		</div>
-	: <Link to='/auth' className={navLink}><MenuItem primaryText='Sign in' style={{color: 'white'}}/></Link>
+	: <span></span>
 }
 
 function MenuItems ({isAuthed}) {
