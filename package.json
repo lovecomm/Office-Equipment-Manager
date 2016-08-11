@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Equipment Manager Application built with React, Redux, Material-UI, Firebase",
   "main": "index.js",
-  "scripts": {
+  "scripts": git add --all{
     "start": "webpack-dev-server",
     "production": "webpack -p",
     "lint": "eslint app/.; exit 0",
