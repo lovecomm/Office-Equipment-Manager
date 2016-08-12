@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { connect } from 'react-redux'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
@@ -19,6 +20,7 @@ const muiTheme = getMuiTheme({
 const MainContainer = React.createClass({
 	propTypes: {
 		children: PropTypes.node,
+		isAuthed: PropTypes.bool.isRequired,
 	},
 	childContextTypes: {
 		muiTheme: PropTypes.object.isRequired,
@@ -30,14 +32,20 @@ const MainContainer = React.createClass({
 		return (
 			<MuiThemeProvider muiTheme={getMuiTheme(muiTheme)}>
 				<div className={container}>
-					<Navigation isAuthed={false}/>
+					<Navigation isAuthed={this.props.isAuthed}/>
 					<div className={innerContainer}>
 						{this.props.children}
 					</div>
 				</div>
 			</MuiThemeProvider>
 		)
-	}
+	},
 })
 
-export default MainContainer
+function mapStateToProps (state) {
+	return {
+		isAuthed: state.isAuthed,
+	}
+}
+
+export default connect(mapStateToProps)(MainContainer)

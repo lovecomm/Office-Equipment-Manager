@@ -3,36 +3,53 @@ import { Authenticate } from 'components'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as userActionCreators from 'redux/modules/users'
-console.log(userActionCreators)
+import { Snackbar } from 'material-ui'
 
 const AuthenticateContainer = React.createClass({
 	propTypes: {
 		isFetching: PropTypes.bool.isRequired,
+		isLoggingOut: PropTypes.bool.isRequired,
 		error: PropTypes.string.isRequired,
-		dispatch: PropTypes.func,
+		params: PropTypes.object,
 		fetchAndHandleAuthedUser: PropTypes.func.isRequired,
+		logoutAndUnauth: PropTypes.func.isRequired,
 	},
 	contextTypes: {
 		muiTheme: PropTypes.object,
+		router: PropTypes.object.isRequired,
 	},
-	handleAuth () {
+	componentDidMount () {
+		this.props.params.status === 'logout' ? this.props.logoutAndUnauth() : ''
+	},
+	handleAuth (e) {
+		e.preventDefault()
 		this.props.fetchAndHandleAuthedUser()
+			.then(() => {
+				this.context.router.replace('/')
+			})
 	},
 	render () {
 		return (
-			<Authenticate
-				palette={this.context.muiTheme.palette}
-				isFetching={this.props.isFetching}
-				error={this.props.error}
-				onAuth={this.handleAuth} />
+			<div>
+				<Authenticate
+					palette={this.context.muiTheme.palette}
+					isFetching={this.props.isFetching}
+					error={this.props.error}
+					onAuth={this.handleAuth} />
+				<Snackbar
+					open={this.props.isLoggingOut === true}
+					message='You have successfuly signed out'
+					autoHideDuration={4000}
+					onRequestClose={this.handleRequestClose} />
+			</div>
 		)
 	},
 })
 
 function mapStateToProps (state) { // this is where we say which parts of the state/store that we care about for this particular component
-	console.log(state)
 	return {
 		isFetching: state.isFetching,
+		isLoggingOut: state.isLoggingOut,
 		error: state.error,
 	}
 }
@@ -42,6 +59,6 @@ function mapDispatchToProps (dispatch) {
 }
 
 export default connect(
-	mapStateToProps,
-	mapDispatchToProps
+	mapStateToProps
+	, mapDispatchToProps
 )(AuthenticateContainer) // connect returns a function, then AuthenticateContainer will be sent as a param to that function

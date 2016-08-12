@@ -1,6 +1,7 @@
 import auth from 'helpers/auth'
 
 const AUTH_USER = 'AUTH_USER'
+const LOGOUT_USER = 'LOGOUT_USER'
 const UNAUTH_USER = 'UNAUTH_USER'
 const FETCHING_USER = 'FETCHING_USER'
 const FETCHING_USER_ERROR = 'FETCHING_USER_ERROR'
@@ -16,9 +17,17 @@ function authUser (uid) {
 	}
 }
 
-function unauthUser () {
+function logoutUser (isLoggingOut) {
+	return {
+		type: LOGOUT_USER,
+		isLoggingOut,
+	}
+}
+
+function unauthUser (isLoggingOut) {
 	return {
 		type: UNAUTH_USER,
+		isLoggingOut,
 	}
 }
 
@@ -64,11 +73,20 @@ function removeUser (uid, timestamp) {
 export function fetchAndHandleAuthedUser () {
 	return function (dispatch) {
 		dispatch(fetchingUser())
-		auth().then((user) => {
+		return auth().then((user) => {
 			dispatch(fetchingUserSuccess(user.uid, user, Date.now()))
 			dispatch(authUser(user.uid))
 			console.log('Authed User', user)
 		}).catch((error) => dispatch(fetchingUserError(error)))
+	}
+}
+
+export function logoutAndUnauth () {
+	return function (dispatch) {
+		dispatch(logoutUser(true))
+		setTimeout(function () {
+			dispatch(unauthUser(false))
+		}, 4000)
 	}
 }
 
@@ -106,6 +124,7 @@ function user (state = initialUserState, action) {
 const initialState = {
 	isFetching: false,
 	isAuthed: false,
+	isLoggingOut: false,
 	error: '',
 	authedId: '',
 }
@@ -118,11 +137,17 @@ export default function users (state = initialState, action) {
 			isAuthed: true,
 			authedId: action.uid,
 		}
+	case LOGOUT_USER:
+		return {
+			...state,
+			isLoggingOut: true,
+			isAuthed: false,
+			authedId: '',
+		}
 	case UNAUTH_USER:
 		return {
 			...state,
-			isAuthed: false,
-			authedId: '',
+			isLoggingOut: false,
 		}
 	case FETCHING_USER:
 		return {

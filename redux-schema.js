@@ -2,6 +2,7 @@
 	users: {
 		isAuthed,
 		isFetching,
+		isLoggingOut,
 		error,
 		authedId,
 		[uid]: {

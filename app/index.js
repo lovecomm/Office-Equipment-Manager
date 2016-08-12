@@ -6,7 +6,8 @@ import thunk from 'redux-thunk'
 import createLogger from 'redux-logger'
 import users from 'redux/modules/users'
 import injectTapEventPlugin from 'react-tap-event-plugin'
-import Routes from 'config/routes'
+import getRoutes from 'config/routes'
+import { checkIfAuthed } from 'helpers/auth'
 
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
@@ -18,9 +19,23 @@ const store = createStore(
 	applyMiddleware(logger, thunk)
 )
 
+function checkAuth (nextState, replace) {
+	const isAuthed = checkIfAuthed(store)
+	const nextPathName = nextState.location.pathname
+	if (nextPathName === '/auth') {
+		if (isAuthed === true) {
+			replace('/')
+		}
+	} else {
+		if (isAuthed !== true) {
+			replace('/auth')
+		}
+	}
+}
+
 ReactDOM.render(
 	<Provider store={store}>
-		{Routes}
+		{getRoutes(checkAuth)}
 	</Provider>,
 	document.getElementById('app')
 )
