@@ -1,26 +1,47 @@
 import React, { PropTypes } from 'react'
 import { Authenticate } from 'components'
-import auth from 'helpers/auth'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as userActionCreators from 'redux/modules/users'
+console.log(userActionCreators)
 
-const AuthenticateContainer = React.createClass ({
+const AuthenticateContainer = React.createClass({
+	propTypes: {
+		isFetching: PropTypes.bool.isRequired,
+		error: PropTypes.string.isRequired,
+		dispatch: PropTypes.func,
+		fetchAndHandleAuthedUser: PropTypes.func.isRequired,
+	},
+	contextTypes: {
+		muiTheme: PropTypes.object,
+	},
 	handleAuth () {
-		auth().then((user) => {
-			console.log('Authed User', user)
-		})
+		this.props.fetchAndHandleAuthedUser()
 	},
 	render () {
 		return (
 			<Authenticate
 				palette={this.context.muiTheme.palette}
-				isFetching={false}
-				error=''
+				isFetching={this.props.isFetching}
+				error={this.props.error}
 				onAuth={this.handleAuth} />
 		)
 	},
 })
 
-AuthenticateContainer.contextTypes = {
-	muiTheme: PropTypes.object.isRequired,
+function mapStateToProps (state) { // this is where we say which parts of the state/store that we care about for this particular component
+	console.log(state)
+	return {
+		isFetching: state.isFetching,
+		error: state.error,
+	}
 }
 
-export default AuthenticateContainer
+function mapDispatchToProps (dispatch) {
+	return bindActionCreators(userActionCreators, dispatch)
+}
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(AuthenticateContainer) // connect returns a function, then AuthenticateContainer will be sent as a param to that function

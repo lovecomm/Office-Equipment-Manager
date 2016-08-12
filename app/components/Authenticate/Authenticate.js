@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
-import { TextField, RaisedButton } from 'material-ui'
-import { container, title, button } from './styles.css'
+import { TextField } from 'material-ui'
+import { container, title } from './styles.css'
+import { AuthButton } from 'components'
 
 Authenticate.propTypes = {
 	palette: PropTypes.object.isRequired,
@@ -22,11 +23,11 @@ export default function Authenticate ({palette, error, isFetching, onAuth}) {
 				hintText='Email'
 				floatingLabelText='Email' />
 				<TextField
-					hintText='Password Field'
+					hintText='Password'
 					floatingLabelText='Password'
 					type='password' />
 				<br />
-				<RaisedButton label='Submit' primary={true} className={button} />
+				<AuthButton isFetching={isFetching} onAuth={onAuth} />
 			</form>
 			{error ? <p style={{color: palette.primaryDanger}}>{error}</p> : null}
 		</div>
