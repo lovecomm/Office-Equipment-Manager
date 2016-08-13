@@ -40,7 +40,7 @@ function fetchingUser () {
 function fetchingUserError (error) {
 	return {
 		type: FETCHING_USER_ERROR,
-		error: 'Looks like that email and password combination doesn\'t exist. Please try again.',
+		error: error,
 	}
 }
 
@@ -73,9 +73,15 @@ function removeUser (uid, timestamp) {
 export function fetchAndHandleAuthedUser (email, password) {
 	return function (dispatch) {
 		dispatch(fetchingUser())
-		return auth(email, password).then((user) => {
-			dispatch(fetchingUserSuccess(user.uid, user, Date.now()))
-			dispatch(authUser(user.uid))
+		return auth(email, password).then((data) => {
+			// REVIEW... Why doesn't this promise recognize when auth is returning an error... and then pass that into the .catch?? B/C it doesn't i'm returning on object with an error essage from auth.
+			if (data.error !== undefined) {
+				dispatch(fetchingUserError(data.error))
+			} else {
+				const user = data
+				dispatch(fetchingUserSuccess(user.uid, user, Date.now()))
+				dispatch(authUser(user.uid))
+			}
 		}).catch((error) => dispatch(fetchingUserError(error)))
 	}
 }
