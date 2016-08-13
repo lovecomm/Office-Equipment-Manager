@@ -3,11 +3,10 @@ import { RaisedButton } from 'material-ui'
 import { button } from './styles.css'
 
 AuthButton.propTypes = {
-	onAuth: PropTypes.func.isRequired,
 	isFetching: PropTypes.bool.isRequired,
 }
 
-export default function AuthButton ({ isFetching, onAuth }) {
+export default function AuthButton ({ isFetching }) {
 	return (
 		<RaisedButton
 			label={isFetching === true
@@ -15,6 +14,6 @@ export default function AuthButton ({ isFetching, onAuth }) {
 					: 'Submit'}
 			primary={true}
 			className={button}
-			onClick={onAuth} />
+			type='submit' />
 	)
 }

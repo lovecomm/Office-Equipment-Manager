@@ -8,9 +8,10 @@ Authenticate.propTypes = {
 	error: PropTypes.string.isRequired,
 	isFetching: PropTypes.bool.isRequired,
 	onAuth: PropTypes.func.isRequired,
+	handleFormData: PropTypes.func.isRequired,
 }
 
-export default function Authenticate ({palette, error, isFetching, onAuth}) {
+export default function Authenticate ({palette, error, isFetching, onAuth, handleFormData}){
 	return (
 		<div className={container} style={{
 			backgroundColor: palette.primary3Color,
@@ -18,16 +19,21 @@ export default function Authenticate ({palette, error, isFetching, onAuth}) {
 		}}>
 			<div className={title}>Please Sign In</div>
 			<br />
-			<form style={{textAlign: 'center'}} >
-			<TextField
-				hintText='Email'
-				floatingLabelText='Email' />
+			<form style={{textAlign: 'center'}} onChange={handleFormData} onSubmit={onAuth}>
 				<TextField
+					type='email'
+					hintText='Email'
+					name='email'
+					required='true'
+					floatingLabelText='Email' />
+				<TextField
+					type='password'
+					name='password'
 					hintText='Password'
-					floatingLabelText='Password'
-					type='password' />
+					required='true'
+					floatingLabelText='Password'/>
 				<br />
-				<AuthButton isFetching={isFetching} onAuth={onAuth} />
+				<AuthButton isFetching={isFetching} />
 			</form>
 			{error ? <p style={{color: palette.primaryDanger}}>{error}</p> : null}
 		</div>

@@ -40,7 +40,7 @@ function fetchingUser () {
 function fetchingUserError (error) {
 	return {
 		type: FETCHING_USER_ERROR,
-		error: 'Error fetching user.',
+		error: 'Looks like that email and password combination doesn\'t exist. Please try again.',
 	}
 }
 
@@ -70,13 +70,12 @@ function removeUser (uid, timestamp) {
 	}
 }
 
-export function fetchAndHandleAuthedUser () {
+export function fetchAndHandleAuthedUser (email, password) {
 	return function (dispatch) {
 		dispatch(fetchingUser())
-		return auth().then((user) => {
+		return auth(email, password).then((user) => {
 			dispatch(fetchingUserSuccess(user.uid, user, Date.now()))
 			dispatch(authUser(user.uid))
-			console.log('Authed User', user)
 		}).catch((error) => dispatch(fetchingUserError(error)))
 	}
 }

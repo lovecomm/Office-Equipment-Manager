@@ -3,6 +3,7 @@ import { Authenticate } from 'components'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as userActionCreators from 'redux/modules/users'
+import FormData from 'react-form-data'
 import { Snackbar } from 'material-ui'
 
 const AuthenticateContainer = React.createClass({
@@ -18,12 +19,13 @@ const AuthenticateContainer = React.createClass({
 		muiTheme: PropTypes.object,
 		router: PropTypes.object.isRequired,
 	},
+	mixins: [ FormData ],
 	componentDidMount () {
 		this.props.params.status === 'logout' ? this.props.logoutAndUnauth() : ''
 	},
 	handleAuth (e) {
 		e.preventDefault()
-		this.props.fetchAndHandleAuthedUser()
+		this.props.fetchAndHandleAuthedUser(this.formData.email, this.formData.password)
 			.then(() => {
 				this.context.router.replace('/')
 			})
@@ -35,6 +37,7 @@ const AuthenticateContainer = React.createClass({
 					palette={this.context.muiTheme.palette}
 					isFetching={this.props.isFetching}
 					error={this.props.error}
+					handleFormData={this.updateFormData}
 					onAuth={this.handleAuth} />
 				<Snackbar
 					open={this.props.isLoggingOut === true}

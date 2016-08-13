@@ -1,13 +1,14 @@
-export default function auth () {
-	return new Promise((resolve, reject) => {
-		setTimeout(() => {
-			resolve({
-				name: 'Logan Call',
-				avatar: 'https://avatars0.githubusercontent.com/u/5152553?v=3&s=460',
-				uid: 'logancall',
-			})
-		}, 1000)
-	})
+import firebase from 'firebase'
+import { ref, firebaseAuth } from 'config/constants'
+
+export default function auth (email, password) {
+	return firebaseAuth().signInWithEmailAndPassword(email, password)
+		.catch(function (error) {
+			// Handle Errors here.
+			const errorCode = error.code;
+			const errorMessage = error.message;
+			// ...
+		})
 }
 
 export function checkIfAuthed (store) {
