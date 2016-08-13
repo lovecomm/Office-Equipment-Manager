@@ -31,6 +31,7 @@ const AuthenticateContainer = React.createClass({
 			})
 	},
 	render () {
+		console.log('PROPS ERROR', this.props.error)
 		return (
 			<div>
 				<Authenticate

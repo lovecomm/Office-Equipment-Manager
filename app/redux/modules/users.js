@@ -1,4 +1,5 @@
-import auth from 'helpers/auth'
+import auth, { logout, saveUser } from 'helpers/auth'
+import { formateUserInfo } from 'helpers/utils'
 
 const AUTH_USER = 'AUTH_USER'
 const LOGOUT_USER = 'LOGOUT_USER'
@@ -73,21 +74,20 @@ function removeUser (uid, timestamp) {
 export function fetchAndHandleAuthedUser (email, password) {
 	return function (dispatch) {
 		dispatch(fetchingUser())
-		return auth(email, password).then((data) => {
-			// REVIEW... Why doesn't this promise recognize when auth is returning an error... and then pass that into the .catch?? B/C it doesn't i'm returning on object with an error essage from auth.
-			if (data.error !== undefined) {
-				dispatch(fetchingUserError(data.error))
-			} else {
-				const user = data
-				dispatch(fetchingUserSuccess(user.uid, user, Date.now()))
-				dispatch(authUser(user.uid))
-			}
-		}).catch((error) => dispatch(fetchingUserError(error)))
+		return auth(email, password).then((user) => {
+			const userData = user.providerData[0]
+			const userInfo = formateUserInfo(userData.displayName, userData.photoURL, user.uid)
+			return dispatch(fetchingUserSuccess(user.uid, userInfo, Date.now()))
+		})
+		.then(({user}) => saveUser(user))
+		.then((user) => dispatch(authUser(user.uid)))
+		.catch((error) => dispatch(fetchingUserError(error.message)))
 	}
 }
 
 export function logoutAndUnauth () {
 	return function (dispatch) {
+		// logout()
 		dispatch(logoutUser(true))
 		setTimeout(function () {
 			dispatch(unauthUser(false))

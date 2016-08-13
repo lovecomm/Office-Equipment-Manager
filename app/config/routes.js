@@ -1,6 +1,6 @@
 import React from 'react'
 import { Router, Route, hashHistory, IndexRoute } from 'react-router'
-import { MainContainer, HomeContainer, AuthenticateContainer, ItemsContainer } from 'containers'
+import { MainContainer, AuthenticateContainer, ItemsContainer } from 'containers'
 
 export default function getRoutes (checkAuth) {
 	return (
