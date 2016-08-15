@@ -23,7 +23,7 @@ function NavItems ({isAuthed}) {
 
 function MenuItems ({isAuthed}) {
 	return isAuthed === true
-	? <Link to='/auth/logout' className={dropdownLink}><MenuItem primaryText='Sign out' /></Link>
+	? <Link to='/logout' className={dropdownLink}><MenuItem primaryText='Sign out' /></Link>
 	: <Link to='/auth' className={dropdownLink}><MenuItem primaryText='Sign in' /></Link>
 }
 

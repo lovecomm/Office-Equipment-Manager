@@ -5,8 +5,7 @@ export default function auth (email, password) {
 }
 
 export function checkIfAuthed (store) {
-	// Ignore firebase for now.
-	return store.getState().isAuthed
+	return store.getState().isAuthed === true
 }
 
 export function logout () {

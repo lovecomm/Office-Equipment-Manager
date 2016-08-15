@@ -1,10 +1,14 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as userActionCreators from 'redux/modules/users'
+import { formatUserInfo } from 'helpers/utils'
+import { firebaseAuth } from 'config/constants'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
+import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import { lightBlue900, lightBlue700, grey200, grey800, deepOrangeA700 } from 'material-ui/styles/colors'
-import { Navigation } from 'components'
+import { Navigation, Loader } from 'components'
 import { container, innerContainer } from './styles.css'
 
 const muiTheme = getMuiTheme({
@@ -21,6 +25,10 @@ const MainContainer = React.createClass({
 	propTypes: {
 		children: PropTypes.node,
 		isAuthed: PropTypes.bool.isRequired,
+		isFetching: PropTypes.bool.isRequired,
+		authUser: PropTypes.func.isRequired,
+		fetchingUserSuccess: PropTypes.func.isRequired,
+		removeFetchingUser: PropTypes.func.isRequired,
 	},
 	childContextTypes: {
 		muiTheme: PropTypes.object.isRequired,
@@ -28,8 +36,22 @@ const MainContainer = React.createClass({
 	getChildContext () {
 		return {muiTheme: getMuiTheme(baseTheme)}
 	},
+	componentDidMount () {
+		firebaseAuth().onAuthStateChanged((user) => {
+			if (user) { // user existing means that we're logged in
+				const userData = user.providerData[0]
+				const userInfo = formatUserInfo(userData.displayName, user.uid)
+				this.props.authUser(user.uid)
+				this.props.fetchingUserSuccess(user.uid, userInfo, Date.now())
+			} else {
+				this.props.removeFetchingUser()
+			}
+		})
+	},
 	render () {
-		return (
+		return this.props.isFetching === true
+			? <Loader size={2} /> // We want this b/c there is going to be some lag while the Auth check is running
+			: (
 			<MuiThemeProvider muiTheme={getMuiTheme(muiTheme)}>
 				<div className={container}>
 					<Navigation isAuthed={this.props.isAuthed}/>
@@ -45,7 +67,12 @@ const MainContainer = React.createClass({
 function mapStateToProps (state) {
 	return {
 		isAuthed: state.isAuthed,
+		isFetching: state.isFetching,
 	}
 }
 
-export default connect(mapStateToProps)(MainContainer)
+function mapDispatchToProps (dispatch) {
+	return bindActionCreators(userActionCreators, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainContainer)

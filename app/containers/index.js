@@ -1,5 +1,5 @@
 export MainContainer from './Main/MainContainer'
-export HomeContainer from './Home/HomeContainer'
 export AuthenticateContainer from './Authenticate/AuthenticateContainer'
 export WrapperContainer from './Wrapper/WrapperContainer'
 export ItemsContainer from './Items/ItemsContainer'
+export LogoutContainer from './Logout/LogoutContainer'

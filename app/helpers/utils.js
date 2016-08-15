@@ -1,7 +1,6 @@
-export function formateUserInfo (name, avatar, uid) {
+export function formatUserInfo (name, uid) {
 	return {
 		name,
-		avatar,
 		uid,
 	}
 }
