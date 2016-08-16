@@ -8,7 +8,8 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import { lightBlue900, lightBlue700, grey200, grey800, deepOrangeA700 } from 'material-ui/styles/colors'
-import { Navigation, Loader } from 'components'
+import { Loader, MenuButton } from 'components'
+import { NavigationContainer } from 'containers'
 import { container, innerContainer } from './styles.css'
 
 const muiTheme = getMuiTheme({
@@ -54,20 +55,21 @@ const MainContainer = React.createClass({
 			: (
 			<MuiThemeProvider muiTheme={getMuiTheme(muiTheme)}>
 				<div className={container}>
-					<Navigation isAuthed={this.props.isAuthed}/>
+					<NavigationContainer isAuthed={this.props.isAuthed}/>
 					<div className={innerContainer}>
 						{this.props.children}
 					</div>
+					<MenuButton isAuthed={this.props.isAuthed}/>
 				</div>
 			</MuiThemeProvider>
 		)
 	},
 })
 
-function mapStateToProps (state) {
+function mapStateToProps ({users}) {
 	return {
-		isAuthed: state.isAuthed,
-		isFetching: state.isFetching,
+		isAuthed: users.isAuthed,
+		isFetching: users.isFetching,
 	}
 }
 

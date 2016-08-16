@@ -38,11 +38,11 @@ const AuthenticateContainer = React.createClass({
 	},
 })
 
-function mapStateToProps (state) { // this is where we say which parts of the state/store that we care about for this particular component
+function mapStateToProps ({users}) { // this is where we say which parts of the state/store that we care about for this particular component
 	return {
-		isFetching: state.isFetching,
-		isLoggingOut: state.isLoggingOut,
-		error: state.error,
+		isFetching: users.isFetching,
+		isLoggingOut: users.isLoggingOut,
+		error: users.error,
 	}
 }
 
