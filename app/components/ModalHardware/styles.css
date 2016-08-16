@@ -1,14 +1,31 @@
 .button {
-  margin: 12;
+  margin: 12px;
+	display: block!important;
+}
+
+.buttonSubmit {
+	margin: 0 12px 12px;
+	display: block!important;
 }
 
 .imageInput {
-  cursor: 'pointer';
-  position: 'absolute';
+  cursor: pointer;
+  position: absolute;
+	display: block;
   top: 0;
   bottom: 0;
   right: 0;
   left: 0;
-  width: '100%';
+  width: 100%;
   opacity: 0;
+}
+
+.headline {
+	font-size: 22px;
+	padding: 10px 25px;
+	color: white;
+}
+
+.formWrapper {
+	padding: 10px 25px;
 }

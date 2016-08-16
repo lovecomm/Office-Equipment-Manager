@@ -1,10 +1,13 @@
 import React from 'react'
-import { Items } from 'components'
+import { Items, ItemsToolbar } from 'components'
 
 const ItemsContainer = React.createClass ({
 	render () {
 		return (
-			<Items />
+			<div>
+				<ItemsToolbar />
+				<Items />
+			</div>
 		)
 	},
 })

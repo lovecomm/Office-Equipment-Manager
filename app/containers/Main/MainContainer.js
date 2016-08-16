@@ -7,8 +7,8 @@ import { firebaseAuth } from 'config/constants'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import { lightBlue900, lightBlue700, grey200, grey800, deepOrangeA700 } from 'material-ui/styles/colors'
-import { Loader, MenuButton } from 'components'
+import { lightBlue900, lightBlue700, grey200, grey800, deepOrangeA700, blueGrey900 } from 'material-ui/styles/colors'
+import { Loader } from 'components'
 import { NavigationContainer } from 'containers'
 import { container, innerContainer } from './styles.css'
 
@@ -16,7 +16,7 @@ const muiTheme = getMuiTheme({
 	palette: {
 		primary1Color: lightBlue700,
 		primary2Color: lightBlue900,
-		primary3Color: grey200,
+		primary3Color: blueGrey900,
 		primaryBlack: grey800,
 		primaryDanger: deepOrangeA700,
 	},
@@ -59,7 +59,6 @@ const MainContainer = React.createClass({
 					<div className={innerContainer}>
 						{this.props.children}
 					</div>
-					<MenuButton isAuthed={this.props.isAuthed}/>
 				</div>
 			</MuiThemeProvider>
 		)

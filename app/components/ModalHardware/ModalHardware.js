@@ -1,20 +1,21 @@
 import React, { PropTypes } from 'react'
 import { TextField, RaisedButton } from 'material-ui'
 import { default as ReactModal } from 'react-modal'
-import { button, imageInput } from './styles.css'
+import { button, buttonSubmit, imageInput, headline, formWrapper } from './styles.css'
 
 const modalStyles = {
-  content: {
-    width: 350,
-    margin: '150px auto',
-    height: 220,
-    borderRadius: 5,
-    background: '#EBEBEB',
-    padding: 0,
-  },
+	content: {
+		width: 400,
+		margin: '150px auto',
+		height: window.innerHeight * 0.6,
+		borderRadius: 3,
+		background: '#FFFFFF',
+		padding: 0,
+	},
 }
 
 const	{ func, bool, string } = PropTypes
+
 ModalHardware.propTypes = {
 	makeText: string.isRequired,
 	modelText: string.isRequired,
@@ -30,7 +31,11 @@ ModalHardware.propTypes = {
 	updatePhotoInfo: func.isRequired,
 }
 
-export default function ModalHardware (props) {
+ModalHardware.contextTypes = {
+	muiTheme: PropTypes.object,
+}
+
+export default function ModalHardware (props, context) {
 	function submitHardware () {
 		console.log('Make ', props.makeText)
 		console.log('Model ', props.modelText)
@@ -38,44 +43,52 @@ export default function ModalHardware (props) {
 		console.log('Photo ', props.photoInfo)
 	}
 	return (
-		<span onClick={props.openModalHardware}>
-			{'Add Hardware'}
+		<span onTouchTap={props.openModalHardware} onClick={props.openModalHardware}>
+			<RaisedButton label='Add Hardware' primary={true} style={{marginRight: '0', marginTop: '10px'}} />
 			<ReactModal style={modalStyles} isOpen={props.isOpen} onRequestClose={props.closeModalHardware}>
-				<TextField
-					onChange={(e) => props.updateMakeText(e.target.value)}
-					hintText='Make'
-					value={props.makeText}
-					floatingLabelText='Make'
-					required='true'/>
-				<br />
-				<TextField
-					onChange={(e) => props.updateModelText(e.target.value)}
-					hintText='Model'
-					value={props.modelText}
-					floatingLabelText='Model'
-					required='true'/>
-				<br />
-				<TextField
-					onChange={(e) => props.updateDescriptionText(e.target.value)}
-					hintText='Hardware Description'
-					value={props.descriptionText}
-					floatingLabelText='Hardware Description'
-					multiLine={true}
-					rows={4}/>
-				<br />
-				<RaisedButton
-					onChange={(e) => props.updatePhotoInfo(e.target.value)}
-					label='Choose an Image'
-					labelPosition='before'
-					value={props.photoInfo}
-					className={button}>
-					<input type='file' className={imageInput} />
-				</RaisedButton>
-				<br />
-				<RaisedButton label='Add Hardware' type='submit' 			primary={true}
-					onTouchTap={submitHardware}
-					disabled={props.isSubmitDisabled}
-					className={button} />
+				<div className={headline} style={{backgroundColor: context.muiTheme.palette.primary3Color}}>
+					New Hardware
+				</div>
+				<div className={formWrapper}>
+					<TextField
+						onChange={(e) => props.updateMakeText(e.target.value)}
+						hintText='Make'
+						value={props.makeText}
+						floatingLabelText='Make'
+						fullWidth={true}
+						required='true'/>
+					<br />
+					<TextField
+						onChange={(e) => props.updateModelText(e.target.value)}
+						hintText='Model'
+						value={props.modelText}
+						floatingLabelText='Model'
+						fullWidth={true}
+						required='true'/>
+					<br />
+					<TextField
+						onChange={(e) => props.updateDescriptionText(e.target.value)}
+						hintText='Hardware Description'
+						value={props.descriptionText}
+						floatingLabelText='Hardware Description'
+						multiLine={true}
+						fullWidth={true}
+						rows={4}/>
+					<br />
+					<RaisedButton
+						label='Select Hardware Image'
+						labelPosition='before'
+						className={button}>
+							<input type='file' className={imageInput}
+								onChange={(e) => props.updatePhotoInfo(e.target.value)}
+								value={props.photoInfo}></input>
+					</RaisedButton>
+					<br />
+					<RaisedButton label='Add Hardware' type='submit' primary={true}
+						onTouchTap={submitHardware}
+						disabled={props.isSubmitDisabled}
+						className={buttonSubmit} />
+				</div>
 			</ReactModal>
 		</span>
 	)

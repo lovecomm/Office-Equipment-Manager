@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import * as modalActionCreators from 'redux/modules/modalHardware'
 
 function mapStateToProps ({modalHardware}, props) {
-	console.log(modalHardware)
 	function disableSubmit () {
 		if (modalHardware.makeText.length <= 0 ||
 			modalHardware.modelText.length <= 0 ||
