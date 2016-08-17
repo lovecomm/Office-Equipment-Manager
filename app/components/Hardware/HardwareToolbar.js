@@ -1,6 +1,6 @@
 import React from 'react'
 import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar'
-import { ModalHardwareContainer } from 'containers'
+import { HardwareFormAddContainer } from 'containers'
 
 export default function HardwareToolbar (props) {
 	return (
@@ -9,7 +9,7 @@ export default function HardwareToolbar (props) {
         <ToolbarTitle text='Hardware' style={{marginLeft: '24px'}}/>
       </ToolbarGroup>
 			<ToolbarGroup>
-				<ModalHardwareContainer />
+				<HardwareFormAddContainer />
 			</ToolbarGroup>
     </Toolbar>
 	)

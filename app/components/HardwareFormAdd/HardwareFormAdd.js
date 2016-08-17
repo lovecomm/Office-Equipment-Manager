@@ -1,29 +1,17 @@
 import React, { PropTypes } from 'react'
-import { TextField, RaisedButton } from 'material-ui'
-import { default as ReactModal } from 'react-modal'
+import { TextField, RaisedButton, Drawer } from 'material-ui'
 import { button, buttonSubmit, imageInput, headline, formWrapper } from './styles.css'
-
-const modalStyles = {
-	content: {
-		width: 400,
-		margin: '150px auto',
-		height: window.innerHeight * 0.6,
-		borderRadius: 3,
-		background: '#FFFFFF',
-		padding: 0,
-	},
-}
 
 const	{ func, bool, string } = PropTypes
 
-ModalHardware.propTypes = {
+HardwareFormAdd.propTypes = {
 	makeText: string.isRequired,
 	modelText: string.isRequired,
 	descriptionText: string.isRequired,
 	photoInfo: string.isRequired,
 	isOpen: bool.isRequired,
-	openModalHardware: func.isRequired,
-	closeModalHardware: func.isRequired,
+	openHardwareFormAdd: func.isRequired,
+	closeHardwareFormAdd: func.isRequired,
 	isSubmitDisabled: bool.isRequired,
 	updateMakeText: func.isRequired,
 	updateModelText: func.isRequired,
@@ -31,11 +19,11 @@ ModalHardware.propTypes = {
 	updatePhotoInfo: func.isRequired,
 }
 
-ModalHardware.contextTypes = {
+HardwareFormAdd.contextTypes = {
 	muiTheme: PropTypes.object,
 }
 
-export default function ModalHardware (props, context) {
+export default function HardwareFormAdd (props, context) {
 	function submitHardware () {
 		console.log('Make ', props.makeText)
 		console.log('Model ', props.modelText)
@@ -43,9 +31,12 @@ export default function ModalHardware (props, context) {
 		console.log('Photo ', props.photoInfo)
 	}
 	return (
-		<span onTouchTap={props.openModalHardware} onClick={props.openModalHardware}>
-			<RaisedButton label='Add Hardware' primary={true} style={{marginRight: '0', marginTop: '10px'}} />
-			<ReactModal style={modalStyles} isOpen={props.isOpen} onRequestClose={props.closeModalHardware}>
+		<span>
+			<RaisedButton label='Add Hardware' primary={true}
+				onTouchTap={props.openHardwareFormAdd}
+				style={{marginRight: '0', marginTop: '10px'}} />
+			<Drawer docked={false} width={400} open={props.isOpen}
+				onRequestChange={props.closeHardwareFormAdd}>
 				<div className={headline} style={{backgroundColor: context.muiTheme.palette.primary3Color}}>
 					New Hardware
 				</div>
@@ -89,7 +80,7 @@ export default function ModalHardware (props, context) {
 						disabled={props.isSubmitDisabled}
 						className={buttonSubmit} />
 				</div>
-			</ReactModal>
+			</Drawer>
 		</span>
 	)
 }

@@ -1,2 +1,2 @@
 export users from './users'
-export modalHardware from './modalHardware'
+export hardwareFormAdd from './hardwareFormAdd'
