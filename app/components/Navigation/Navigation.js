@@ -1,13 +1,15 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
-import { AppBar, IconMenu, MenuItem, IconButton, Menu } from 'material-ui'
+import { AppBar, IconMenu, MenuItem, IconButton } from 'material-ui'
 import MenuIcon from 'material-ui/svg-icons/navigation/menu'
 import ContactsIcon from 'material-ui/svg-icons/communication/contacts'
 import StreamIcon from 'material-ui/svg-icons/action/view-stream'
 import HardwareIcon from 'material-ui/svg-icons/hardware/laptop-chromebook'
+import ContentAdd from 'material-ui/svg-icons/content/add'
 import { dropdownLink, title } from './styles.css'
+import { HardwareFormToggleContainer } from 'containers'
 
-MenuItems.propTypes = Navigation.propTypes = NavItems.propTypes = {
+ Navigation.propTypes = NavItems.propTypes = MenuItems.propTypes = {
 	isAuthed: PropTypes.bool.isRequired,
 }
 
@@ -17,6 +19,12 @@ function NavItems ({isAuthed}) {
 			<Link to='/hardware'><IconButton><HardwareIcon color='white'/></IconButton></Link>
 			<Link to='/people'><IconButton><ContactsIcon color='white'/></IconButton></Link>
 			<Link to='/'><IconButton><StreamIcon color='white'/></IconButton></Link>
+			<IconMenu
+				iconButtonElement={<IconButton><ContentAdd color='white'/></IconButton>}
+				targetOrigin={{horizontal: 'left', vertical: 'top'}}
+				anchorOrigin={{horizontal: 'left', vertical: 'bottom'}} >
+					<MenuItem><HardwareFormToggleContainer /></MenuItem>
+				</IconMenu>
 		</div>
 	: <span></span>
 }

@@ -1,4 +1,4 @@
-import { HardwareFormAdd } from 'components'
+import { HardwareFormDrawer } from 'components'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as modalActionCreators from 'redux/modules/hardwareFormAdd'
@@ -27,4 +27,4 @@ function mapDispatchToProps (dispatch) {
 	return bindActionCreators(modalActionCreators, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(HardwareFormAdd)
+export default connect(mapStateToProps, mapDispatchToProps)(HardwareFormDrawer)
