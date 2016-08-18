@@ -1,7 +1,8 @@
-import { HardwareFormToggle } from 'components'
+import React from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import * as modalActionCreators from 'redux/modules/hardwareForm'
+import { HardwareForm } from 'components'
+import * as hardwareFormActionCreators from 'redux/modules/hardwareForm'
 
 function mapStateToProps ({hardwareForm}, props) {
 	function disableSubmit () {
@@ -24,7 +25,7 @@ function mapStateToProps ({hardwareForm}, props) {
 }
 
 function mapDispatchToProps (dispatch) {
-	return bindActionCreators(modalActionCreators, dispatch)
+	return bindActionCreators(hardwareFormActionCreators, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(HardwareFormToggle)
+export default connect(mapStateToProps, mapDispatchToProps)(HardwareForm)

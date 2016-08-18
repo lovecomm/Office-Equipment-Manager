@@ -7,7 +7,7 @@ import StreamIcon from 'material-ui/svg-icons/action/view-stream'
 import HardwareIcon from 'material-ui/svg-icons/hardware/laptop-chromebook'
 import ContentAdd from 'material-ui/svg-icons/content/add'
 import { dropdownLink, title } from './styles.css'
-import { HardwareFormToggleContainer } from 'containers'
+import { FormTogglesContainer } from 'containers'
 
  Navigation.propTypes = NavItems.propTypes = MenuItems.propTypes = {
 	isAuthed: PropTypes.bool.isRequired,
@@ -23,7 +23,7 @@ function NavItems ({isAuthed}) {
 				iconButtonElement={<IconButton><ContentAdd color='white'/></IconButton>}
 				targetOrigin={{horizontal: 'left', vertical: 'top'}}
 				anchorOrigin={{horizontal: 'left', vertical: 'bottom'}} >
-					<MenuItem><HardwareFormToggleContainer /></MenuItem>
+					<FormTogglesContainer />
 				</IconMenu>
 		</div>
 	: <span></span>

@@ -4,13 +4,12 @@ import { button, buttonSubmit, imageInput, headline, formWrapper } from './style
 
 const	{ func, bool, string } = PropTypes
 
-HardwareFormDrawer.propTypes = {
+HardwareForm.propTypes = {
 	makeText: string.isRequired,
 	modelText: string.isRequired,
 	descriptionText: string.isRequired,
 	photoInfo: string.isRequired,
 	isOpen: bool.isRequired,
-	openHardwareForm: func.isRequired,
 	closeHardwareForm: func.isRequired,
 	isSubmitDisabled: bool.isRequired,
 	updateMakeText: func.isRequired,
@@ -19,11 +18,11 @@ HardwareFormDrawer.propTypes = {
 	updatePhotoInfo: func.isRequired,
 }
 
-HardwareFormDrawer.contextTypes = {
+HardwareForm.contextTypes = {
 	muiTheme: PropTypes.object,
 }
 
-export default function HardwareFormDrawer (props, context) {
+export default function HardwareForm (props, context) {
 	function submitHardware () {
 		console.log('Make ', props.makeText)
 		console.log('Model ', props.modelText)
