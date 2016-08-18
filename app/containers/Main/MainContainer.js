@@ -8,8 +8,8 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import { lightBlue900, lightBlue700, grey200, grey800, deepOrangeA700, blueGrey900 } from 'material-ui/styles/colors'
-import { Loader } from 'components'
-import { NavigationContainer, FormsDrawersContainer } from 'containers'
+import { Loader, Navigation } from 'components'
+import { FormsDrawersContainer } from 'containers'
 import { container, innerContainer } from './styles.css'
 
 const muiTheme = getMuiTheme({
@@ -56,7 +56,7 @@ const MainContainer = React.createClass({
 			: (
 			<MuiThemeProvider muiTheme={getMuiTheme(muiTheme)}>
 				<div className={container}>
-					<NavigationContainer isAuthed={this.props.isAuthed}/>
+					<Navigation isAuthed={this.props.isAuthed}/>
 					<div className={innerContainer}>
 						{this.props.children}
 						<FormsDrawersContainer />
