@@ -2,24 +2,24 @@ import React from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { HardwareForm } from 'components'
-import * as hardwareActionCreators from 'redux/modules/hardware'
+import * as hardwareActionCreators from 'redux/modules/hardwareForm'
 
-function mapStateToProps ({hardware}, props) {
+function mapStateToProps ({hardwareForm}, props) {
 	function disableSubmit () {
-		if (hardware.makeText.length <= 0 ||
-			hardware.modelText.length <= 0 ||
-			hardware.photoInfo === undefined) {
+		if (hardwareForm.makeText.length <= 0 ||
+			hardwareForm.modelText.length <= 0 ||
+			hardwareForm.photoInfo === undefined) {
 			return true
 		} else {
 			return false
 		}
 	}
 	return {
-		makeText: hardware.makeText,
-		modelText: hardware.modelText,
-		descriptionText: hardware.descriptionText,
-		photoInfo: hardware.photoInfo,
-		isOpen: hardware.isOpen,
+		makeText: hardwareForm.makeText,
+		modelText: hardwareForm.modelText,
+		descriptionText: hardwareForm.descriptionText,
+		photoInfo: hardwareForm.photoInfo,
+		isOpen: hardwareForm.isOpen,
 		isSubmitDisabled: disableSubmit(),
 	}
 }

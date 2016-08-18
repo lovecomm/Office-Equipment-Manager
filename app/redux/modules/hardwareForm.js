@@ -79,7 +79,7 @@ const initialState = {
 	isOpen: false,
 }
 
-export default function hardware (state = initialState, action) {
+export default function hardwareForm (state = initialState, action) {
 	switch (action.type) {
 	case OPEN_HARDWARE_FORM:
 		return {

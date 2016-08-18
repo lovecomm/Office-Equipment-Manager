@@ -1,2 +1,2 @@
 export users from './users'
-export hardware from './hardware'
+export hardwareForm from './hardwareForm'

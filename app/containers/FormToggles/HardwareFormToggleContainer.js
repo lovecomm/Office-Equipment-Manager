@@ -1,12 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import * as hardwareActionCreators from 'redux/modules/hardware'
+import * as hardwareActionCreators from 'redux/modules/hardwareForm'
 import { HardwareFormToggle } from 'components'
 
-function mapStateToProps ({hardware}) {
+function mapStateToProps ({hardwareForm}) {
 	return {
-		openHardwareForm: hardware.openHardwareForm,
+		openHardwareForm: hardwareForm.openHardwareForm,
 	}
 }
 
