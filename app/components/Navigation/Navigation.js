@@ -2,26 +2,10 @@ import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import { AppBar, IconMenu, MenuItem, IconButton } from 'material-ui'
 import MenuIcon from 'material-ui/svg-icons/navigation/menu'
-import ContactsIcon from 'material-ui/svg-icons/communication/contacts'
-import StreamIcon from 'material-ui/svg-icons/action/view-stream'
-import HardwareIcon from 'material-ui/svg-icons/hardware/laptop-chromebook'
-import ContentAdd from 'material-ui/svg-icons/content/add'
 import { dropdownLink, title } from './styles.css'
-import { FormTogglesContainer } from 'containers'
 
- Navigation.propTypes = NavItems.propTypes = MenuItems.propTypes = {
+ Navigation.propTypes = MenuItems.propTypes = {
 	isAuthed: PropTypes.bool.isRequired,
-}
-
-function NavItems ({isAuthed}) {
-	return isAuthed === true
-	? <IconMenu
-			iconButtonElement={<IconButton><ContentAdd color='white'/></IconButton>}
-			targetOrigin={{horizontal: 'right', vertical: 'bottom'}}
-			anchorOrigin={{horizontal: 'right', vertical: 'top'}} >
-				<FormTogglesContainer />
-		</IconMenu>
-	: <span></span>
 }
 
 function MenuItems ({isAuthed}) {
@@ -40,7 +24,6 @@ export default function Navigation ({isAuthed}) {
 				targetOrigin={{horizontal: 'left', vertical: 'top'}}
 				anchorOrigin={{horizontal: 'left', vertical: 'bottom'}} >
 					<MenuItems isAuthed={isAuthed} />
-				</IconMenu>}
-				iconElementRight={<NavItems isAuthed={isAuthed} />} />
+				</IconMenu>}/>
 	)
 }

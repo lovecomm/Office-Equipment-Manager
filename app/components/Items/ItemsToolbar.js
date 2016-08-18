@@ -1,5 +1,9 @@
 import React from 'react'
-import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar'
+import { IconMenu, IconButton } from 'material-ui'
+import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more'
+import { Toolbar, ToolbarGroup, ToolbarTitle, ToolbarSeparator } from 'material-ui/Toolbar'
+import { FormTogglesContainer } from 'containers'
+import { menuMoreIcon } from './styles.css'
 
 export default function ItemsToolbar (props) {
 	return (
@@ -7,6 +11,15 @@ export default function ItemsToolbar (props) {
       <ToolbarGroup firstChild={true}>
         <ToolbarTitle text='Items' style={{marginLeft: '24px'}}/>
       </ToolbarGroup>
+			<ToolbarGroup>
+				<ToolbarSeparator />
+				<IconMenu
+					iconButtonElement={<IconButton><NavigationExpandMoreIcon className={menuMoreIcon}/></IconButton>}
+					targetOrigin={{horizontal: 'right', vertical: 'top'}}
+					anchorOrigin={{horizontal: 'right', vertical: 'bottom'}} >
+						<FormTogglesContainer />
+				</IconMenu>
+			</ToolbarGroup>
     </Toolbar>
 	)
 }
