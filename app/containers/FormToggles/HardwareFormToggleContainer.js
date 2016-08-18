@@ -1,17 +1,17 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import * as hardwareFormActionCreators from 'redux/modules/hardwareForm'
+import * as hardwareActionCreators from 'redux/modules/hardware'
 import { HardwareFormToggle } from 'components'
 
-function mapStateToProps ({hardwareForm}) {
+function mapStateToProps ({hardware}) {
 	return {
-		openHardwareForm: hardwareForm.openHardwareForm,
+		openHardwareForm: hardware.openHardwareForm,
 	}
 }
 
 function mapDispatchToProps (dispatch) {
-	return bindActionCreators(hardwareFormActionCreators, dispatch)
+	return bindActionCreators(hardwareActionCreators, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HardwareFormToggle)

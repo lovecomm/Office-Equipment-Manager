@@ -1,3 +1,5 @@
+import { saveHardware } from 'helpers/api'
+
 const OPEN_HARDWARE_FORM = 'OPEN_HARDWARE_FORM'
 const CLOSE_HARDWARE_FORM = 'CLOSE_HARDWARE_FORM'
 const UPDATE_MAKE_TEXT = 'UPDATE_MAKE_TEXT'
@@ -55,7 +57,7 @@ const initialState = {
 	isOpen: false,
 }
 
-export default function modal (state = initialState, action) {
+export default function hardware (state = initialState, action) {
 	switch (action.type) {
 	case OPEN_HARDWARE_FORM:
 		return {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { IconMenu, IconButton } from 'material-ui'
+import { IconMenu, IconButton, MenuItem } from 'material-ui'
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more'
 import { Toolbar, ToolbarGroup, ToolbarTitle, ToolbarSeparator } from 'material-ui/Toolbar'
 import { FormTogglesContainer } from 'containers'
@@ -17,6 +17,8 @@ export default function ItemsToolbar (props) {
 					iconButtonElement={<IconButton className={menuMoreIcon}><NavigationExpandMoreIcon /></IconButton>}
 					targetOrigin={{horizontal: 'right', vertical: 'top'}}
 					anchorOrigin={{horizontal: 'right', vertical: 'bottom'}} >
+						<MenuItem className={menuMoreIcon} primaryText='Add Item' />
+						<MenuItem className={menuMoreIcon} primaryText='Add Person' />
 						<FormTogglesContainer />
 				</IconMenu>
 			</ToolbarGroup>
