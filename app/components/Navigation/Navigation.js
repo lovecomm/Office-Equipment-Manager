@@ -15,17 +15,12 @@ import { FormTogglesContainer } from 'containers'
 
 function NavItems ({isAuthed}) {
 	return isAuthed === true
-	? <div>
-			<Link to='/hardware'><IconButton><HardwareIcon color='white'/></IconButton></Link>
-			<Link to='/people'><IconButton><ContactsIcon color='white'/></IconButton></Link>
-			<Link to='/'><IconButton><StreamIcon color='white'/></IconButton></Link>
-			<IconMenu
-				iconButtonElement={<IconButton><ContentAdd color='white'/></IconButton>}
-				targetOrigin={{horizontal: 'left', vertical: 'top'}}
-				anchorOrigin={{horizontal: 'left', vertical: 'bottom'}} >
-					<FormTogglesContainer />
-				</IconMenu>
-		</div>
+	? <IconMenu
+			iconButtonElement={<IconButton><ContentAdd color='white'/></IconButton>}
+			targetOrigin={{horizontal: 'right', vertical: 'bottom'}}
+			anchorOrigin={{horizontal: 'right', vertical: 'top'}} >
+				<FormTogglesContainer />
+		</IconMenu>
 	: <span></span>
 }
 

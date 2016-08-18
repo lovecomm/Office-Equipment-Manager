@@ -5,7 +5,7 @@ import HardwareFormToggleContainer from './HardwareFormToggleContainer'
 export default function FormTogglesContainer (props) {
 	return (
 		<div>
-			<MenuItem><HardwareFormToggleContainer /></MenuItem>
+			<MenuItem style={{textAlign: 'right'}}><HardwareFormToggleContainer /></MenuItem>
 		</div>
 	)
 }
