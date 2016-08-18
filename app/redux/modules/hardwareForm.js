@@ -1,20 +1,20 @@
-const OPEN_HARDWARE_FORM_ADD = 'OPEN_HARDWARE_FORM_ADD'
-const CLOSE_HARDWARE_FORM_ADD = 'CLOSE_HARDWARE_FORM_ADD'
+const OPEN_HARDWARE_FORM = 'OPEN_HARDWARE_FORM'
+const CLOSE_HARDWARE_FORM = 'CLOSE_HARDWARE_FORM'
 const UPDATE_MAKE_TEXT = 'UPDATE_MAKE_TEXT'
 const UPDATE_MODEL_TEXT = 'UPDATE_MODEL_TEXT'
 const UPDATE_DESCRIPTION_TEXT = 'UPDATE_DESCRIPTION_TEXT'
 const UPDATE_PHOTO_INFO = 'UPDATE_PHOTO_INFO'
 
 // ACTIONS
-export function openHardwareFormAdd () {
+export function openHardwareForm () {
 	return {
-		type: OPEN_HARDWARE_FORM_ADD,
+		type: OPEN_HARDWARE_FORM,
 	}
 }
 
-export function closeHardwareFormAdd () {
+export function closeHardwareForm () {
 	return {
-		type: CLOSE_HARDWARE_FORM_ADD,
+		type: CLOSE_HARDWARE_FORM,
 	}
 }
 
@@ -57,12 +57,12 @@ const initialState = {
 
 export default function modal (state = initialState, action) {
 	switch (action.type) {
-	case OPEN_HARDWARE_FORM_ADD:
+	case OPEN_HARDWARE_FORM:
 		return {
 			...state,
 			isOpen: true,
 		}
-	case CLOSE_HARDWARE_FORM_ADD:
+	case CLOSE_HARDWARE_FORM:
 		return {
 			makeText: '',
 			modelText: '',

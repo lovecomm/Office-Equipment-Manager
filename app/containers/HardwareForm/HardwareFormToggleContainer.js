@@ -1,24 +1,24 @@
 import { HardwareFormToggle } from 'components'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import * as modalActionCreators from 'redux/modules/hardwareFormAdd'
+import * as modalActionCreators from 'redux/modules/hardwareForm'
 
-function mapStateToProps ({hardwareFormAdd}, props) {
+function mapStateToProps ({hardwareForm}, props) {
 	function disableSubmit () {
-		if (hardwareFormAdd.makeText.length <= 0 ||
-			hardwareFormAdd.modelText.length <= 0 ||
-			hardwareFormAdd.photoInfo === undefined) {
+		if (hardwareForm.makeText.length <= 0 ||
+			hardwareForm.modelText.length <= 0 ||
+			hardwareForm.photoInfo === undefined) {
 			return true
 		} else {
 			return false
 		}
 	}
 	return {
-		makeText: hardwareFormAdd.makeText,
-		modelText: hardwareFormAdd.modelText,
-		descriptionText: hardwareFormAdd.descriptionText,
-		photoInfo: hardwareFormAdd.photoInfo,
-		isOpen: hardwareFormAdd.isOpen,
+		makeText: hardwareForm.makeText,
+		modelText: hardwareForm.modelText,
+		descriptionText: hardwareForm.descriptionText,
+		photoInfo: hardwareForm.photoInfo,
+		isOpen: hardwareForm.isOpen,
 		isSubmitDisabled: disableSubmit(),
 	}
 }

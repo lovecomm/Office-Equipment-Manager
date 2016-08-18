@@ -10,8 +10,8 @@ HardwareFormDrawer.propTypes = {
 	descriptionText: string.isRequired,
 	photoInfo: string.isRequired,
 	isOpen: bool.isRequired,
-	openHardwareFormAdd: func.isRequired,
-	closeHardwareFormAdd: func.isRequired,
+	openHardwareForm: func.isRequired,
+	closeHardwareForm: func.isRequired,
 	isSubmitDisabled: bool.isRequired,
 	updateMakeText: func.isRequired,
 	updateModelText: func.isRequired,
@@ -32,7 +32,7 @@ export default function HardwareFormDrawer (props, context) {
 	}
 	return (
 		<Drawer docked={false} width={400} open={props.isOpen}
-			onRequestChange={props.closeHardwareFormAdd}>
+			onRequestChange={props.closeHardwareForm}>
 			<div className={headline} style={{backgroundColor: context.muiTheme.palette.primaryBlueDark}}>
 				New Hardware
 			</div>

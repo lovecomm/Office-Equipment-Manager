@@ -1,11 +1,11 @@
 import React, { PropTypes } from 'react'
 
 HardwareFormToggle.propTypes = {
-	openHardwareFormAdd: PropTypes.func.isRequired,
+	openHardwareForm: PropTypes.func.isRequired,
 }
 
-export default function HardwareFormToggle (props, context) {
+export default function HardwareFormToggle ({openHardwareForm}) {
 	return (
-		<span onTouchTap={props.openHardwareFormAdd}>{'Add Hardware'}</span>
+		<span onTouchTap={openHardwareForm}>{'Add Hardware'}</span>
 	)
 }
