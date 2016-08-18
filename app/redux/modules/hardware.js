@@ -1,5 +1,6 @@
 import { saveHardware } from 'helpers/api'
 
+const ADD_HARDWARE = 'ADD_HARDWARE'
 const OPEN_HARDWARE_FORM = 'OPEN_HARDWARE_FORM'
 const CLOSE_HARDWARE_FORM = 'CLOSE_HARDWARE_FORM'
 const UPDATE_MAKE_TEXT = 'UPDATE_MAKE_TEXT'
@@ -48,6 +49,27 @@ export function updatePhotoInfo (photoInfo) {
 	}
 }
 
+function addHardware (hardware) {
+	return {
+		type: ADD_HARDWARE,
+		hardware,
+	}
+}
+
+export function hardwareFanout (hardware) {
+	return function (dispatch, getState) {
+		// const uid = getState().users.authedId
+		saveHardware(hardware)
+		.then((hardwareWithId) => {
+			dispatch(addHardware(hardwareWithId))
+			dispatch(closeHardwareForm())
+		})
+		.catch((err) => {
+			console.warn('Error in hardwareFanout', err)
+		})
+	}
+}
+
 // REDUCERS
 const initialState = {
 	makeText: '',
@@ -91,6 +113,11 @@ export default function hardware (state = initialState, action) {
 		return {
 			...state,
 			photoInfo: action.photoInfo,
+		}
+	case ADD_HARDWARE:
+		return {
+			...state,
+			[action.hardware.hardwareId]: action.hardware,
 		}
 	default :
 		return state

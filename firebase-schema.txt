@@ -22,16 +22,18 @@ SPA – All Views
 	status
 	itemPhotos
 	itemNotes
-	hardwareId
-		hardwarePhoto
-		make
-		model
-		description
-	personId
-		personPhoto
-		fname
-		lname
-		email
+	hardware
+		hardwareId
+			hardwarePhoto
+			make
+			model
+			description
+	people
+		personId
+			personPhoto
+			fname
+			lname
+			email
 
 /users
 	uid

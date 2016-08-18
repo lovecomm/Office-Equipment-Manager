@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { TextField, RaisedButton, Drawer } from 'material-ui'
 import { button, buttonSubmit, imageInput, headline, formWrapper } from './styles.css'
+import { formatHardware } from 'helpers/utils'
 
 const	{ func, bool, string } = PropTypes
 
@@ -16,6 +17,7 @@ HardwareForm.propTypes = {
 	updateModelText: func.isRequired,
 	updateDescriptionText: func.isRequired,
 	updatePhotoInfo: func.isRequired,
+	hardwareFanout: func.isRequired,
 }
 
 HardwareForm.contextTypes = {
@@ -24,10 +26,12 @@ HardwareForm.contextTypes = {
 
 export default function HardwareForm (props, context) {
 	function submitHardware () {
-		console.log('Make ', props.makeText)
-		console.log('Model ', props.modelText)
-		console.log('Description ', props.descriptionText)
-		console.log('Photo ', props.photoInfo)
+		props.hardwareFanout(formatHardware(
+			props.makeText,
+			props.modelText,
+			props.descriptionText,
+			props.photoInfo,
+		))
 	}
 	return (
 		<Drawer docked={false} width={400} open={props.isOpen}
