@@ -76,6 +76,7 @@ const initialState = {
 	modelText: '',
 	descriptionText: '',
 	photo: {},
+	photoNameText: '',
 	isOpen: false,
 }
 
@@ -92,6 +93,7 @@ export default function hardwareForm (state = initialState, action) {
 			modelText: '',
 			descriptionText: '',
 			photo: {},
+			photoNameText: '',
 			isOpen: false,
 		}
 	case UPDATE_MAKE_TEXT:
@@ -113,6 +115,7 @@ export default function hardwareForm (state = initialState, action) {
 		return {
 			...state,
 			photo: action.photo,
+			photoNameText: action.photo.name,
 		}
 	case ADD_HARDWARE:
 		return {

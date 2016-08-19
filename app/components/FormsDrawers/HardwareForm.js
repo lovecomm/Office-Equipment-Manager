@@ -10,10 +10,10 @@ HardwareForm.propTypes = {
 	modelText: string.isRequired,
 	descriptionText: string.isRequired,
 	photo: object.isRequired,
+	photoNameText: string.isRequired,
 	isOpen: bool.isRequired,
 	closeHardwareForm: func.isRequired,
 	isSubmitDisabled: bool.isRequired,
-	showSelectedPhoto: string.isRequired,
 	updateMakeText: func.isRequired,
 	updateModelText: func.isRequired,
 	updateDescriptionText: func.isRequired,
@@ -74,8 +74,8 @@ export default function HardwareForm (props, context) {
 							onChange={(e) => props.updatePhoto(e.target.files[0])} />
 				</RaisedButton>
 				<br />
-				{props.showSelectedPhoto !== ''
-					? <p className={selectedPhoto} style={{color: context.muiTheme.palette.primary2Color}}>{props.showSelectedPhoto}</p>
+				{props.photoNameText !== ''
+					? <p className={selectedPhoto} style={{color: context.muiTheme.palette.primary2Color}}>{props.photoNameText}</p>
 					: ''}
 				<br />
 				<RaisedButton label='Add Hardware' type='submit' primary={true}

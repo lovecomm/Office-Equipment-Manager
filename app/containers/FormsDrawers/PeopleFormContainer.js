@@ -16,21 +16,14 @@ function mapStateToProps ({peopleForm}, props) {
 			return false
 		}
 	}
-	function showSelectedPhoto () {
-		if (Object.keys(peopleForm.photo).length === 0 && peopleForm.photo.constructor === Object) {
-			return ''
-		} else {
-			return peopleForm.photo.name
-		}
-	}
 	return {
 		firstNameText: peopleForm.firstNameText,
 		lastNameText: peopleForm.lastNameText,
 		emailText: peopleForm.emailText,
 		photo: peopleForm.photo,
+		photoNameText: peopleForm.photoNameText,
 		isOpen: peopleForm.isOpen,
 		isSubmitDisabled: disableSubmit(),
-		showSelectedPhoto: showSelectedPhoto(),
 	}
 }
 

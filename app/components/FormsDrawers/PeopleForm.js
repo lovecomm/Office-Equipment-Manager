@@ -10,10 +10,10 @@ PeopleForm.propTypes = {
 	lastNameText: string.isRequired,
 	emailText: string.isRequired,
 	photo: object.isRequired,
+	photoNameText: string.isRequired,
 	isOpen: bool.isRequired,
 	closePeopleForm: func.isRequired,
 	isSubmitDisabled: bool.isRequired,
-	showSelectedPhoto: string.isRequired,
 	updateFirstNameText: func.isRequired,
 	updateLastNameText: func.isRequired,
 	updateEmailText: func.isRequired,
@@ -73,8 +73,8 @@ export default function PeopleForm (props, context) {
 							onChange={(e) => props.updatePhoto(e.target.files[0])} />
 				</RaisedButton>
 				<br />
-				{props.showSelectedPhoto !== ''
-					? <p className={selectedPhoto} style={{color: context.muiTheme.palette.primary2Color}}>{props.showSelectedPhoto}</p>
+				{props.photoNameText !== ''
+					? <p className={selectedPhoto} style={{color: context.muiTheme.palette.primary2Color}}>{props.photoNameText}</p>
 					: ''}
 				<br />
 				<RaisedButton label='Add Person' type='submit' primary={true}

@@ -15,21 +15,14 @@ function mapStateToProps ({hardwareForm}, props) {
 			return false
 		}
 	}
-	function showSelectedPhoto () {
-		if (Object.keys(hardwareForm.photo).length === 0 && hardwareForm.photo.constructor === Object) {
-			return ''
-		} else {
-			return hardwareForm.photo.name
-		}
-	}
 	return {
 		makeText: hardwareForm.makeText,
 		modelText: hardwareForm.modelText,
 		descriptionText: hardwareForm.descriptionText,
 		photo: hardwareForm.photo,
+		photoNameText: hardwareForm.photoNameText,
 		isOpen: hardwareForm.isOpen,
 		isSubmitDisabled: disableSubmit(),
-		showSelectedPhoto: showSelectedPhoto(),
 	}
 }
 
