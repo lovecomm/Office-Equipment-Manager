@@ -29,3 +29,10 @@
 .formWrapper {
 	padding: 10px 25px;
 }
+
+.selectedPhoto {
+	max-width: 100%;
+	margin: 0 12px;
+	font-size: 0.75em;
+	font-style: italic;
+}

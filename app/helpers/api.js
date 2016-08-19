@@ -13,6 +13,8 @@ export function saveHardware (hardware, uid) {
 		photo: {
 			name: hardwarePhotoRef.name,
 			fullPath: hardwarePhotoRef.fullPath,
+			size: hardware.photo.size,
+			type: hardware.photo.type,
 			bucket: hardwarePhotoRef.bucket,
 		},
 		dateCreated: Date.now(),

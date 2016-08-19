@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { TextField, RaisedButton, Drawer } from 'material-ui'
-import { button, buttonSubmit, imageInput, headline, formWrapper } from './styles.css'
+import { button, buttonSubmit, imageInput, headline, formWrapper, selectedPhoto } from './styles.css'
 import { formatHardware } from 'helpers/utils'
 
 const	{ func, bool, string, object } = PropTypes
@@ -13,6 +13,7 @@ HardwareForm.propTypes = {
 	isOpen: bool.isRequired,
 	closeHardwareForm: func.isRequired,
 	isSubmitDisabled: bool.isRequired,
+	showSelectedPhoto: string.isRequired,
 	updateMakeText: func.isRequired,
 	updateModelText: func.isRequired,
 	updateDescriptionText: func.isRequired,
@@ -72,6 +73,10 @@ export default function HardwareForm (props, context) {
 						<input type='file' className={imageInput}
 							onChange={(e) => props.updatePhoto(e.target.files[0])} />
 				</RaisedButton>
+				<br />
+				{props.showSelectedPhoto !== ''
+					? <p className={selectedPhoto} style={{color: context.muiTheme.palette.primary2Color}}>{props.showSelectedPhoto}</p>
+					: ''}
 				<br />
 				<RaisedButton label='Add Hardware' type='submit' primary={true}
 					onTouchTap={submitHardware}
