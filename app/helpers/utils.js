@@ -13,3 +13,12 @@ export function formatHardware (make, model, description, photo) {
 		photo,
 	}
 }
+
+export function formatPerson (firstName, lastName, email, photo) {
+	return {
+		firstName,
+		lastName,
+		email,
+		photo,
+	}
+}

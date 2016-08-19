@@ -21,6 +21,29 @@ export function saveHardware (hardware, uid) {
 		dateLastUpdated: Date.now(),
 	}
 
-	return ref.child(`items/hardware/${hardwareId}`).set({...newHardware, hardwareId})
+	return ref.child(`items/hardware/${hardwareId}`).set({...newHardware, hardwareId}) // saving hardware to firebase
 		.then(() => ({...newHardware, hardwareId}))
+}
+
+export function savePeople (person, uid) {
+	const personId = ref.child('items/people').push().key
+	const personPhotoRef = imagesRef.child(`people/${person.photo.name}`) // Get ref for person photo
+
+	personPhotoRef.put(person.photo) // saving person photo to firebase
+
+	const newPerson = {
+		firstName: person.firstName,
+		lastName: person.lastName,
+		email: person.email,
+		photo: {
+			name: personPhotoRef.name,
+			fullPath: personPhotoRef.fullPath,
+			size: person.photo.size,
+			type: person.photo.type,
+			bucket: personPhotoRef.bucket,
+		},
+	}
+
+	return ref.child(`items/people/${personId}`).set({...newPerson, personId}) // saving person to firebase
+		.then(() => ({...newPerson, personId}))
 }

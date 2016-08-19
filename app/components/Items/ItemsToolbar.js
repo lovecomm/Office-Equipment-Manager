@@ -18,7 +18,6 @@ export default function ItemsToolbar (props) {
 					targetOrigin={{horizontal: 'right', vertical: 'top'}}
 					anchorOrigin={{horizontal: 'right', vertical: 'bottom'}} >
 						<MenuItem className={menuMoreIcon} primaryText='Add Item' />
-						<MenuItem className={menuMoreIcon} primaryText='Add Person' />
 						<FormTogglesContainer />
 				</IconMenu>
 			</ToolbarGroup>
