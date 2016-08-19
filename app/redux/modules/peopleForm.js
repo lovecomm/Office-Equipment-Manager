@@ -88,26 +88,26 @@ export default function peopleForm (state = initialState, action) {
 		}
 	case CLOSE_PEOPLE_FORM:
 		return {
-			makeText: '',
-			modelText: '',
-			descriptionText: '',
+			firstNameText: '',
+			lastNameText: '',
+			emailText: '',
 			photo: {},
 			isOpen: false,
 		}
 	case UPDATE_FIRST_NAME_TEXT:
 		return {
 			...state,
-			makeText: action.firstNameText,
+			firstNameText: action.firstNameText,
 		}
 	case UPDATE_LAST_NAME_TEXT:
 		return {
 			...state,
-			modelText: action.lastNameText,
+			lastNameText: action.lastNameText,
 		}
 	case UPDATE_EMAIL_TEXT:
 		return {
 			...state,
-			descriptionText: action.emailText,
+			emailText: action.emailText,
 		}
 	case UPDATE_PHOTO:
 		return {

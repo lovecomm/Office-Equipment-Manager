@@ -42,6 +42,8 @@ export function savePeople (person, uid) {
 			type: person.photo.type,
 			bucket: personPhotoRef.bucket,
 		},
+		dateCreated: Date.now(),
+		dateLastUpdated: Date.now(),
 	}
 
 	return ref.child(`items/people/${personId}`).set({...newPerson, personId}) // saving person to firebase
