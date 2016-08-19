@@ -16,12 +16,14 @@ SPA – All Views
 	Hardware Info
 
 /items
-	uid
+	itemId
 	createdAt
+	purchasedAt
 	assignedAt
-	status
+	viability
 	itemPhotos
 	itemNotes
+	uid // user who created the item
 	hardware
 		hardwareId
 			hardwarePhoto

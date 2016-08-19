@@ -1,12 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import * as itemsActionCreators from 'redux/modules/itemsForm'
+import * as itemsActionCreators from 'redux/modules/items'
 import { ItemsFormToggle } from 'components'
 
-function mapStateToProps ({itemsForm}) {
+function mapStateToProps ({items}) {
 	return {
-		openItemsForm: itemsForm.openItemsForm,
+		openItemsForm: items.openItemsForm,
 	}
 }
 

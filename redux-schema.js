@@ -21,7 +21,7 @@
 		[itemId]: {
 			lastUpdated,
 			info: {
-				status,
+				viability,
 				purchasedAt,
 				assignedAt,
 				itemNoteIds: [itemNoteId, itemNoteId, itemNoteId],
