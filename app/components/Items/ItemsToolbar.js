@@ -17,7 +17,6 @@ export default function ItemsToolbar (props) {
 					iconButtonElement={<IconButton className={menuMoreIcon}><NavigationExpandMoreIcon /></IconButton>}
 					targetOrigin={{horizontal: 'right', vertical: 'top'}}
 					anchorOrigin={{horizontal: 'right', vertical: 'bottom'}} >
-						<MenuItem className={menuMoreIcon} primaryText='Add Item' />
 						<FormTogglesContainer />
 				</IconMenu>
 			</ToolbarGroup>
