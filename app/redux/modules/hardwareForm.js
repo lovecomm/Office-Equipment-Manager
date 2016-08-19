@@ -6,7 +6,7 @@ const CLOSE_HARDWARE_FORM = 'CLOSE_HARDWARE_FORM'
 const UPDATE_MAKE_TEXT = 'UPDATE_MAKE_TEXT'
 const UPDATE_MODEL_TEXT = 'UPDATE_MODEL_TEXT'
 const UPDATE_DESCRIPTION_TEXT = 'UPDATE_DESCRIPTION_TEXT'
-const UPDATE_PHOTO_INFO = 'UPDATE_PHOTO_INFO'
+const UPDATE_PHOTO = 'UPDATE_PHOTO'
 
 // ACTIONS
 export function openHardwareForm () {
@@ -42,10 +42,10 @@ export function updateDescriptionText (descriptionText) {
 	}
 }
 
-export function updatePhotoInfo (photoInfo) {
+export function updatePhoto (photo) {
 	return {
-		type: UPDATE_PHOTO_INFO,
-		photoInfo,
+		type: UPDATE_PHOTO,
+		photo,
 	}
 }
 
@@ -75,7 +75,7 @@ const initialState = {
 	makeText: '',
 	modelText: '',
 	descriptionText: '',
-	photoInfo: {},
+	photo: {},
 	isOpen: false,
 }
 
@@ -91,7 +91,7 @@ export default function hardwareForm (state = initialState, action) {
 			makeText: '',
 			modelText: '',
 			descriptionText: '',
-			photoInfo: {},
+			photo: {},
 			isOpen: false,
 		}
 	case UPDATE_MAKE_TEXT:
@@ -109,10 +109,10 @@ export default function hardwareForm (state = initialState, action) {
 			...state,
 			descriptionText: action.descriptionText,
 		}
-	case UPDATE_PHOTO_INFO:
+	case UPDATE_PHOTO:
 		return {
 			...state,
-			photoInfo: action.photoInfo,
+			photo: action.photo,
 		}
 	case ADD_HARDWARE:
 		return {

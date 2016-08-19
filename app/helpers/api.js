@@ -2,15 +2,15 @@ import { ref, imagesRef } from 'config/constants'
 
 export function saveHardware (hardware, uid) {
 	const hardwareId = ref.child('items/hardware').push().key
-	const hardwarePhotoRef = imagesRef.child(`hardware/${hardware.photoInfo.name}`) // Create a reference to hardware image in firebase
+	const hardwarePhotoRef = imagesRef.child(`hardware/${hardware.photo.name}`) // Create a reference to hardware image in firebase
 
-	hardwarePhotoRef.put(hardware.photoInfo) // Store photo to firebase
+	hardwarePhotoRef.put(hardware.photo) // Store photo to firebase
 
 	const newHardware = {
 		make: hardware.make,
 		model: hardware.model,
 		description: hardware.description,
-		photoInfo: {
+		photo: {
 			name: hardwarePhotoRef.name,
 			fullPath: hardwarePhotoRef.fullPath,
 			bucket: hardwarePhotoRef.bucket,

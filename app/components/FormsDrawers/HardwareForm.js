@@ -9,14 +9,14 @@ HardwareForm.propTypes = {
 	makeText: string.isRequired,
 	modelText: string.isRequired,
 	descriptionText: string.isRequired,
-	photoInfo: object.isRequired,
+	photo: object.isRequired,
 	isOpen: bool.isRequired,
 	closeHardwareForm: func.isRequired,
 	isSubmitDisabled: bool.isRequired,
 	updateMakeText: func.isRequired,
 	updateModelText: func.isRequired,
 	updateDescriptionText: func.isRequired,
-	updatePhotoInfo: func.isRequired,
+	updatePhoto: func.isRequired,
 	hardwareFanout: func.isRequired,
 }
 
@@ -30,7 +30,7 @@ export default function HardwareForm (props, context) {
 			props.makeText,
 			props.modelText,
 			props.descriptionText,
-			props.photoInfo,
+			props.photo,
 		))
 	}
 	return (
@@ -70,7 +70,7 @@ export default function HardwareForm (props, context) {
 					labelPosition='before'
 					className={button}>
 						<input type='file' className={imageInput}
-							onChange={(e) => props.updatePhotoInfo(e.target.files[0])} />
+							onChange={(e) => props.updatePhoto(e.target.files[0])} />
 				</RaisedButton>
 				<br />
 				<RaisedButton label='Add Hardware' type='submit' primary={true}

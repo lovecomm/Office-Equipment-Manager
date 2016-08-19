@@ -8,7 +8,7 @@ function mapStateToProps ({hardwareForm}, props) {
 	function disableSubmit () {
 		if (hardwareForm.makeText.length <= 0 ||
 			hardwareForm.modelText.length <= 0 ||
-			hardwareForm.photoInfo === undefined) {
+			hardwareForm.photo === undefined) {
 			return true
 		} else {
 			return false
@@ -18,7 +18,7 @@ function mapStateToProps ({hardwareForm}, props) {
 		makeText: hardwareForm.makeText,
 		modelText: hardwareForm.modelText,
 		descriptionText: hardwareForm.descriptionText,
-		photoInfo: hardwareForm.photoInfo,
+		photo: hardwareForm.photo,
 		isOpen: hardwareForm.isOpen,
 		isSubmitDisabled: disableSubmit(),
 	}
