@@ -1,10 +1,12 @@
-import { saveItems } from 'helpers/api'
+// import { saveItems } from 'helpers/api'
 
 const ADD_ITEM = 'ADD_ITEM'
 const OPEN_ITEMS_FORM = 'OPEN_ITEMS_FORM'
 const CLOSE_ITEMS_FORM = 'CLOSE_ITEMS_FORM'
 const UPDATE_ITEM_ID_TEXT = 'UPDATE_ITEM_ID_TEXT'
 const UPDATE_PURCHASED_AT_DATE = 'UPDATE_PURCHASED_AT_DATE'
+const UPDATE_FORM_NOTES = 'UPDATE_FORM_NOTES'
+const UPDATE_FORM_PHOTOS = 'UPDATE_FORM_PHOTOS'
 const FETCHING_ITEMS = 'FETCHING_ITEMS'
 const FETCHING_ITEMS_ERROR = 'FETCHING_ITEMS_ERROR'
 const FETCHING_ITEMS_SUCCESS = 'FETCHING_ITEMS_SUCCESS'
@@ -34,6 +36,20 @@ export function updatePurchasedAtDate (purchasedAtDate) {
 	return {
 		type: UPDATE_PURCHASED_AT_DATE,
 		purchasedAtDate,
+	}
+}
+
+export function updateFormNotes (formNotes) {
+	return {
+		type: UPDATE_FORM_NOTES,
+		formNotes,
+	}
+}
+
+export function updateFormPhotos (formPhotos) {
+	return {
+		type: UPDATE_FORM_PHOTOS,
+		formPhotos,
 	}
 }
 
@@ -75,19 +91,69 @@ function addItem (item, timestamp) {
 
 export function itemsFanout (items) {
 	return function (dispatch, getState) {
-		const uid = getState().users.authedId
-		saveItems(items, { uid: uid })
-		.then((itemsWithId) => {
-			dispatch(addItem(itemsWithId))
-			dispatch(closeItemsForm())
-		})
-		.catch((err) => {
-			console.warn('Error in itemsFanout', err)
-		})
+		// const uid = getState().users.authedId
+		// saveItems(items, { uid: uid })
+		// .then((itemsWithId) => {
+		// 	dispatch(addItem(itemsWithId))
+		// 	dispatch(closeItemsForm())
+		// })
+		// .catch((err) => {
+		// 	console.warn('Error in itemsFanout', err)
+		// })
 	}
 }
 
 // REDUCERS
+const initialItemsFormState = {
+	isOpen: false,
+	purchasedAtDate: Date.now(),
+	itemId: '',
+	itemPersonId: '',
+	itemHardwareId: '',
+	notes: {},
+	photos: {},
+	photoNames: {},
+}
+
+function itemsForm (state = initialItemsFormState, action) {
+	switch (action.type) {
+	case OPEN_ITEMS_FORM:
+		return {
+			...state,
+			isOpen: true,
+		}
+	case CLOSE_ITEMS_FORM:
+		return {
+			itemId: '',
+			purchasedAtDate: '',
+			isOpen: false,
+		}
+	case UPDATE_ITEM_ID_TEXT:
+		return {
+			...state,
+			itemId: action.itemId,
+		}
+	case UPDATE_PURCHASED_AT_DATE:
+		return {
+			...state,
+			purchasedAtDate: action.purchasedAtDate,
+		}
+	case UPDATE_FORM_PHOTOS:
+		return {
+			...state,
+			photos: action.photos,
+			photoNames: action.photoNames,
+		}
+	case UPDATE_FORM_NOTES:
+		return {
+			...state,
+			notes: action.notes,
+		}
+	default :
+		return state
+	}
+}
+
 const initialItemState = {
 	lastUpdated: Date.now(),
 	info: {
@@ -105,9 +171,13 @@ function item (state = initialItemState, action) {
 	case ADD_ITEM:
 		return {
 			...state,
-			info: action.item,
-			lastUpdated: action.timestamp,
+			[action.itemId]: {
+				info: action.item,
+				lastUpdated: action.timestamp,
+			},
 		}
+	default :
+		return state
 	}
 }
 
@@ -115,32 +185,28 @@ const initialState = {
 	isFetching: false,
 	error: '',
 	lastUpdated: Date.now(),
-	formIsOpen: false,
 }
 
 export default function items (state = initialState, action) {
 	switch (action.type) {
 	case OPEN_ITEMS_FORM:
-		return {
-			...state,
-			formIsOpen: true,
-		}
 	case CLOSE_ITEMS_FORM:
-		return {
-			itemId: '',
-			purchasedAtDate: '',
-			formIsOpen: false,
-		}
 	case UPDATE_ITEM_ID_TEXT:
-		return {
-			...state,
-			itemId: action.itemId,
-		}
 	case UPDATE_PURCHASED_AT_DATE:
-		return {
-			...state,
-			purchasedAtDate: action.purchasedAtDate,
-		}
+	case UPDATE_FORM_PHOTOS:
+	case UPDATE_FORM_NOTES:
+		return action.form === null
+			? {
+				...state,
+				error: '',
+				lastUpdated: Date.now(),
+			}
+			: {
+				...state,
+				error: '',
+				lastUpdated: Date.now(),
+				form: itemsForm(state[action.form], action),
+			}
 	case FETCHING_ITEMS:
 		return {
 			...state,
@@ -162,7 +228,7 @@ export default function items (state = initialState, action) {
 		}
 		: {
 			...state,
-			[action.item.itemsId]: item(state[action.item], action),
+			items: item(state[action.item], action),
 		}
 	default :
 		return state
