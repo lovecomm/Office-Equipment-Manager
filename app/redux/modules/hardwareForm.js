@@ -58,8 +58,8 @@ function addHardware (hardware) {
 
 export function hardwareFanout (hardware) {
 	return function (dispatch, getState) {
-		// const uid = getState().users.authedId
-		saveHardware(hardware)
+		const uid = getState().users.authedId
+		saveHardware(hardware, { uid: uid })
 		.then((hardwareWithId) => {
 			dispatch(addHardware(hardwareWithId))
 			dispatch(closeHardwareForm())
@@ -75,7 +75,7 @@ const initialState = {
 	makeText: '',
 	modelText: '',
 	descriptionText: '',
-	photoInfo: '',
+	photoInfo: {},
 	isOpen: false,
 }
 
@@ -91,7 +91,7 @@ export default function hardwareForm (state = initialState, action) {
 			makeText: '',
 			modelText: '',
 			descriptionText: '',
-			photoInfo: '',
+			photoInfo: {},
 			isOpen: false,
 		}
 	case UPDATE_MAKE_TEXT:

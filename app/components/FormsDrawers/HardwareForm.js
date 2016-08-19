@@ -3,13 +3,13 @@ import { TextField, RaisedButton, Drawer } from 'material-ui'
 import { button, buttonSubmit, imageInput, headline, formWrapper } from './styles.css'
 import { formatHardware } from 'helpers/utils'
 
-const	{ func, bool, string } = PropTypes
+const	{ func, bool, string, object } = PropTypes
 
 HardwareForm.propTypes = {
 	makeText: string.isRequired,
 	modelText: string.isRequired,
 	descriptionText: string.isRequired,
-	photoInfo: string.isRequired,
+	photoInfo: object.isRequired,
 	isOpen: bool.isRequired,
 	closeHardwareForm: func.isRequired,
 	isSubmitDisabled: bool.isRequired,
@@ -70,8 +70,7 @@ export default function HardwareForm (props, context) {
 					labelPosition='before'
 					className={button}>
 						<input type='file' className={imageInput}
-							onChange={(e) => props.updatePhotoInfo(e.target.value)}
-							value={props.photoInfo}></input>
+							onChange={(e) => props.updatePhotoInfo(e.target.files[0])} />
 				</RaisedButton>
 				<br />
 				<RaisedButton label='Add Hardware' type='submit' primary={true}

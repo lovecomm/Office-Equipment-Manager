@@ -28,13 +28,18 @@ SPA – All Views
 			make
 			model
 			description
+			uid //user who added the item
+			dateCreated
+			dateLastUpdated
 	people
 		personId
 			personPhoto
 			fname
 			lname
 			email
-
+			uid //user who added the item
+			dateCreated
+			dateLastUpdated
 /users
 	uid
 	name
