@@ -1,26 +1,28 @@
 import React, { PropTypes } from 'react'
 import { TextField, RaisedButton, Drawer } from 'material-ui'
-import { button, buttonSubmit, imageInput, headline, formWrapper, selectedPhoto } from './styles.css'
+import { buttonSubmit, headline, formWrapper } from './styles.css'
 // import { formatItem } from 'helpers/utils'
 
-const	{ func, bool, string, object } = PropTypes
+const	{ func, bool, object, string } = PropTypes
 
 ItemsForm.propTypes = {
 	isOpen: bool.isRequired,
-	purchasedAtDate: object.isRequired,
+	purchasedAtDate: string.isRequired,
 	itemId: string.isRequired,
 	itemPersonId: string.isRequired,
 	itemHardwareId: string.isRequired,
 	notes: object.isRequired,
 	photos: object.isRequired,
 	photoNames: object.isRequired,
+	// START Bound to dispatch
 	closeItemsForm: func.isRequired,
-	isSubmitDisabled: bool.isRequired,
 	updateItemId: func.isRequired,
 	updatePurchasedAtDate: func.isRequired,
-	updateEmailText: func.isRequired,
-	updatePhoto: func.isRequired,
+	updateFormNotes: func.isRequired,
+	updateFormPhotos: func.isRequired,
 	itemsFanout: func.isRequired,
+	// END Bound to dispatch
+	isSubmitDisabled: bool.isRequired,
 }
 
 ItemsForm.contextTypes = {
@@ -35,6 +37,7 @@ export default function ItemsForm (props, context) {
 			// props.emailText,
 			// props.photo,
 		// ))
+		console.log('submitting item')
 	}
 	return (
 		<Drawer docked={false} width={400} open={props.isOpen}

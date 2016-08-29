@@ -106,7 +106,7 @@ export function itemsFanout (items) {
 // REDUCERS
 const initialItemsFormState = {
 	isOpen: false,
-	purchasedAtDate: Date.now(),
+	purchasedAtDate: '',
 	itemId: '',
 	itemPersonId: '',
 	itemHardwareId: '',
@@ -185,6 +185,7 @@ const initialState = {
 	isFetching: false,
 	error: '',
 	lastUpdated: Date.now(),
+	form: initialItemsFormState,
 }
 
 export default function items (state = initialState, action) {
@@ -195,41 +196,35 @@ export default function items (state = initialState, action) {
 	case UPDATE_PURCHASED_AT_DATE:
 	case UPDATE_FORM_PHOTOS:
 	case UPDATE_FORM_NOTES:
-		return action.form === null
-			? {
-				...state,
-				error: '',
-				lastUpdated: Date.now(),
-			}
-			: {
-				...state,
-				error: '',
-				lastUpdated: Date.now(),
-				form: itemsForm(state[action.form], action),
-			}
-	case FETCHING_ITEMS:
 		return {
 			...state,
-			isFetching: true,
-		}
-	case FETCHING_ITEMS_ERROR:
-		return {
-			...state,
-			isFetching: false,
-			error: action.error,
-		}
-	case FETCHING_ITEMS_SUCCESS:
-	case ADD_ITEM:
-		return action.item === null
-		? {
-			...state,
-			isFetching: false,
 			error: '',
+			lastUpdated: Date.now(),
+			form: itemsForm(state[action.form], action),
 		}
-		: {
-			...state,
-			items: item(state[action.item], action),
-		}
+	// case FETCHING_ITEMS:
+	// 	return {
+	// 		...state,
+	// 		isFetching: true,
+	// 	}
+	// case FETCHING_ITEMS_ERROR:
+	// 	return {
+	// 		...state,
+	// 		isFetching: false,
+	// 		error: action.error,
+	// 	}
+	// case FETCHING_ITEMS_SUCCESS:
+	// case ADD_ITEM:
+	// 	return action.item === null
+	// 	? {
+	// 		...state,
+	// 		isFetching: false,
+	// 		error: '',
+	// 	}
+	// 	: {
+	// 		...state,
+	// 		items: item(state[action.item], action),
+	// 	}
 	default :
 		return state
 	}
