@@ -1,41 +1,42 @@
 import React, { PropTypes } from 'react'
-import { TextField } from 'material-ui'
 import { container, title } from './styles.css'
 import { AuthButton } from 'components'
+import { Input } from 'react-toolbox/lib';
 
 Authenticate.propTypes = {
-	palette: PropTypes.object.isRequired,
 	error: PropTypes.string.isRequired,
 	isFetching: PropTypes.bool.isRequired,
 	onAuth: PropTypes.func.isRequired,
 	handleFormData: PropTypes.func.isRequired,
 }
 
-export default function Authenticate ({palette, error, isFetching, onAuth, handleFormData}){
+export default function Authenticate ({error, isFetching, onAuth, handleFormData}) {
 	return (
 		<div className={container} style={{
-			backgroundColor: palette.primary3Color,
-			color: palette.primaryBlack,
+			// backgroundColor: palette.primary3Color,
+			// color: palette.primaryBlack,
 		}}>
 			<div className={title}>Please Sign In</div>
 			<br />
 			<form style={{textAlign: 'center'}} onChange={handleFormData} onSubmit={onAuth}>
-				<TextField
+				<Input
 					type='email'
-					hintText='Email'
+					label='Email'
 					name='email'
-					required='true'
-					floatingLabelText='Email' />
-				<TextField
+					required={true}
+					floating={true}/>
+				<Input
 					type='password'
 					name='password'
-					hintText='Password'
-					required='true'
-					floatingLabelText='Password'/>
+					label='Password'
+					required={true}
+					floating={true}/>
 				<br />
 				<AuthButton isFetching={isFetching} />
 			</form>
-			{error ? <p style={{color: palette.primaryDanger}}>{error}</p> : null}
+			{error ? <p style={{
+				// color: palette.primaryDanger
+			}}>{error}</p> : null}
 		</div>
 	)
 }

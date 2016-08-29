@@ -4,24 +4,10 @@ import { bindActionCreators } from 'redux'
 import * as userActionCreators from 'redux/modules/users'
 import { formatUserInfo } from 'helpers/utils'
 import { firebaseAuth } from 'config/constants'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
-import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import { lightBlue900, lightBlue700, grey200, grey800, deepOrangeA700, blueGrey900 } from 'material-ui/styles/colors'
 import { Loader, Navigation } from 'components'
 import { FormsDrawersContainer } from 'containers'
+import { ThemeProvider } from 'react-css-themr'
 import { container, innerContainer } from './styles.css'
-
-const muiTheme = getMuiTheme({
-	palette: {
-		primary1Color: lightBlue700,
-		primary2Color: lightBlue900,
-		primary3Color: grey200,
-		primaryBlueDark: blueGrey900,
-		primaryBlack: grey800,
-		primaryDanger: deepOrangeA700,
-	},
-})
 
 const MainContainer = React.createClass({
 	propTypes: {
@@ -31,12 +17,6 @@ const MainContainer = React.createClass({
 		authUser: PropTypes.func.isRequired,
 		fetchingUserSuccess: PropTypes.func.isRequired,
 		removeFetchingUser: PropTypes.func.isRequired,
-	},
-	childContextTypes: {
-		muiTheme: PropTypes.object.isRequired,
-	},
-	getChildContext () {
-		return {muiTheme: getMuiTheme(baseTheme)}
 	},
 	componentDidMount () {
 		firebaseAuth().onAuthStateChanged((user) => {
@@ -53,16 +33,15 @@ const MainContainer = React.createClass({
 	render () {
 		return this.props.isFetching === true
 			? <Loader size={2} /> // We want this b/c there is going to be some lag while the Auth check is running
-			: (
-			<MuiThemeProvider muiTheme={getMuiTheme(muiTheme)}>
+			: (<ThemeProvider>
 				<div className={container}>
 					<Navigation isAuthed={this.props.isAuthed}/>
 					<div className={innerContainer}>
 						{this.props.children}
-						<FormsDrawersContainer />
+						{/* <FormsDrawersContainer /> */}
 					</div>
 				</div>
-			</MuiThemeProvider>
+			</ThemeProvider>
 		)
 	},
 })

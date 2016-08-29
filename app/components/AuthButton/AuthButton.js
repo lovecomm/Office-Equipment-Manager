@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { RaisedButton } from 'material-ui'
+import { Button } from 'react-toolbox/lib'
 import { button } from './styles.css'
 
 AuthButton.propTypes = {
@@ -8,11 +8,13 @@ AuthButton.propTypes = {
 
 export default function AuthButton ({ isFetching }) {
 	return (
-		<RaisedButton
+		<Button
 			label={isFetching === true
 					? 'Loading'
 					: 'Submit'}
 			primary={true}
+			ripple={true}
+			floating={true}
 			className={button}
 			type='submit' />
 	)

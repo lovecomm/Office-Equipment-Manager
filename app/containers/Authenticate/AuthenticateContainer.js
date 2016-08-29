@@ -28,7 +28,6 @@ const AuthenticateContainer = React.createClass({
 		return (
 			<div>
 				<Authenticate
-					palette={this.context.muiTheme.palette}
 					isFetching={this.props.isFetching}
 					error={this.props.error}
 					handleFormData={this.updateFormData}

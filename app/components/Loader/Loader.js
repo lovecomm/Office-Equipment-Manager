@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
-import { CircularProgress } from 'material-ui'
+import { ProgressBar } from 'react-toolbox/lib'
+// import { CircularProgress } from 'material-ui'
 
 const styles = {
 	wrapper: {
@@ -21,7 +22,8 @@ const styles = {
 export default function Loader ({size}) {
 	return (
 		<div style={styles.wrapper}>
-			<CircularProgress size={size} style={styles.indicator}/>
+			<ProgressBar type='circular' mode='indeterminate' size={size}
+				style={styles.indicator}/>
 		</div>
 	)
 }
