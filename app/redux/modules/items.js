@@ -106,7 +106,7 @@ export function itemsFanout (items) {
 // REDUCERS
 const initialItemsFormState = {
 	isOpen: false,
-	purchasedAtDate: '',
+	purchasedAtDate: {},
 	itemId: '',
 	itemPersonId: '',
 	itemHardwareId: '',
@@ -158,7 +158,7 @@ const initialItemState = {
 	lastUpdated: Date.now(),
 	info: {
 		itemId: '',
-		purchasedAtDate: '',
+		purchasedAtDate: {},
 		assignedAtDate: '',
 		viability: '',
 		photos: {},
