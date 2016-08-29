@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
-// import { TextField, RaisedButton, Drawer } from 'material-ui'
-import { button, buttonSubmit, imageInput, headline, formWrapper, selectedPhoto } from './styles.css'
+import { Drawer, Input, Button } from 'react-toolbox/lib'
+import { button, buttonSubmit, headline, formWrapper, selectedPhoto } from './styles.css'
 import { formatHardware } from 'helpers/utils'
 
 const	{ func, bool, string, object } = PropTypes
@@ -31,51 +31,47 @@ export default function HardwareForm (props, context) {
 		))
 	}
 	return (
-		<Drawer docked={false} width={400} open={props.isOpen}
-			onRequestChange={props.closeHardwareForm}>
+		<Drawer active={props.isOpen} type='left'
+			onOverlayClick={props.closeHardwareForm}>
 			<div className={headline}>
 				New Hardware
 			</div>
 			<div className={formWrapper}>
-				<TextField
+				<Input
 					onChange={(e) => props.updateMakeText(e.target.value)}
-					hintText='Make'
+					label='Make'
 					value={props.makeText}
-					floatingLabelText='Make'
-					fullWidth={true}
-					required='true'/>
+					hint='Make'
+					required={true}/>
 				<br />
-				<TextField
+				<Input
 					onChange={(e) => props.updateModelText(e.target.value)}
-					hintText='Model'
+					label='Model'
 					value={props.modelText}
-					floatingLabelText='Model'
-					fullWidth={true}
-					required='true'/>
+					hint='Model'
+					required={true}/>
 				<br />
-				<TextField
+				<Input
 					onChange={(e) => props.updateDescriptionText(e.target.value)}
-					hintText='Hardware Description'
+					label='Hardware Description'
 					value={props.descriptionText}
-					floatingLabelText='Hardware Description'
-					multiLine={true}
-					fullWidth={true}
+					hint='Hardware Description'
+					multiline={true}
 					rows={4}/>
 				<br />
-				<RaisedButton
+				<Input
 					label='Select Hardware Image'
 					labelPosition='before'
-					className={button}>
-						<input type='file' className={imageInput}
-							onChange={(e) => props.updatePhoto(e.target.files[0])} />
-				</RaisedButton>
+					type='file'
+					onChange={(e) => props.updatePhoto(e.target.files[0])}
+					className={button} />
 				<br />
 				{props.photoNameText !== ''
 					? <p className={selectedPhoto}>{props.photoNameText}</p>
 					: ''}
 				<br />
-				<RaisedButton label='Add Hardware' type='submit' primary={true}
-					onTouchTap={submitHardware}
+				<Button label='Add Hardware' type='submit' primary={true}
+					onClick={submitHardware}
 					disabled={props.isSubmitDisabled}
 					className={buttonSubmit} />
 			</div>

@@ -40,6 +40,7 @@ const MainContainer = React.createClass({
 						{this.props.children}
 						{/* <FormsDrawersContainer /> */}
 					</div>
+					<FormsDrawersContainer />
 				</div>
 			</ThemeProvider>
 		)

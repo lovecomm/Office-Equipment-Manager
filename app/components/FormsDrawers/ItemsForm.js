@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-// import { TextField, RaisedButton, Drawer, DatePicker } from 'material-ui'
+import { Drawer, Input, Button, DatePicker } from 'react-toolbox/lib'
 import { buttonSubmit, headline, formWrapper } from './styles.css'
 // import { formatItem } from 'helpers/utils'
 
@@ -7,7 +7,7 @@ const	{ func, bool, object, string } = PropTypes
 
 ItemsForm.propTypes = {
 	isOpen: bool.isRequired,
-	purchasedAtDate: object.isRequired,
+	purchasedAtDate: string.isRequired,
 	itemId: string.isRequired,
 	itemPersonId: string.isRequired,
 	itemHardwareId: string.isRequired,
@@ -35,29 +35,28 @@ export default function ItemsForm (props, context) {
 		// ))
 	}
 	return (
-		<Drawer docked={false} width={400} open={props.isOpen}
-			onRequestChange={props.closeItemsForm}>
+		<Drawer active={props.isOpen} type='left'
+			onOverlayClick={props.closeItemsForm}>
 			<div className={headline}>
 				New Item
 			</div>
 			<div className={formWrapper}>
-				<TextField
+				<Input
 					onChange={(e) => props.updateItemId(e.target.value)}
-					hintText='Serial #'
+					label='Serial #'
 					value={props.itemId}
-					floatingLabelText='Serial #'
-					fullWidth={true}
-					required='true'/>
+					hint='Serial #'
+					required={true}/>
 				<br />
 				<DatePicker
-					hintText='When was the item purchased?'
+					label='When was the item purchased?'
+					autoOk={true}
 					value={props.purchasedAtDate}
 					onChange={(e, date) => props.updatePurchasedAtDate(date)}
-					fullWidth={true}
-					required='true'/>
+					required={true}/>
 				<br />
-				<RaisedButton label='Add Item' type='submit' primary={true}
-					onTouchTap={submitItems}
+				<Button label='Add Item' type='submit' primary={true}
+					onClick={submitItems}
 					disabled={props.isSubmitDisabled}
 					className={buttonSubmit} />
 			</div>
