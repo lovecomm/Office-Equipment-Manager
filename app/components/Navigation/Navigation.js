@@ -1,33 +1,38 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
-// import { AppBar, IconMenu, MenuItem, IconButton } from 'material-ui'
+import { IconMenu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu'
+import FontIcon from 'react-toolbox/lib/font_icon'
 import { AppBar } from 'react-toolbox/lib/app_bar'
-import MenuIcon from 'material-ui/svg-icons/navigation/menu'
-import { dropdownLink, title } from './styles.css'
+import { title, appBar, dropdownIcon, dropdownMenu } from './styles.scss'
+import { HardwareFormToggleContainer, PeopleFormToggleContainer, ItemsFormToggleContainer } from 'containers'
 
-//  Navigation.propTypes = MenuItems.propTypes = {
-// 	isAuthed: PropTypes.bool.isRequired,
-// }
+ Navigation.propTypes = MenuItems.propTypes = {
+	isAuthed: PropTypes.bool.isRequired,
+}
 
-// function MenuItems ({isAuthed}) {
-// 	return isAuthed === true
-// 	? <Link to='/logout' className={dropdownLink}><MenuItem primaryText='Sign out' /></Link>
-// 	: <Link to='/auth' className={dropdownLink}><MenuItem primaryText='Sign in' /></Link>
-// }
+function MenuItems ({isAuthed}) {
+	if (isAuthed) {
+		return <IconMenu
+			className={dropdownMenu}
+			icon={<FontIcon value='more_vert' className={dropdownIcon}/>}
+			position='topRight'
+			menuRipple={true}>
+			<ItemsFormToggleContainer />
+			<PeopleFormToggleContainer />
+			<HardwareFormToggleContainer />
+			<MenuDivider />
+			<Link to='/logout'><MenuItem icon='close' value='Sign Out' caption='Sign Out' /></Link>
+		</IconMenu>
+	} else {
+		return <span></span>
+	}
+}
 
 export default function Navigation ({isAuthed}) {
 	return (
-		// <AppBar
-		// 	title='Equipment Manager'
-		// 	className={title}
-		// 	iconElementLeft={<IconMenu
-		// 		iconButtonElement={<IconButton><MenuIcon color='white'/></IconButton>}
-		// 		targetOrigin={{horizontal: 'left', vertical: 'top'}}
-		// 		anchorOrigin={{horizontal: 'left', vertical: 'bottom'}} >
-		// 			<MenuItems isAuthed={isAuthed} />
-		// 		</IconMenu>}/>
-		<AppBar fixed={true} flat={true}>
+		<AppBar className={appBar}>
 			<Link to='/' className={title}>Equipment Manager</Link>
+			<MenuItems isAuthed={isAuthed} />
 		</AppBar>
 	)
 }

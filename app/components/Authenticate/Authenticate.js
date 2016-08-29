@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
-import { container, title } from './styles.css'
+import { container, title, form } from './styles.scss'
 import { AuthButton } from 'components'
-import { Input } from 'react-toolbox/lib';
+import { Input } from 'react-toolbox/lib'
 
 Authenticate.propTypes = {
 	error: PropTypes.string.isRequired,
@@ -18,7 +18,8 @@ export default function Authenticate ({error, isFetching, onAuth, handleFormData
 		}}>
 			<div className={title}>Please Sign In</div>
 			<br />
-			<form style={{textAlign: 'center'}} onChange={handleFormData} onSubmit={onAuth}>
+			<form style={{textAlign: 'center'}} onChange={handleFormData} onSubmit={onAuth}
+				className={form}>
 				<Input
 					type='email'
 					label='Email'

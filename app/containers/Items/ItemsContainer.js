@@ -1,11 +1,11 @@
 import React from 'react'
 import { Items, ItemsToolbar } from 'components'
 
-const ItemsContainer = React.createClass ({
+const ItemsContainer = React.createClass({
 	render () {
 		return (
 			<div>
-				<ItemsToolbar />
+				{/* <ItemsToolbar /> */}
 				<Items />
 			</div>
 		)

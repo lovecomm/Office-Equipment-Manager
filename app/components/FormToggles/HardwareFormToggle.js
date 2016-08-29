@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { toggle } from './styles.css'
+import { MenuItem } from 'react-toolbox/lib/menu'
 
 HardwareFormToggle.propTypes = {
 	openHardwareForm: PropTypes.func.isRequired,
@@ -7,6 +7,6 @@ HardwareFormToggle.propTypes = {
 
 export default function HardwareFormToggle ({openHardwareForm}) {
 	return (
-		<span onTouchTap={openHardwareForm} className={toggle}>{'Add Hardware'}</span>
+		<MenuItem icon='laptop' onClick={openHardwareForm} caption='Add Hardware'/>
 	)
 }

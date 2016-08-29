@@ -1,13 +1,12 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
 import { ProgressBar } from 'react-toolbox/lib'
-// import { CircularProgress } from 'material-ui'
 
 const styles = {
 	wrapper: {
 		position: 'relative',
-		height: window.innerHeight,
-		width: '100%',
+		width: '65%',
 		maxHeight: '100%',
+		margin: '25% auto 0',
 	},
 	indicator: {
 		position: 'absolute',
@@ -16,18 +15,15 @@ const styles = {
 		right: 0,
 		bottom: 0,
 		top: 0,
+		width: '100px',
+		height: '100px',
 	},
 }
 
-export default function Loader ({size}) {
+export default function Loader () {
 	return (
 		<div style={styles.wrapper}>
-			<ProgressBar type='circular' mode='indeterminate' size={size}
-				style={styles.indicator}/>
+			<ProgressBar type='linear' mode='indeterminate' />
 		</div>
 	)
-}
-
-Loader.propTypes = {
-	size: PropTypes.number.isRequired,
 }

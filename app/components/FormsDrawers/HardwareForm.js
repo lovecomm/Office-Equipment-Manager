@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { TextField, RaisedButton, Drawer } from 'material-ui'
+// import { TextField, RaisedButton, Drawer } from 'material-ui'
 import { button, buttonSubmit, imageInput, headline, formWrapper, selectedPhoto } from './styles.css'
 import { formatHardware } from 'helpers/utils'
 
@@ -21,10 +21,6 @@ HardwareForm.propTypes = {
 	hardwareFanout: func.isRequired,
 }
 
-HardwareForm.contextTypes = {
-	muiTheme: PropTypes.object,
-}
-
 export default function HardwareForm (props, context) {
 	function submitHardware () {
 		props.hardwareFanout(formatHardware(
@@ -37,7 +33,7 @@ export default function HardwareForm (props, context) {
 	return (
 		<Drawer docked={false} width={400} open={props.isOpen}
 			onRequestChange={props.closeHardwareForm}>
-			<div className={headline} style={{backgroundColor: context.muiTheme.palette.primaryBlueDark}}>
+			<div className={headline}>
 				New Hardware
 			</div>
 			<div className={formWrapper}>
@@ -75,7 +71,7 @@ export default function HardwareForm (props, context) {
 				</RaisedButton>
 				<br />
 				{props.photoNameText !== ''
-					? <p className={selectedPhoto} style={{color: context.muiTheme.palette.primary2Color}}>{props.photoNameText}</p>
+					? <p className={selectedPhoto}>{props.photoNameText}</p>
 					: ''}
 				<br />
 				<RaisedButton label='Add Hardware' type='submit' primary={true}

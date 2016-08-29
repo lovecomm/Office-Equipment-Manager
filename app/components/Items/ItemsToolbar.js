@@ -1,7 +1,4 @@
 import React from 'react'
-import { IconMenu, IconButton, MenuItem } from 'material-ui'
-import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more'
-import { Toolbar, ToolbarGroup, ToolbarTitle, ToolbarSeparator } from 'material-ui/Toolbar'
 import { FormTogglesContainer } from 'containers'
 import { menuMoreIcon } from './styles.css'
 

@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { toggle } from './styles.css'
+import { MenuItem } from 'react-toolbox/lib/menu'
 
 PeopleFormToggle.propTypes = {
 	openPeopleForm: PropTypes.func.isRequired,
@@ -7,6 +7,6 @@ PeopleFormToggle.propTypes = {
 
 export default function PeopleFormToggle ({openPeopleForm}) {
 	return (
-		<span onTouchTap={openPeopleForm} className={toggle}>{'Add People'}</span>
+		<MenuItem icon='people' onClick={openPeopleForm} caption='Add Person'/>
 	)
 }

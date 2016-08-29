@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { toggle } from './styles.css'
+import { MenuItem } from 'react-toolbox/lib/menu'
 
 ItemsFormToggle.propTypes = {
 	openItemsForm: PropTypes.func.isRequired,
@@ -7,6 +7,6 @@ ItemsFormToggle.propTypes = {
 
 export default function ItemsFormToggle ({openItemsForm}) {
 	return (
-		<span onTouchTap={openItemsForm} className={toggle}>{'Add Items'}</span>
+		<MenuItem icon='view_agenda' onClick={openItemsForm} caption='Add Items'/>
 	)
 }

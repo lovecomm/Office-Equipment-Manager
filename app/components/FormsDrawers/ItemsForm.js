@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { TextField, RaisedButton, Drawer, DatePicker } from 'material-ui'
+// import { TextField, RaisedButton, Drawer, DatePicker } from 'material-ui'
 import { buttonSubmit, headline, formWrapper } from './styles.css'
 // import { formatItem } from 'helpers/utils'
 
@@ -25,10 +25,6 @@ ItemsForm.propTypes = {
 	isSubmitDisabled: bool.isRequired,
 }
 
-ItemsForm.contextTypes = {
-	muiTheme: PropTypes.object,
-}
-
 export default function ItemsForm (props, context) {
 	function submitItems () {
 		// props.itemsFanout(formatPerson(
@@ -41,7 +37,7 @@ export default function ItemsForm (props, context) {
 	return (
 		<Drawer docked={false} width={400} open={props.isOpen}
 			onRequestChange={props.closeItemsForm}>
-			<div className={headline} style={{backgroundColor: context.muiTheme.palette.primaryBlueDark}}>
+			<div className={headline}>
 				New Item
 			</div>
 			<div className={formWrapper}>

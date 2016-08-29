@@ -13,7 +13,6 @@ const AuthenticateContainer = React.createClass({
 		fetchAndHandleAuthedUser: PropTypes.func.isRequired,
 	},
 	contextTypes: {
-		muiTheme: PropTypes.object,
 		router: PropTypes.object.isRequired,
 	},
 	mixins: [ FormData ],
