@@ -3,10 +3,10 @@ import { saveHardware } from 'helpers/api'
 const ADD_HARDWARE = 'ADD_HARDWARE'
 const OPEN_HARDWARE_FORM = 'OPEN_HARDWARE_FORM'
 const CLOSE_HARDWARE_FORM = 'CLOSE_HARDWARE_FORM'
-const UPDATE_MAKE_TEXT = 'UPDATE_MAKE_TEXT'
-const UPDATE_MODEL_TEXT = 'UPDATE_MODEL_TEXT'
-const UPDATE_DESCRIPTION_TEXT = 'UPDATE_DESCRIPTION_TEXT'
-const UPDATE_PHOTO = 'UPDATE_PHOTO'
+const UPDATE_HARDWARE_MAKE_TEXT = 'UPDATE_HARDWARE_MAKE_TEXT'
+const UPDATE_HARDWARE_MODEL_TEXT = 'UPDATE_HARDWARE_MODEL_TEXT'
+const UPDATE_HARDWARE_DESCRIPTION_TEXT = 'UPDATE_HARDWARE_DESCRIPTION_TEXT'
+const UPDATE_HARDWARE_PHOTO = 'UPDATE_HARDWARE_PHOTO'
 
 // ACTIONS
 export function openHardwareForm () {
@@ -23,28 +23,28 @@ export function closeHardwareForm () {
 
 export function updateMakeText (makeText) {
 	return {
-		type: UPDATE_MAKE_TEXT,
+		type: UPDATE_HARDWARE_MAKE_TEXT,
 		makeText,
 	}
 }
 
 export function updateModelText (modelText) {
 	return {
-		type: UPDATE_MODEL_TEXT,
+		type: UPDATE_HARDWARE_MODEL_TEXT,
 		modelText,
 	}
 }
 
 export function updateDescriptionText (descriptionText) {
 	return {
-		type: UPDATE_DESCRIPTION_TEXT,
+		type: UPDATE_HARDWARE_DESCRIPTION_TEXT,
 		descriptionText,
 	}
 }
 
 export function updatePhoto (photo) {
 	return {
-		type: UPDATE_PHOTO,
+		type: UPDATE_HARDWARE_PHOTO,
 		photo,
 	}
 }
@@ -96,22 +96,22 @@ export default function hardwareForm (state = initialState, action) {
 			photoNameText: '',
 			isOpen: false,
 		}
-	case UPDATE_MAKE_TEXT:
+	case UPDATE_HARDWARE_MAKE_TEXT:
 		return {
 			...state,
 			makeText: action.makeText,
 		}
-	case UPDATE_MODEL_TEXT:
+	case UPDATE_HARDWARE_MODEL_TEXT:
 		return {
 			...state,
 			modelText: action.modelText,
 		}
-	case UPDATE_DESCRIPTION_TEXT:
+	case UPDATE_HARDWARE_DESCRIPTION_TEXT:
 		return {
 			...state,
 			descriptionText: action.descriptionText,
 		}
-	case UPDATE_PHOTO:
+	case UPDATE_HARDWARE_PHOTO:
 		return {
 			...state,
 			photo: action.photo,

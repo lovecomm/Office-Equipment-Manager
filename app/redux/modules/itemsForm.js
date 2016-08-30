@@ -2,10 +2,10 @@
 
 const OPEN_ITEMS_FORM = 'OPEN_ITEMS_FORM'
 const CLOSE_ITEMS_FORM = 'CLOSE_ITEMS_FORM'
-const UPDATE_ITEM_ID_TEXT = 'UPDATE_ITEM_ID_TEXT'
-const UPDATE_PURCHASED_AT_DATE = 'UPDATE_PURCHASED_AT_DATE'
-const UPDATE_FORM_NOTES = 'UPDATE_FORM_NOTES'
-const UPDATE_FORM_PHOTOS = 'UPDATE_FORM_PHOTOS'
+const UPDATE_ITEMS_ITEM_ID_TEXT = 'UPDATE_ITEMS_ITEM_ID_TEXT'
+const UPDATE_ITEMS_PURCHASED_AT_DATE = 'UPDATE_ITEMS_PURCHASED_AT_DATE'
+const UPDATE_ITEMS_FORM_NOTES = 'UPDATE_ITEMS_FORM_NOTES'
+const UPDATE_ITEMS_FORM_PHOTOS = 'UPDATE_ITEMS_FORM_PHOTOS'
 
 // ACTIONS
 export function openItemsForm () {
@@ -22,28 +22,28 @@ export function closeItemsForm () {
 
 export function updateItemId (itemId) {
 	return {
-		type: UPDATE_ITEM_ID_TEXT,
+		type: UPDATE_ITEMS_ITEM_ID_TEXT,
 		itemId,
 	}
 }
 
 export function updatePurchasedAtDate (purchasedAtDate) {
 	return {
-		type: UPDATE_PURCHASED_AT_DATE,
+		type: UPDATE_ITEMS_PURCHASED_AT_DATE,
 		purchasedAtDate,
 	}
 }
 
 export function updateFormNotes (formNotes) {
 	return {
-		type: UPDATE_FORM_NOTES,
+		type: UPDATE_ITEMS_FORM_NOTES,
 		formNotes,
 	}
 }
 
 export function updateFormPhotos (formPhotos) {
 	return {
-		type: UPDATE_FORM_PHOTOS,
+		type: UPDATE_ITEMS_FORM_PHOTOS,
 		formPhotos,
 	}
 }
@@ -87,23 +87,23 @@ export default function itemsForm (state = initialState, action) {
 			purchasedAtDate: '',
 			isOpen: false,
 		}
-	case UPDATE_ITEM_ID_TEXT:
+	case UPDATE_ITEMS_ITEM_ID_TEXT:
 		return {
 			...state,
 			itemId: action.itemId,
 		}
-	case UPDATE_PURCHASED_AT_DATE:
+	case UPDATE_ITEMS_PURCHASED_AT_DATE:
 		return {
 			...state,
 			purchasedAtDate: action.purchasedAtDate,
 		}
-	case UPDATE_FORM_PHOTOS:
+	case UPDATE_ITEMS_FORM_PHOTOS:
 		return {
 			...state,
 			photos: action.photos,
 			photoNames: action.photoNames,
 		}
-	case UPDATE_FORM_NOTES:
+	case UPDATE_ITEMS_FORM_NOTES:
 		return {
 			...state,
 			notes: action.notes,
