@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import * as itemsActionCreators from 'redux/modules/items'
+import * as itemsFormActionCreators from 'redux/modules/itemsForm'
 import { ItemsFormToggle } from 'components'
 
 function mapStateToProps ({items}) {
@@ -11,7 +11,7 @@ function mapStateToProps ({items}) {
 }
 
 function mapDispatchToProps (dispatch) {
-	return bindActionCreators(itemsActionCreators, dispatch)
+	return bindActionCreators(itemsFormActionCreators, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ItemsFormToggle)

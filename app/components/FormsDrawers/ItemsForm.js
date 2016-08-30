@@ -3,11 +3,11 @@ import { Drawer, Input, Button, DatePicker } from 'react-toolbox/lib'
 import { button, headline, formWrapper, drawer } from './styles.scss'
 // import { formatItem } from 'helpers/utils'
 
-const	{ func, bool, object, string } = PropTypes
+const	{ func, bool, object, string, any } = PropTypes
 
 ItemsForm.propTypes = {
 	isOpen: bool.isRequired,
-	purchasedAtDate: string.isRequired,
+	purchasedAtDate: any.isRequired,
 	itemId: string.isRequired,
 	itemPersonId: string.isRequired,
 	itemHardwareId: string.isRequired,
@@ -53,7 +53,7 @@ export default function ItemsForm (props, context) {
 					label='When was the item purchased?'
 					autoOk={true}
 					value={props.purchasedAtDate}
-					onChange={(e, date) => props.updatePurchasedAtDate(date)}
+					onChange={(value) => props.updatePurchasedAtDate(value)}
 					required={true}/>
 				<br />
 				<Button label='Add Item' type='submit' raised={true}

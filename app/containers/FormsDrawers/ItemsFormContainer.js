@@ -1,9 +1,9 @@
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { ItemsForm } from 'components'
-import * as itemsActionCreators from 'redux/modules/items'
+import * as itemsFormActionCreators from 'redux/modules/itemsForm'
 
-function mapStateToProps ({items}, props) {
+function mapStateToProps ({itemsForm}, props) {
 	function disableSubmit () {
 		// if (items.firstNameText.length <= 0 ||
 		// 	items.lastNameText.length <= 0 ||
@@ -17,20 +17,20 @@ function mapStateToProps ({items}, props) {
 		// }
 	}
 	return {
-		isOpen: items.form.isOpen,
-		purchasedAtDate: items.form.purchasedAtDate,
-		itemId: items.form.itemId,
-		itemPersonId: items.form.itemPersonId,
-		itemHardwareId: items.form.itemHardwareId,
-		notes: items.form.notes,
-		photos: items.form.photos,
-		photoNames: items.form.photoNames,
+		isOpen: itemsForm.isOpen,
+		purchasedAtDate: itemsForm.purchasedAtDate,
+		itemId: itemsForm.itemId,
+		itemPersonId: itemsForm.itemPersonId,
+		itemHardwareId: itemsForm.itemHardwareId,
+		notes: itemsForm.notes,
+		photos: itemsForm.photos,
+		photoNames: itemsForm.photoNames,
 		isSubmitDisabled: disableSubmit(),
 	}
 }
 
 function mapDispatchToProps (dispatch) {
-	return bindActionCreators(itemsActionCreators, dispatch)
+	return bindActionCreators(itemsFormActionCreators, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ItemsForm)
