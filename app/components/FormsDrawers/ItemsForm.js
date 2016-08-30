@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Drawer, Input, Button, DatePicker } from 'react-toolbox/lib'
-import { buttonSubmit, headline, formWrapper } from './styles.css'
+import { button, headline, formWrapper, drawer } from './styles.scss'
 // import { formatItem } from 'helpers/utils'
 
 const	{ func, bool, object, string } = PropTypes
@@ -35,14 +35,15 @@ export default function ItemsForm (props, context) {
 		// ))
 	}
 	return (
-		<Drawer active={props.isOpen} type='left'
+		<Drawer active={props.isOpen}
+			className={drawer}
 			onOverlayClick={props.closeItemsForm}>
 			<div className={headline}>
 				New Item
 			</div>
 			<div className={formWrapper}>
 				<Input
-					onChange={(e) => props.updateItemId(e.target.value)}
+					onChange={(value) => props.updateItemId(value)}
 					label='Serial #'
 					value={props.itemId}
 					hint='Serial #'
@@ -55,10 +56,12 @@ export default function ItemsForm (props, context) {
 					onChange={(e, date) => props.updatePurchasedAtDate(date)}
 					required={true}/>
 				<br />
-				<Button label='Add Item' type='submit' primary={true}
+				<Button label='Add Item' type='submit' raised={true}
+					accent={true}
+					primary={false}
 					onClick={submitItems}
 					disabled={props.isSubmitDisabled}
-					className={buttonSubmit} />
+					className={button} />
 			</div>
 		</Drawer>
 	)

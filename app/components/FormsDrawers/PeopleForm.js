@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Drawer, Input, Button } from 'react-toolbox/lib'
-import { button, buttonSubmit, headline, formWrapper, selectedPhoto } from './styles.css'
+import { button, headline, formWrapper, selectedPhoto, drawer, imageInput } from './styles.scss'
 import { formatPerson } from 'helpers/utils'
 
 const	{ func, bool, string, object } = PropTypes
@@ -31,47 +31,52 @@ export default function PeopleForm (props, context) {
 		))
 	}
 	return (
-		<Drawer active={props.isOpen} type='left'
+		<Drawer active={props.isOpen}
+			className={drawer}
 			onOverlayClick={props.closePeopleForm}>
 			<div className={headline}>
 				New Person
 			</div>
 			<div className={formWrapper}>
 				<Input
-					onChange={(e) => props.updateFirstNameText(e.target.value)}
+					onChange={(value) => props.updateFirstNameText(value)}
 					label='First Name'
 					value={props.firstNameText}
 					hint='First Name'
 					required={true}/>
 				<br />
 				<Input
-					onChange={(e) => props.updateLastNameText(e.target.value)}
+					onChange={(value) => props.updateLastNameText(value)}
 					label='Last Name'
 					value={props.lastNameText}
 					hint='Last Name'
 					required={true}/>
 				<br />
 				<Input
-					onChange={(e) => props.updateEmailText(e.target.value)}
+					onChange={(value) => props.updateEmailText(value)}
 					label='Email'
 					type='email'
 					value={props.emailText}
 					hint='Email'/>
 				<br />
-				<Input
-					label="Select Person's Photo"
-					onChange={(e) => props.updatePhoto(e.target.files[0])}
-					type='file'
-					className={button} />
+				<div className={button}>
+					<Button
+						raised={true}
+						label="Select this Person's Photo"
+						primary={true} />
+					<input type='file' onChange={(e) => props.updatePhoto(e.target.files[0])} className={imageInput}/>
+				</div>
 				<br />
 				{props.photoNameText !== ''
 					? <p className={selectedPhoto}>{props.photoNameText}</p>
 					: ''}
 				<br />
-				<Button label='Add Person' type='submit' primary={true}
+				<Button label='Add Person' type='submit' raised={true}
+					accent={true}
+					primary={false}
 					onClick={submitPeople}
 					disabled={props.isSubmitDisabled}
-					className={buttonSubmit} />
+					className={button} />
 			</div>
 		</Drawer>
 	)

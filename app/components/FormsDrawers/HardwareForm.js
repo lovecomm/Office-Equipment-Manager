@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Drawer, Input, Button } from 'react-toolbox/lib'
-import { button, buttonSubmit, headline, formWrapper, selectedPhoto } from './styles.css'
+import { drawer, button, headline, formWrapper, selectedPhoto, imageInput } from './styles.scss'
 import { formatHardware } from 'helpers/utils'
 
 const	{ func, bool, string, object } = PropTypes
@@ -31,49 +31,51 @@ export default function HardwareForm (props, context) {
 		))
 	}
 	return (
-		<Drawer active={props.isOpen} type='left'
+		<Drawer active={props.isOpen}
+			className={drawer}
 			onOverlayClick={props.closeHardwareForm}>
 			<div className={headline}>
 				New Hardware
 			</div>
 			<div className={formWrapper}>
 				<Input
-					onChange={(e) => props.updateMakeText(e.target.value)}
+					onChange={(value) => props.updateMakeText(value)}
+					name='make'
 					label='Make'
 					value={props.makeText}
-					hint='Make'
 					required={true}/>
 				<br />
 				<Input
-					onChange={(e) => props.updateModelText(e.target.value)}
+					onChange={(value) => props.updateModelText(value)}
 					label='Model'
 					value={props.modelText}
-					hint='Model'
 					required={true}/>
 				<br />
 				<Input
-					onChange={(e) => props.updateDescriptionText(e.target.value)}
+					onChange={(value) => props.updateDescriptionText(value)}
 					label='Hardware Description'
 					value={props.descriptionText}
-					hint='Hardware Description'
 					multiline={true}
 					rows={4}/>
 				<br />
-				<Input
-					label='Select Hardware Image'
-					labelPosition='before'
-					type='file'
-					onChange={(e) => props.updatePhoto(e.target.files[0])}
-					className={button} />
+				<div className={button}>
+					<Button
+						raised={true}
+						label='Select Hardware Image'
+						primary={true} />
+					<input type='file' onChange={(e) => props.updatePhoto(e.target.files[0])} className={imageInput}/>
+				</div>
 				<br />
 				{props.photoNameText !== ''
 					? <p className={selectedPhoto}>{props.photoNameText}</p>
 					: ''}
 				<br />
-				<Button label='Add Hardware' type='submit' primary={true}
+				<Button label='Add Hardware' type='submit' raised={true}
+					accent={true}
+					primary={false}
 					onClick={submitHardware}
 					disabled={props.isSubmitDisabled}
-					className={buttonSubmit} />
+					className={button} />
 			</div>
 		</Drawer>
 	)

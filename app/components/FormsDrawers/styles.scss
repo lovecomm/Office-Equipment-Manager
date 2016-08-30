@@ -1,11 +1,12 @@
-.button {
-  margin: 12px 12px 0;
-	display: block!important;
+.drawer {
+	width: 350px;
 }
 
-.buttonSubmit {
-	margin: 0 12px 12px;
-	display: block!important;
+.button {
+  margin: 0 auto;
+	display: block !important;
+	position: relative;
+	text-align: center;
 }
 
 .imageInput {
