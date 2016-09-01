@@ -34,17 +34,17 @@ export function updatePurchasedAtDate (purchasedAtDate) {
 	}
 }
 
-export function updateFormNotes (formNotes) {
+export function updateFormNotes (notes) {
 	return {
 		type: UPDATE_ITEMS_FORM_NOTES,
-		formNotes,
+		notes,
 	}
 }
 
-export function updateFormPhotos (formPhotos) {
+export function updateFormPhotos (photos) {
 	return {
 		type: UPDATE_ITEMS_FORM_PHOTOS,
-		formPhotos,
+		photos,
 	}
 }
 
@@ -69,7 +69,7 @@ const initialState = {
 	itemId: '',
 	itemPersonId: '',
 	itemHardwareId: '',
-	notes: {},
+	notes: '',
 	photos: {},
 	photoNames: {},
 }
@@ -83,9 +83,14 @@ export default function itemsForm (state = initialState, action) {
 		}
 	case CLOSE_ITEMS_FORM:
 		return {
-			itemId: '',
-			purchasedAtDate: '',
 			isOpen: false,
+			purchasedAtDate: '',
+			itemId: '',
+			itemPersonId: '',
+			itemHardwareId: '',
+			notes: '',
+			photos: {},
+			photoNames: {},
 		}
 	case UPDATE_ITEMS_ITEM_ID_TEXT:
 		return {

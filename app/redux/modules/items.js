@@ -5,6 +5,14 @@ const FETCHING_ITEMS = 'FETCHING_ITEMS'
 const FETCHING_ITEMS_ERROR = 'FETCHING_ITEMS_ERROR'
 const FETCHING_ITEMS_SUCCESS = 'FETCHING_ITEMS_SUCCESS'
 const REMOVE_FETCHING_ITEMS = 'REMOVE_FETCHING_ITEMS'
+const ADD_ITEMS_TO_FEED = 'ADD_ITEMS_TO_FEED'
+
+export function addItemsToFeed (items) {
+	return {
+		type: ADD_ITEMS_TO_FEED,
+		items
+	}
+}
 
 function fetchingItems () {
 	return {
@@ -85,9 +93,9 @@ function item (state = initialItemState, action) {
 }
 
 const initialState = {
-	isFetching: false,
-	error: '',
-	lastUpdated: Date.now(),
+	// isFetching: false,
+	// error: '',
+	// lastUpdated: Date.now(),
 }
 
 export default function items (state = initialState, action) {
@@ -95,12 +103,12 @@ export default function items (state = initialState, action) {
 	case FETCHING_ITEMS:
 		return {
 			...state,
-			isFetching: true,
+			// isFetching: true,
 		}
 	case FETCHING_ITEMS_ERROR:
 		return {
 			...state,
-			isFetching: false,
+			// isFetching: false,
 			error: action.error,
 		}
 	case FETCHING_ITEMS_SUCCESS:
@@ -108,12 +116,17 @@ export default function items (state = initialState, action) {
 		return action.item === null
 		? {
 			...state,
-			isFetching: false,
-			error: '',
+			// isFetching: false,
+			// error: '',
 		}
 		: {
 			...state,
 			items: item(state[action.item], action),
+		}
+	case ADD_ITEMS_TO_FEED:
+		return {
+			...state,
+			...action.items
 		}
 	default :
 		return state

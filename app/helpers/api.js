@@ -1,7 +1,7 @@
 import { ref, imagesRef } from 'config/constants'
 
 export function saveHardware (hardware, uid) {
-	const hardwareId = ref.child('items/hardware').push().key
+	const hardwareId = ref.child('feed/hardware').push().key
 	const hardwarePhotoRef = imagesRef.child(`hardware/${hardware.photo.name}`) // Create a reference to hardware image in firebase
 
 	hardwarePhotoRef.put(hardware.photo) // Store photo to firebase
@@ -21,12 +21,12 @@ export function saveHardware (hardware, uid) {
 		dateLastUpdated: Date.now(),
 	}
 
-	return ref.child(`items/hardware/${hardwareId}`).set({...newHardware, hardwareId}) // saving hardware to firebase
+	return ref.child(`feed/hardware/${hardwareId}`).set({...newHardware, hardwareId}) // saving hardware to firebase
 		.then(() => ({...newHardware, hardwareId}))
 }
 
 export function savePeople (person, uid) {
-	const personId = ref.child('items/people').push().key
+	const personId = ref.child('feed/people').push().key
 	const personPhotoRef = imagesRef.child(`people/${person.photo.name}`) // Get ref for person photo
 
 	personPhotoRef.put(person.photo) // saving person photo to firebase
@@ -46,6 +46,16 @@ export function savePeople (person, uid) {
 		dateLastUpdated: Date.now(),
 	}
 
-	return ref.child(`items/people/${personId}`).set({...newPerson, personId}) // saving person to firebase
+	return ref.child(`feed/people/${personId}`).set({...newPerson, personId}) // saving person to firebase
 		.then(() => ({...newPerson, personId}))
+}
+
+export function listenToFeed (cb, errorCB) {
+	ref.child('feed/people').on('value', (snapshot) => {
+		const feed = snapshot.val() || {}
+		const sortedIds = Object.keys(feed).sort((a, b) => feed[b].dateCreated - feed[a].dateCreated)
+		console.log('feed: ', feed)
+		console.log('sortedIds: ', sortedIds)
+		cb({feed, sortedIds})
+	}, errorCB)
 }

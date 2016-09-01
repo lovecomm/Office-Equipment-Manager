@@ -1,6 +1,6 @@
 import React from 'react'
 import { Router, Route, hashHistory, IndexRoute } from 'react-router'
-import { MainContainer, AuthenticateContainer, ItemsContainer, LogoutContainer, HardwareContainer } from 'containers'
+import { MainContainer, AuthenticateContainer, FeedContainer, LogoutContainer, HardwareContainer } from 'containers'
 
 export default function getRoutes (checkAuth) {
 	return (
@@ -9,7 +9,7 @@ export default function getRoutes (checkAuth) {
 				<Route path='auth' component={AuthenticateContainer} onEnter={checkAuth} />
 				<Route path='logout' component={LogoutContainer} />
 				<Route path='hardware' component={HardwareContainer} />
-				<IndexRoute component={ItemsContainer} onEnter={checkAuth} />
+				<IndexRoute component={FeedContainer} onEnter={checkAuth} />
 			</Route>
 		</Router>
 	)
