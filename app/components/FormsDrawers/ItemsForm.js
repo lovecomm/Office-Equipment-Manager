@@ -14,6 +14,7 @@ ItemsForm.propTypes = {
 	notes: string.isRequired,
 	photos: object.isRequired,
 	photoNames: object.isRequired,
+	people: object.isRequired,
 	// START Bound to dispatch
 	closeItemsForm: func.isRequired,
 	updateItemId: func.isRequired,
@@ -26,6 +27,22 @@ ItemsForm.propTypes = {
 }
 
 export default function ItemsForm (props, context) {
+	let testobj = {
+		test: 'test',
+		testa: 'test2',
+	}
+	function formatPeopleList () {
+		let peopleList = {}
+		Object.keys(props.people).forEach((person) => {
+			const thisPerson = props.people[person]
+			peopleList = {
+				...peopleList,
+				[person]: `${thisPerson.firstName} ${thisPerson.lastName}`,
+			}
+		})
+		return peopleList
+	}
+	formatPeopleList()
 	function submitItems () {
 		// props.itemsFanout(formatPerson(
 			// props.firstNameText,
@@ -48,7 +65,13 @@ export default function ItemsForm (props, context) {
 					value={props.itemId}
 					required={true}/>
 				<br />
-				<Autocomplete />
+				<Autocomplete
+					direction='down'
+					selectedPosition='above'
+					label='Assigned this item to...'
+					value={props.itemPersonId}
+					onChange={(value) => console.log(value)}
+					source={formatPeopleList()} />
 				<br />
 				<DatePicker
 					label='When was the item purchased?'
@@ -72,9 +95,11 @@ export default function ItemsForm (props, context) {
 					<input type='file' onChange={(e) => props.updateFormPhotos(e.target.files[0])} className={imageInput}/>
 				</div>
 				<br />
-				{props.photoNames !== ''
-					? <p className={selectedPhoto}>{props.photoNames}</p>
-					: ''}
+				{
+					// props.photoNames !== ''
+					// ? <p className={selectedPhoto}>{props.photoNames}</p>
+					// : ''
+				}
 				<br />
 				<Button label='Add Item' type='submit' raised={true}
 					accent={true}

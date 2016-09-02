@@ -12,7 +12,7 @@ const ItemsFormContainer = React.createClass({
 	},
 })
 
-function mapStateToProps ({itemsForm}, props) {
+function mapStateToProps ({itemsForm, people}, props) {
 	function disableSubmit () {
 		// if (items.firstNameText.length <= 0 ||
 		// 	items.lastNameText.length <= 0 ||
@@ -34,6 +34,7 @@ function mapStateToProps ({itemsForm}, props) {
 		notes: itemsForm.notes,
 		photos: itemsForm.photos,
 		photoNames: itemsForm.photoNames,
+		people,
 		isSubmitDisabled: disableSubmit(),
 	}
 }

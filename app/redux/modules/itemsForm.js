@@ -1,6 +1,4 @@
 // import { saveItems } from 'helpers/api'
-import { listenToPeople } from 'helpers/api'
-import { addListener } from 'redux/modules/listeners'
 
 const OPEN_ITEMS_FORM = 'OPEN_ITEMS_FORM'
 const CLOSE_ITEMS_FORM = 'CLOSE_ITEMS_FORM'
