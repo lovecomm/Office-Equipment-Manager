@@ -54,8 +54,16 @@ export function listenToFeed (cb, errorCB) {
 	ref.child('feed/people').on('value', (snapshot) => {
 		const feed = snapshot.val() || {}
 		const sortedIds = Object.keys(feed).sort((a, b) => feed[b].dateCreated - feed[a].dateCreated)
-		console.log('feed: ', feed)
-		console.log('sortedIds: ', sortedIds)
 		cb({feed, sortedIds})
+	}, errorCB)
+}
+
+export function listenToPeople (cb, errorCB) {
+	ref.child('feed/people').on('value', (snapshot) => {
+		const people = snapshot.val() || {}
+		const sortedIds = Object.keys(people).sort((a, b) => people[b].dateCreated - people[a].dateCreated)
+		console.log('people: ', people)
+		console.log('sortedIds: ', sortedIds)
+		cb({people, sortedIds})
 	}, errorCB)
 }

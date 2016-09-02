@@ -4,6 +4,7 @@ export peopleForm from './peopleForm'
 export itemsForm from './itemsForm'
 export listeners from './listeners'
 export feed from './feed'
+export people from './people'
 
 
 export items from './items'

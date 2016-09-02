@@ -1,7 +1,23 @@
+import React, { PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { ItemsForm } from 'components'
 import * as itemsFormActionCreators from 'redux/modules/itemsForm'
+import { setAndHandlePeopleListener } from 'redux/modules/feed'
+
+const ItemsFormContainer = React.createClass({
+	propTypes: {
+		setAndHandlePeopleListener: PropTypes.func.isRequired,
+	},
+	componentDidMount () {
+		this.props.setAndHandlePeopleListener()
+	},
+	render () {
+		return (
+			<ItemsForm {...this.props} />
+		)
+	},
+})
 
 function mapStateToProps ({itemsForm}, props) {
 	function disableSubmit () {
@@ -29,8 +45,13 @@ function mapStateToProps ({itemsForm}, props) {
 	}
 }
 
-function mapDispatchToProps (dispatch) {
-	return bindActionCreators(itemsFormActionCreators, dispatch)
+const dispatchedItems = {
+	...itemsFormActionCreators,
+	setAndHandlePeopleListener,
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ItemsForm)
+function mapDispatchToProps (dispatch) {
+	return bindActionCreators(dispatchedItems, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ItemsFormContainer)
