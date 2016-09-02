@@ -1,7 +1,7 @@
 import { addListener } from 'redux/modules/listeners'
-import { listenToFeed, listenToPeople } from 'helpers/api'
+import { listenToFeed } from 'helpers/api'
 import { addItemsToFeed } from 'redux/modules/items'
-import { addPeopleToTree } from 'redux/modules/people'
+import { addPeopleToFeed } from 'redux/modules/people'
 
 const SETTING_FEED_LISTENER = 'SETTING_FEED_LISTENER'
 const SETTING_FEED_LISTENER_ERROR = 'SETTING_FEED_LISTENER_ERROR'
@@ -25,24 +25,10 @@ function settingFeedListenerError (error) {
 	}
 }
 
-function settingPeopleListenerError (error) {
-	console.warn(error)
-	return {
-		type: SETTING_PEOPLE_LISTENER_ERROR,
-		error: 'Error fetching people.',
-	}
-}
-
-function settingFeedListenerSuccess (itemIds) {
+function settingFeedListenerSuccess (itemIds, peopleIds) {
 	return {
 		type: SETTING_FEED_LISTENER_SUCCESS,
 		itemIds,
-	}
-}
-
-function settingPeopleListenerSuccess (peopleIds) {
-	return {
-		type: SETTING_PEOPLE_LISTENER_SUCCESS,
 		peopleIds,
 	}
 }
@@ -63,31 +49,16 @@ export function setAndHandleFeedListener () {
 
 		dispatch(settingFeedListener())
 		dispatch(addListener('feed'))
-		listenToFeed(({feed, sortedIds}) => {
-			dispatch(addItemsToFeed(feed))
-			initialFetch === true
-				? dispatch(settingPeopleListenerSuccess(sortedIds))
-				: '' // dispatch(addNewItemToFeed(sortedIds[0]))
-			initialFetch = false
-		}, (error) => dispatch(settingPeopleListenerError(error)))
-	}
-}
-
-export function setAndHandlePeopleListener () {
-	let initialFetch = true
-	return function (dispatch, getState) {
-		if (getState().listeners.people === true) {
-			return
-		}
-
-		dispatch(settingFeedListener())
 		dispatch(addListener('people'))
-		listenToPeople(({people, sortedIds}) => {
-			console.log(people)
-			dispatch(addPeopleToTree(people))
-			initialFetch === true
-				? dispatch(settingFeedListenerSuccess(sortedIds))
-				: '' // dispatch(addNewItemToFeed(sortedIds[0]))
+
+		listenToFeed(({items, sortedItemIds, people, sortedPeopleIds}) => {
+			dispatch(addItemsToFeed(items))
+			dispatch(addPeopleToFeed(people))
+			if (initialFetch === true) {
+				dispatch(settingFeedListenerSuccess(sortedItemIds, sortedPeopleIds))
+			} else {
+				// dispatch(addNewItemToFeed(sortedIds[0]))
+			}
 			initialFetch = false
 		}, (error) => dispatch(settingFeedListenerError(error)))
 	}
@@ -98,6 +69,7 @@ const initialState = {
 	isFetching: false,
 	error: '',
 	itemIds: [],
+	peopleIds: [],
 }
 
 export default function feed (state = initialState, action) {
@@ -125,6 +97,7 @@ export default function feed (state = initialState, action) {
 			isFetching: false,
 			error: '',
 			itemIds: action.itemIds,
+			peopleIds: action.peopleIds,
 		}
 	// case ADD_NEW_ITEM_TO_FEED:
 	// 	return {

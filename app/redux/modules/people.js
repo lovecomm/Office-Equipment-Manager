@@ -1,21 +1,19 @@
-const ADD_PEOPLE_TO_TREE = 'ADD_PEOPLE_TO_TREE'
+const ADD_PEOPLE_TO_FEED = 'ADD_PEOPLE_TO_FEED'
 
 // ACTIONS
-export function addPeopleToTree (people) {
+export function addPeopleToFeed (people) {
 	return {
-		type: ADD_PEOPLE_TO_TREE,
+		type: ADD_PEOPLE_TO_FEED,
 		people,
 	}
 }
 
 // REDUCERS
-const initialState = {
-	lastUpdated: new Date(),
-}
+const initialState = {}
 
 export default function people (state = initialState, action) {
 	switch (action.type) {
-	case ADD_PEOPLE_TO_TREE:
+	case ADD_PEOPLE_TO_FEED:
 		return {
 			...state,
 			...action.people,

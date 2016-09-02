@@ -50,20 +50,24 @@ export function savePeople (person, uid) {
 		.then(() => ({...newPerson, personId}))
 }
 
-export function listenToFeed (cb, errorCB) {
+function getItems (cb, errorCB) {
 	ref.child('feed/people').on('value', (snapshot) => {
-		const feed = snapshot.val() || {}
-		const sortedIds = Object.keys(feed).sort((a, b) => feed[b].dateCreated - feed[a].dateCreated)
-		cb({feed, sortedIds})
+		const items = snapshot.val() || {}
+		const sortedItemIds = Object.keys(items).sort((a, b) => items[b].dateCreated - items[a].dateCreated)
+		cb({items, sortedItemIds})
 	}, errorCB)
 }
 
-export function listenToPeople (cb, errorCB) {
+function getPeople (cb, errorCB) {
 	ref.child('feed/people').on('value', (snapshot) => {
 		const people = snapshot.val() || {}
-		const sortedIds = Object.keys(people).sort((a, b) => people[b].dateCreated - people[a].dateCreated)
-		console.log('people: ', people)
-		console.log('sortedIds: ', sortedIds)
-		cb({people, sortedIds})
+		const sortedPeopleIds = Object.keys(people).sort((a, b) => people[b].dateCreated - people[a].dateCreated)
+		cb({people, sortedPeopleIds})
 	}, errorCB)
+}
+
+export function listenToFeed (cb, errorCB) {
+	getItems(({items, sortedItemIds}) => {
+		getPeople(({people, sortedPeopleIds}) => cb({items, sortedItemIds, people, sortedPeopleIds}))
+	})
 }
