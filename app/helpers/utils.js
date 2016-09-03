@@ -22,3 +22,14 @@ export function formatPerson (firstName, lastName, email, photo) {
 		photo,
 	}
 }
+
+export function formatItem (purchasedAtDate, itemId, itemPersonId, itemHardwareId, notes, photo) {
+	return {
+		purchasedAtDate,
+		itemId,
+		itemPersonId,
+		itemHardwareId,
+		notes,
+		photo,
+	}
+}

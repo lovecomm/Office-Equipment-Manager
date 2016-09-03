@@ -50,6 +50,35 @@ export function savePeople (person, uid) {
 		.then(() => ({...newPerson, personId}))
 }
 
+export function saveItem (item, uid) {
+	const itemId = ref.child('feed/items').push().key
+	let photo = {}
+	let newItem = {
+		itemId: item.itemId,
+		purchasedAtDate: item.purchasedAtDate,
+		itemPersonId: item.itemPersonId,
+		itemHardwareId: item.itemHardwareId,
+		notes: item.notes,
+		dateCreated: Date.now(),
+		dateLastUpdated: Date.now(),
+	}
+	if (item.photo.size) { // if size exists, photo exists
+		const itemPhotoRef = imagesRef.child(`items/${item.photo.name}`) // Get ref for person photo
+		itemPhotoRef.put(item.photo) // saving person photo to firebase
+		photo = {
+			name: itemPhotoRef.name,
+			fullPath: itemPhotoRef.fullPath,
+			size: item.photo.size,
+			type: item.photo.type,
+			bucket: itemPhotoRef.bucket,
+		}
+	}
+
+	return ref.child(`feed/items/${itemId}`).set({...newItem, photo, itemId}) // saving person to firebase
+		.then(() => ({...newItem, photo, itemId}))
+}
+
+// START Getting Data from Firebase
 function getItems (cb, errorCB) {
 	ref.child('feed/people').on('value', (snapshot) => {
 		const items = snapshot.val() || {}
@@ -88,3 +117,4 @@ export function listenToFeed (cb, errorCB) {
 		})
 	})
 }
+// END Getting Data from Firebase

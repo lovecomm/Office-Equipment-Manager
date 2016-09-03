@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Drawer, Input, Button, DatePicker, Autocomplete } from 'react-toolbox/lib'
 import { button, headline, formWrapper, drawer, imageInput, selectedPhoto } from './styles.scss'
-// import { formatItem } from 'helpers/utils'
+import { formatItem } from 'helpers/utils'
 
 const	{ func, bool, object, string, any } = PropTypes
 
@@ -10,10 +10,12 @@ ItemsForm.propTypes = {
 	purchasedAtDate: any.isRequired,
 	itemId: string.isRequired,
 	itemPerson: string.isRequired,
+	itemPersonId: string.isRequired,
 	itemHardware: string.isRequired,
+	itemHardwareId: string.isRequired,
 	notes: string.isRequired,
-	photos: object.isRequired,
-	photoNames: object.isRequired,
+	photo: object.isRequired,
+	photoNames: string.isRequired,
 	people: object.isRequired,
 	// START Bound to dispatch
 	closeItemsForm: func.isRequired,
@@ -21,8 +23,8 @@ ItemsForm.propTypes = {
 	updatePurchasedAtDate: func.isRequired,
 	updateFormNotes: func.isRequired,
 	updateFormPhotos: func.isRequired,
-	updateItemPersonId: func.isRequired,
-	updateItemHardwareId: func.isRequired,
+	updateItemPersonInfo: func.isRequired,
+	updateItemHardwareInfo: func.isRequired,
 	itemsFanout: func.isRequired,
 	// END Bound to dispatch
 	isSubmitDisabled: bool.isRequired,
@@ -51,14 +53,15 @@ export default function ItemsForm (props, context) {
 		})
 		return hardwareList
 	}
-	formatHardwareList()
 	function submitItems () {
-		// props.itemsFanout(formatPerson(
-			// props.firstNameText,
-			// props.lastNameText,
-			// props.emailText,
-			// props.photo,
-		// ))
+		props.itemsFanout(formatItem(
+			props.purchasedAtDate,
+			props.itemId,
+			props.itemPersonId,
+			props.itemHardwareId,
+			props.notes,
+			props.photo,
+		))
 	}
 	return (
 		<Drawer active={props.isOpen}
@@ -80,7 +83,7 @@ export default function ItemsForm (props, context) {
 					direction='down'
 					selectedPosition='above'
 					label='Assign item to:'
-					onChange={(value) => props.updateItemPersonId(value)}
+					onChange={(value) => props.updateItemPersonInfo(value)}
 					source={formatPeopleList()}
 					value={props.itemPerson} />
 					<Autocomplete
@@ -89,7 +92,7 @@ export default function ItemsForm (props, context) {
 						direction='down'
 						selectedPosition='above'
 						label='This is what kind of hardware?'
-						onChange={(value) => props.updateItemHardwareId(value)}
+						onChange={(value) => props.updateItemHardwareInfo(value)}
 						source={formatHardwareList()}
 						value={props.itemHardware} />
 				<br />
@@ -115,11 +118,9 @@ export default function ItemsForm (props, context) {
 					<input type='file' onChange={(e) => props.updateFormPhotos(e.target.files[0])} className={imageInput}/>
 				</div>
 				<br />
-				{
-					// props.photoNames !== ''
-					// ? <p className={selectedPhoto}>{props.photoNames}</p>
-					// : ''
-				}
+				{props.photoNames !== ''
+					? <p className={selectedPhoto}>{props.photoNames}</p>
+					: ''}
 				<br />
 				<Button label='Add Item' type='submit' raised={true}
 					accent={true}

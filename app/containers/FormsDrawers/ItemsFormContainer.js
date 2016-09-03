@@ -14,25 +14,26 @@ const ItemsFormContainer = React.createClass({
 
 function mapStateToProps ({itemsForm, people, hardware}, props) {
 	function disableSubmit () {
-		// if (items.firstNameText.length <= 0 ||
-		// 	items.lastNameText.length <= 0 ||
-		// 	items.emailText.length <= 0 ||
-		// 	// testing to see if no photo has been selected is empty
-		// 	Object.keys(items.photo).length === 0 && items.photo.constructor === Object
-		// ) {
-		// 	return true
-		// } else {
-		return false
-		// }
+		if (itemsForm.itemId.length <= 0 ||
+			itemsForm.itemPerson.length <= 0 ||
+			itemsForm.itemHardware.length <= 0 ||
+			itemsForm.purchasedAtDate.length <= 0
+		) {
+			return true
+		} else {
+			return false
+		}
 	}
 	return {
 		isOpen: itemsForm.isOpen,
 		purchasedAtDate: itemsForm.purchasedAtDate,
 		itemId: itemsForm.itemId,
 		itemPerson: itemsForm.itemPerson,
+		itemPersonId: itemsForm.itemPersonId,
 		itemHardware: itemsForm.itemHardware,
+		itemHardwareId: itemsForm.itemHardwareId,
 		notes: itemsForm.notes,
-		photos: itemsForm.photos,
+		photo: itemsForm.photo,
 		photoNames: itemsForm.photoNames,
 		people,
 		hardware,
