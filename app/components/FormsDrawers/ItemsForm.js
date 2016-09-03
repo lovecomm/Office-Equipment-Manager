@@ -9,8 +9,8 @@ ItemsForm.propTypes = {
 	isOpen: bool.isRequired,
 	purchasedAtDate: any.isRequired,
 	itemId: string.isRequired,
-	itemPersonId: string.isRequired,
-	itemHardwareId: string.isRequired,
+	itemPerson: string.isRequired,
+	itemHardware: string.isRequired,
 	notes: string.isRequired,
 	photos: object.isRequired,
 	photoNames: object.isRequired,
@@ -21,16 +21,14 @@ ItemsForm.propTypes = {
 	updatePurchasedAtDate: func.isRequired,
 	updateFormNotes: func.isRequired,
 	updateFormPhotos: func.isRequired,
+	updateItemPersonId: func.isRequired,
+	updateItemHardwareId: func.isRequired,
 	itemsFanout: func.isRequired,
 	// END Bound to dispatch
 	isSubmitDisabled: bool.isRequired,
 }
 
 export default function ItemsForm (props, context) {
-	let testobj = {
-		test: 'test',
-		testa: 'test2',
-	}
 	function formatPeopleList () {
 		let peopleList = {}
 		Object.keys(props.people).forEach((person) => {
@@ -42,7 +40,18 @@ export default function ItemsForm (props, context) {
 		})
 		return peopleList
 	}
-	formatPeopleList()
+	function formatHardwareList () {
+		let hardwareList = {}
+		Object.keys(props.hardware).forEach((hardwareId) => {
+			let hardwareItem = props.hardware[hardwareId]
+			hardwareList = {
+				...hardwareList,
+				[hardwareId]: `${hardwareItem.make} ${hardwareItem.model}`,
+			}
+		})
+		return hardwareList
+	}
+	formatHardwareList()
 	function submitItems () {
 		// props.itemsFanout(formatPerson(
 			// props.firstNameText,
@@ -66,12 +75,23 @@ export default function ItemsForm (props, context) {
 					required={true}/>
 				<br />
 				<Autocomplete
+					required={true}
+					multiple={false}
 					direction='down'
 					selectedPosition='above'
-					label='Assigned this item to...'
-					value={props.itemPersonId}
-					onChange={(value) => console.log(value)}
-					source={formatPeopleList()} />
+					label='Assign item to:'
+					onChange={(value) => props.updateItemPersonId(value)}
+					source={formatPeopleList()}
+					value={props.itemPerson} />
+					<Autocomplete
+						required={true}
+						multiple={false}
+						direction='down'
+						selectedPosition='above'
+						label='This is what kind of hardware?'
+						onChange={(value) => props.updateItemHardwareId(value)}
+						source={formatHardwareList()}
+						value={props.itemHardware} />
 				<br />
 				<DatePicker
 					label='When was the item purchased?'

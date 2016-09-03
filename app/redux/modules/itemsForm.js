@@ -6,6 +6,8 @@ const UPDATE_ITEMS_ITEM_ID_TEXT = 'UPDATE_ITEMS_ITEM_ID_TEXT'
 const UPDATE_ITEMS_PURCHASED_AT_DATE = 'UPDATE_ITEMS_PURCHASED_AT_DATE'
 const UPDATE_ITEMS_FORM_NOTES = 'UPDATE_ITEMS_FORM_NOTES'
 const UPDATE_ITEMS_FORM_PHOTOS = 'UPDATE_ITEMS_FORM_PHOTOS'
+const UPDATE_ITEM_PERSON = 'UPDATE_ITEM_PERSON'
+const UPDATE_ITEM_HARDWARE = 'UPDATE_ITEM_HARDWARE'
 
 // ACTIONS
 export function openItemsForm () {
@@ -48,6 +50,36 @@ export function updateFormPhotos (photos) {
 	}
 }
 
+function updateItemPerson (itemPerson) {
+	return {
+		type: UPDATE_ITEM_PERSON,
+		itemPerson,
+	}
+}
+
+export function updateItemPersonId (itemPersonId) {
+	return function (dispatch, getState) {
+		const person = getState().people[itemPersonId]
+		const personName = `${person.firstName} ${person.lastName}`
+		dispatch(updateItemPerson(personName))
+	}
+}
+
+function updateItemHardware (itemHardware) {
+	return {
+		type: UPDATE_ITEM_HARDWARE,
+		itemHardware,
+	}
+}
+
+export function updateItemHardwareId (itemHardwareId) {
+	return function (dispatch, getState) {
+		const hardware = getState().hardware[itemHardwareId]
+		const hardwareName = `${hardware.make} ${hardware.model}`
+		dispatch(updateItemHardware(hardwareName))
+	}
+}
+
 export function itemsFanout (items) {
 // 	return function (dispatch, getState) {
 // 		// const uid = getState().users.authedId
@@ -67,8 +99,8 @@ const initialState = {
 	isOpen: false,
 	purchasedAtDate: '',
 	itemId: '',
-	itemPersonId: '',
-	itemHardwareId: '',
+	itemPerson: '',
+	itemHardware: '',
 	notes: '',
 	photos: {},
 	photoNames: {},
@@ -86,8 +118,8 @@ export default function itemsForm (state = initialState, action) {
 			isOpen: false,
 			purchasedAtDate: '',
 			itemId: '',
-			itemPersonId: '',
-			itemHardwareId: '',
+			itemPerson: '',
+			itemHardware: '',
 			notes: '',
 			photos: {},
 			photoNames: {},
@@ -112,6 +144,16 @@ export default function itemsForm (state = initialState, action) {
 		return {
 			...state,
 			notes: action.notes,
+		}
+	case UPDATE_ITEM_PERSON:
+		return {
+			...state,
+			itemPerson: action.itemPerson,
+		}
+	case UPDATE_ITEM_HARDWARE:
+		return {
+			...state,
+			itemHardware: action.itemHardware,
 		}
 	default:
 		return state

@@ -66,8 +66,25 @@ function getPeople (cb, errorCB) {
 	}, errorCB)
 }
 
+function getHardware (cb, errorCB) {
+	ref.child('feed/hardware').on('value', (snapshot) => {
+		const hardware = snapshot.val() || {}
+		const sortedHardwareIds = Object.keys(hardware).sort((a, b) => hardware[b].dateCreated - hardware[a].dateCreated)
+		cb({hardware, sortedHardwareIds})
+	}, errorCB)
+}
+
 export function listenToFeed (cb, errorCB) {
 	getItems(({items, sortedItemIds}) => {
-		getPeople(({people, sortedPeopleIds}) => cb({items, sortedItemIds, people, sortedPeopleIds}))
+		getPeople(({people, sortedPeopleIds}) => {
+			getHardware(({hardware, sortedHardwareIds}) => cb({
+				items,
+				sortedItemIds,
+				people,
+				sortedPeopleIds,
+				hardware,
+				sortedHardwareIds,
+			}))
+		})
 	})
 }

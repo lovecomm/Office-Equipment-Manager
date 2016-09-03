@@ -2,6 +2,7 @@ import { addListener } from 'redux/modules/listeners'
 import { listenToFeed } from 'helpers/api'
 import { addItemsToFeed } from 'redux/modules/items'
 import { addPeopleToFeed } from 'redux/modules/people'
+import { addHardwareToFeed } from 'redux/modules/hardware'
 
 const SETTING_FEED_LISTENER = 'SETTING_FEED_LISTENER'
 const SETTING_FEED_LISTENER_ERROR = 'SETTING_FEED_LISTENER_ERROR'
@@ -25,11 +26,12 @@ function settingFeedListenerError (error) {
 	}
 }
 
-function settingFeedListenerSuccess (itemIds, peopleIds) {
+function settingFeedListenerSuccess (itemIds, peopleIds, hardwareIds) {
 	return {
 		type: SETTING_FEED_LISTENER_SUCCESS,
 		itemIds,
 		peopleIds,
+		hardwareIds,
 	}
 }
 
@@ -51,11 +53,19 @@ export function setAndHandleFeedListener () {
 		dispatch(addListener('feed'))
 		dispatch(addListener('people'))
 
-		listenToFeed(({items, sortedItemIds, people, sortedPeopleIds}) => {
+		listenToFeed(({
+			items,
+			sortedItemIds,
+			people,
+			sortedPeopleIds,
+			hardware,
+			sortedHardwareIds,
+		}) => {
 			dispatch(addItemsToFeed(items))
 			dispatch(addPeopleToFeed(people))
+			dispatch(addHardwareToFeed(hardware))
 			if (initialFetch === true) {
-				dispatch(settingFeedListenerSuccess(sortedItemIds, sortedPeopleIds))
+				dispatch(settingFeedListenerSuccess(sortedItemIds, sortedPeopleIds, sortedHardwareIds))
 			} else {
 				// dispatch(addNewItemToFeed(sortedIds[0]))
 			}
@@ -98,6 +108,7 @@ export default function feed (state = initialState, action) {
 			error: '',
 			itemIds: action.itemIds,
 			peopleIds: action.peopleIds,
+			hardwareIds: action.hardwareIds,
 		}
 	// case ADD_NEW_ITEM_TO_FEED:
 	// 	return {

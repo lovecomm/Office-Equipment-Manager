@@ -5,6 +5,7 @@ export itemsForm from './itemsForm'
 export listeners from './listeners'
 export feed from './feed'
 export people from './people'
+export hardware from './hardware'
 
 
 export items from './items'
