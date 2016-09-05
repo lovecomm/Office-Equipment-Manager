@@ -1,4 +1,15 @@
-import { ref, imagesRef } from 'config/constants'
+import { ref, imagesRef, storageRef } from 'config/constants'
+
+// Get firebase imagesRef
+export function fhref (fullPath) {
+	return storageRef.child(fullPath).getDownloadURL()
+	.then((url) => {
+		// console.log('url in fhref', url)
+		return url
+	}).catch(function (error) {
+		console.warn(error)
+	})
+}
 
 export function saveHardware (hardware, uid) {
 	const hardwareId = ref.child('feed/hardware').push().key
@@ -28,26 +39,29 @@ export function saveHardware (hardware, uid) {
 export function savePeople (person, uid) {
 	const personId = ref.child('feed/people').push().key
 	const personPhotoRef = imagesRef.child(`people/${person.photo.name}`) // Get ref for person photo
-
 	personPhotoRef.put(person.photo) // saving person photo to firebase
 
-	const newPerson = {
-		firstName: person.firstName,
-		lastName: person.lastName,
-		email: person.email,
-		photo: {
-			name: personPhotoRef.name,
-			fullPath: personPhotoRef.fullPath,
-			size: person.photo.size,
-			type: person.photo.type,
-			bucket: personPhotoRef.bucket,
-		},
-		dateCreated: Date.now(),
-		dateLastUpdated: Date.now(),
-	}
-
-	return ref.child(`feed/people/${personId}`).set({...newPerson, personId}) // saving person to firebase
-		.then(() => ({...newPerson, personId}))
+	return fhref(personPhotoRef.fullPath).then((url) => {
+		// console.log('url in savePeople', url)
+		const newPerson = {
+			firstName: person.firstName,
+			lastName: person.lastName,
+			email: person.email,
+			photo: {
+				name: personPhotoRef.name,
+				fullPath: personPhotoRef.fullPath,
+				size: person.photo.size,
+				type: person.photo.type,
+				bucket: personPhotoRef.bucket,
+				url: url,
+			},
+			// photoUrl: url,
+			dateCreated: Date.now(),
+			dateLastUpdated: Date.now(),
+		}
+		return ref.child(`feed/people/${personId}`).set({...newPerson, personId}) // saving person to firebase
+			.then(() => ({...newPerson, personId}))
+	})
 }
 
 export function saveItem (item, uid) {
@@ -80,7 +94,7 @@ export function saveItem (item, uid) {
 
 // START Getting Data from Firebase
 function getItems (cb, errorCB) {
-	ref.child('feed/people').on('value', (snapshot) => {
+	ref.child('feed/items').on('value', (snapshot) => {
 		const items = snapshot.val() || {}
 		const sortedItemIds = Object.keys(items).sort((a, b) => items[b].dateCreated - items[a].dateCreated)
 		cb({items, sortedItemIds})

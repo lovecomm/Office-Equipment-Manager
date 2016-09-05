@@ -77,6 +77,7 @@ const initialState = {
 	emailText: '',
 	photo: {},
 	photoNameText: '',
+	// photoUrl: '',
 	isOpen: false,
 }
 
@@ -94,6 +95,7 @@ export default function peopleForm (state = initialState, action) {
 			emailText: '',
 			photo: {},
 			photoNameText: '',
+			// photoUrl: '',
 			isOpen: false,
 		}
 	case UPDATE_PEOPLE_FIRST_NAME_TEXT:

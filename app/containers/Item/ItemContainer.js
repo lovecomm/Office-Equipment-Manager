@@ -4,7 +4,12 @@ import { Item } from 'components'
 
 const ItemsContainer = React.createClass({
 	propTypes: {
-		item: PropTypes.object.isRequired,
+		itemId: PropTypes.string.isRequired,
+		dateCreated: PropTypes.number.isRequired,
+		itemHardware: PropTypes.object.isRequired,
+		itemPerson: PropTypes.object.isRequired,
+		notes: PropTypes.string,
+		photo: PropTypes.object,
 	},
 	render () {
 		return (
@@ -13,9 +18,15 @@ const ItemsContainer = React.createClass({
 	},
 })
 
-function mapStateToProps ({items}, props) {
+function mapStateToProps ({items, people, hardware}, props) {
+	const item = items[props.itemId]
 	return {
-		item: items[props.itemId],
+		itemId: item.itemId,
+		dateCreated: item.dateCreated,
+		itemHardware: hardware[item.itemHardwareId],
+		itemPerson: people[item.itemPersonId],
+		notes: item.notes,
+		photo: item.photo,
 	}
 }
 

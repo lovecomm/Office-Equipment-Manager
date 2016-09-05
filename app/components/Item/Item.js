@@ -1,7 +1,19 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import { Card, CardMedia, CardTitle, CardText, CardActions } from 'react-toolbox/lib/card'
 
-export default function Item ({item}) {
+export default function Item ({itemId, dateCreated, itemHardware, itemPerson, notes, photo}) {
+	console.log('person photo', itemPerson.photoUrl)
 	return (
-		<div>{item.firstName}</div>
+		<Card style={{width: '350px'}}>
+			<CardTitle
+				avatar={itemPerson.photo.url}
+				title={`${itemHardware.make} ${itemHardware.model}`}
+				subtitle={itemId}/>
+			<CardMedia
+				aspectRatio='wide'/>
+			<CardTitle
+				title={`${itemPerson.firstName} ${itemPerson.lastName}`}
+				subtitle={itemPerson.email}/>
+		</Card>
 	)
 }

@@ -52,6 +52,7 @@ export function setAndHandleFeedListener () {
 		dispatch(settingFeedListener())
 		dispatch(addListener('feed'))
 		dispatch(addListener('people'))
+		dispatch(addListener('hardware'))
 
 		listenToFeed(({
 			items,
