@@ -7,9 +7,9 @@ import { addHardwareToFeed } from 'redux/modules/hardware'
 const SETTING_FEED_LISTENER = 'SETTING_FEED_LISTENER'
 const SETTING_FEED_LISTENER_ERROR = 'SETTING_FEED_LISTENER_ERROR'
 const SETTING_FEED_LISTENER_SUCCESS = 'SETTING_FEED_LISTENER_SUCCESS'
-const SETTING_PEOPLE_LISTENER_SUCCESS = 'SETTING_PEOPLE_LISTENER_SUCCESS'
-const SETTING_PEOPLE_LISTENER_ERROR = 'SETTING_PEOPLE_LISTENER_ERROR'
 // const ADD_NEW_ITEM_TO_FEED = 'ADD_NEW_ITEM_TO_FEED'
+const UPDATE_SORT_STATUS = 'UPDATE_SORT_STATUS'
+const UPDATE_SORT_ORDER = 'UPDATE_SORT_ORDER'
 
 // ACTIONS
 function settingFeedListener () {
@@ -26,12 +26,10 @@ function settingFeedListenerError (error) {
 	}
 }
 
-function settingFeedListenerSuccess (itemIds, peopleIds, hardwareIds) {
+function settingFeedListenerSuccess (itemIds) {
 	return {
 		type: SETTING_FEED_LISTENER_SUCCESS,
 		itemIds,
-		peopleIds,
-		hardwareIds,
 	}
 }
 
@@ -42,31 +40,41 @@ function settingFeedListenerSuccess (itemIds, peopleIds, hardwareIds) {
 // 	}
 // }
 
+function updateSortOrder (sortOrder) {
+	return {
+		type: UPDATE_SORT_ORDER,
+		sortOrder,
+	}
+}
+
+function updateSortStatus (sortStatus) {
+	return {
+		type: UPDATE_SORT_STATUS,
+		sortStatus,
+	}
+}
+
 export function setAndHandleFeedListener () {
 	let initialFetch = true
 	return function (dispatch, getState) {
 		if (getState().listeners.feed === true) {
 			return
 		}
-
 		dispatch(settingFeedListener())
 		dispatch(addListener('feed'))
 		dispatch(addListener('people'))
 		dispatch(addListener('hardware'))
-
 		listenToFeed(({
 			items,
 			sortedItemIds,
 			people,
-			sortedPeopleIds,
 			hardware,
-			sortedHardwareIds,
 		}) => {
 			dispatch(addItemsToFeed(items))
 			dispatch(addPeopleToFeed(people))
 			dispatch(addHardwareToFeed(hardware))
 			if (initialFetch === true) {
-				dispatch(settingFeedListenerSuccess(sortedItemIds, sortedPeopleIds, sortedHardwareIds))
+				dispatch(settingFeedListenerSuccess(sortedItemIds))
 			} else {
 				// dispatch(addNewItemToFeed(sortedIds[0]))
 			}
@@ -75,12 +83,92 @@ export function setAndHandleFeedListener () {
 	}
 }
 
+export function sortFeedCreationDate () {
+	return function (dispatch, getState) {
+		console.log('sortFeedCreationDate')
+	}
+}
+
+function applySortFeedPurchaseDate (dispatch, getState) {
+	dispatch(updateSortStatus('purchasedDate'))
+	const items = getState().items
+	const itemsArray = []
+	for (let item in items) {
+		itemsArray.push([item, items[item]])
+	}
+	if (getState().feed.sortOrder === 'asc') {
+		itemsArray.sort(function (a, b) {
+			const aDate = new Date(a[1].purchasedAtDate)
+			const bDate = new Date(b[1].purchasedAtDate)
+			if (aDate > bDate) {
+				return 1
+			} else if (aDate < bDate) {
+				return -1
+			} else {
+				return 0
+			}
+		})
+	} else { // getState().feed.sortOrder === 'dec'
+		itemsArray.sort(function (a, b) {
+			const aDate = new Date(a[1].purchasedAtDate)
+			const bDate = new Date(b[1].purchasedAtDate)
+			if (aDate < bDate) {
+				return 1
+			} else if (aDate > bDate) {
+				return -1
+			} else {
+				return 0
+			}
+		})
+	}
+	const sortedIds = itemsArray.map((item) => item[0])
+	dispatch(settingFeedListenerSuccess(sortedIds))
+}
+
+export function sortFeedPurchaseDate () {
+	return function (dispatch, getState) {
+		applySortFeedPurchaseDate(dispatch, getState)
+	}
+}
+
+export function sortFeedPeople () {
+	return function (dispatch, getState) {
+		console.log('sortFeedPeople')
+	}
+}
+
+export function sortFeedHardware () {
+	return function (dispatch, getState) {
+		console.log('sortFeedHardware')
+	}
+}
+
+export function applyNewSortOrder (dispatch, getState) {
+	return new Promise(function (resolve, reject) {
+		if (getState().feed.sortOrder === 'dec') {
+			resolve(dispatch(updateSortOrder('asc')))
+		} else {
+			resolve(dispatch(updateSortOrder('dec')))
+		}
+	})
+}
+
+export function changeSortOrder () {
+	return function (dispatch, getState) {
+		applyNewSortOrder(dispatch, getState)
+		.then(() => {
+			applySortFeedPurchaseDate(dispatch, getState)
+		})
+	}
+}
+
 // REDUCERS
 const initialState = {
 	isFetching: false,
 	error: '',
+	sortStatus: 'creationDate',
+	sortOrder: 'dec',
 	itemIds: [],
-	peopleIds: [],
 }
 
 export default function feed (state = initialState, action) {
@@ -96,33 +184,28 @@ export default function feed (state = initialState, action) {
 			isFetching: false,
 			error: action.error,
 		}
-	case SETTING_PEOPLE_LISTENER_ERROR:
-		return {
-			...state,
-			isFetching: false,
-			error: action.error,
-		}
 	case SETTING_FEED_LISTENER_SUCCESS:
 		return {
 			...state,
 			isFetching: false,
 			error: '',
 			itemIds: action.itemIds,
-			peopleIds: action.peopleIds,
-			hardwareIds: action.hardwareIds,
+		}
+	case UPDATE_SORT_STATUS:
+		return {
+			...state,
+			sortStatus: action.sortStatus,
+		}
+	case UPDATE_SORT_ORDER:
+		return {
+			...state,
+			sortOrder: action.sortOrder,
 		}
 	// case ADD_NEW_ITEM_TO_FEED:
 	// 	return {
 	// 		...state,
 	// 		newItemToAdd: [action.itemId, ...state.newItemToAdd],
 	// 	}
-	case SETTING_PEOPLE_LISTENER_SUCCESS:
-		return {
-			...state,
-			isFetching: false,
-			error: '',
-			peopleIds: action.peopleIds
-		}
 	default:
 		return state
 	}

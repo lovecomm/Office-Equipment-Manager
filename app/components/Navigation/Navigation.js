@@ -12,7 +12,7 @@ import { HardwareFormToggleContainer, PeopleFormToggleContainer, ItemsFormToggle
 
 function MenuItems ({isAuthed}) {
 	if (isAuthed) {
-		return <IconMenu
+		return (<IconMenu
 			className={dropdownMenu}
 			icon={<FontIcon value='more_vert' className={dropdownIcon}/>}
 			position='topRight'
@@ -22,7 +22,7 @@ function MenuItems ({isAuthed}) {
 			<HardwareFormToggleContainer />
 			<MenuDivider />
 			<Link to='/logout'><MenuItem icon='close' value='Sign Out' caption='Sign Out' /></Link>
-		</IconMenu>
+		</IconMenu>)
 	} else {
 		return <span></span>
 	}

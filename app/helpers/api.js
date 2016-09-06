@@ -70,7 +70,7 @@ export function saveItem (item, uid) {
 	const itemId = ref.child('feed/items').push().key
 	let newItem = {
 		serial: item.serial,
-		purchasedAtDate: item.purchasedAtDate,
+		purchasedAtDate: item.purchasedAtDate.toString(),
 		itemPersonId: item.itemPersonId,
 		itemHardwareId: item.itemHardwareId,
 		notes: item.notes,
