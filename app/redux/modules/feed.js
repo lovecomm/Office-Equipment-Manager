@@ -167,7 +167,7 @@ const initialState = {
 	isFetching: false,
 	error: '',
 	sortStatus: 'dateCreated',
-	sortOrder: 'dec',
+	sortOrder: 'asc',
 	itemIds: [],
 }
 
