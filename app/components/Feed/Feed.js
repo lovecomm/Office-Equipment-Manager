@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { ItemContainer } from 'containers'
-import { toolbar, sorting, searchbox, dropdownIcon, dropdownMenu } from './styles.scss'
+import { toolbar, leftToolbar, rightToolbar, dropdownIcon, dropdownMenu } from './styles.scss'
 import { IconMenu, MenuItem } from 'react-toolbox/lib/menu'
 import { FontIcon, Button } from 'react-toolbox/lib'
 
@@ -10,7 +10,8 @@ Feed.propTypes = {
 	isFetching: PropTypes.bool.isRequired,
 	sortFeedCreationDate: PropTypes.func.isRequired,
 	sortFeedPurchaseDate: PropTypes.func.isRequired,
-	sortFeedPeople: PropTypes.func.isRequired,
+	sortFeedLastName: PropTypes.func.isRequired,
+	sortFeedFirstName: PropTypes.func.isRequired,
 	sortFeedHardware: PropTypes.func.isRequired,
 	changeSortOrder: PropTypes.func.isRequired,
 }
@@ -20,7 +21,7 @@ export default function Feed (props) {
 		? <h1>{'Getting your items...'}</h1>
 		: <div>
 			<div className={toolbar}>
-				<div className={searchbox}>
+				<div className={leftToolbar}>
 					<IconMenu
 						className={dropdownMenu}
 						icon={<FontIcon value='sort' className={dropdownIcon}/>}
@@ -28,12 +29,13 @@ export default function Feed (props) {
 						menuRipple={true}>
 						<MenuItem icon='view_agenda' caption='Creation Date' onClick={props.sortFeedCreationDate}/>
 						<MenuItem icon='monetization_on' caption='Purchase Date' onClick={props.sortFeedPurchaseDate}/>
-						<MenuItem icon='people' caption='People' onClick={props.sortFeedPeople}/>
-						<MenuItem icon='laptop' caption='Hardware' onClick={props.sortFeedHardware}/>
+						<MenuItem icon='people' caption='Last Name' onClick={props.sortFeedLastName}/>
+						<MenuItem icon='people' caption='First Name' onClick={props.sortFeedFirstName}/>
+						<MenuItem icon='laptop' caption='Make & Model' onClick={props.sortFeedHardware}/>
 					</IconMenu>
-					<span>{' Sort Items'}</span>
+					<span>{' Sort'}</span>
 				</div>
-				<div className={sorting}>
+				<div className={rightToolbar}>
 					<Button icon='cached' label='Change sort order' raised={true}
 						primary={true} onClick={props.changeSortOrder}/>
 				</div>

@@ -131,13 +131,57 @@ export function sortFeedPurchaseDate () {
 	}
 }
 
-export function sortFeedPeople () {
+function applySortStatusPeople (dispatch, getState, sortStatus, name) {
+	dispatch(updateSortStatus(sortStatus))
+	const items = getState().items
+	const people = getState().people
+	const itemsArray = []
+	for (let item in items) {
+		const person = people[[items[item]][0].itemPersonId]
+		itemsArray.push([item, person])
+	}
+	if (getState().feed.sortOrder === 'asc') {
+		itemsArray.sort(function (a, b) {
+			const itemA = a[1][name]
+			const itemB = b[1][name]
+			if (itemA > itemB) {
+				return 1
+			} else if (itemA < itemB) {
+				return -1
+			} else {
+				return 0
+			}
+		})
+	} else { // getState().feed.sortOrder === 'dec'
+		itemsArray.sort(function (a, b) {
+			const itemA = a[1][name]
+			const itemB = b[1][name]
+			if (itemA < itemB) {
+				return 1
+			} else if (itemA > itemB) {
+				return -1
+			} else {
+				return 0
+			}
+		})
+	}
+	const sortedIds = itemsArray.map((item) => item[0])
+	dispatch(settingFeedListenerSuccess(sortedIds))
+}
+
+export function sortFeedLastName () {
 	return function (dispatch, getState) {
-		console.log('sortFeedPeople')
+		applySortStatusPeople(dispatch, getState, 'people', 'lastName')
 	}
 }
 
-function applySortStatusHardware(dispatch, getState, sortStatus) {
+export function sortFeedFirstName () {
+	return function (dispatch, getState) {
+		applySortStatusPeople(dispatch, getState, 'people', 'firstName')
+	}
+}
+
+function applySortStatusHardware (dispatch, getState, sortStatus) {
 	dispatch(updateSortStatus(sortStatus))
 	const items = getState().items
 	const hardwares = getState().hardware
@@ -200,6 +244,8 @@ export function changeSortOrder () {
 				applySortStatusByDate(dispatch, getState, sortStatus)
 			} else if (sortStatus === 'hardware') {
 				applySortStatusHardware(dispatch, getState, sortStatus)
+			} else if (sortStatus === 'people') {
+				applySortStatusPeople(dispatch, getState, sortStatus, 'lastName')
 			}
 		})
 	}

@@ -14,7 +14,7 @@ export default function Item ({serial, hardware, person, notes, photo, purchased
 		<li>
 			{serial}
 			<br />
-			{hardware.make} {hardware.model}
+			{person.firstName} {person.lastName}
 		</li>
 	)
 }
