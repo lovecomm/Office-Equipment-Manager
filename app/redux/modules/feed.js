@@ -83,14 +83,8 @@ export function setAndHandleFeedListener () {
 	}
 }
 
-export function sortFeedCreationDate () {
-	return function (dispatch, getState) {
-		console.log('sortFeedCreationDate')
-	}
-}
-
-function applySortFeedPurchaseDate (dispatch, getState) {
-	dispatch(updateSortStatus('purchasedDate'))
+function applySortStatus (dispatch, getState, sortStatus) {
+	dispatch(updateSortStatus(sortStatus))
 	const items = getState().items
 	const itemsArray = []
 	for (let item in items) {
@@ -98,11 +92,11 @@ function applySortFeedPurchaseDate (dispatch, getState) {
 	}
 	if (getState().feed.sortOrder === 'asc') {
 		itemsArray.sort(function (a, b) {
-			const aDate = new Date(a[1].purchasedAtDate)
-			const bDate = new Date(b[1].purchasedAtDate)
-			if (aDate > bDate) {
+			const itemA = new Date(a[1][sortStatus])
+			const itemB = new Date(b[1][sortStatus])
+			if (itemA > itemB) {
 				return 1
-			} else if (aDate < bDate) {
+			} else if (itemA < itemB) {
 				return -1
 			} else {
 				return 0
@@ -110,11 +104,11 @@ function applySortFeedPurchaseDate (dispatch, getState) {
 		})
 	} else { // getState().feed.sortOrder === 'dec'
 		itemsArray.sort(function (a, b) {
-			const aDate = new Date(a[1].purchasedAtDate)
-			const bDate = new Date(b[1].purchasedAtDate)
-			if (aDate < bDate) {
+			const itemA = new Date(a[1][sortStatus])
+			const itemB = new Date(b[1][sortStatus])
+			if (itemA < itemB) {
 				return 1
-			} else if (aDate > bDate) {
+			} else if (itemA > itemB) {
 				return -1
 			} else {
 				return 0
@@ -125,9 +119,15 @@ function applySortFeedPurchaseDate (dispatch, getState) {
 	dispatch(settingFeedListenerSuccess(sortedIds))
 }
 
+export function sortFeedCreationDate () {
+	return function (dispatch, getState) {
+		applySortStatus(dispatch, getState, 'dateCreated')
+	}
+}
+
 export function sortFeedPurchaseDate () {
 	return function (dispatch, getState) {
-		applySortFeedPurchaseDate(dispatch, getState)
+		applySortStatus(dispatch, getState, 'purchasedAtDate')
 	}
 }
 
@@ -157,7 +157,7 @@ export function changeSortOrder () {
 	return function (dispatch, getState) {
 		applyNewSortOrder(dispatch, getState)
 		.then(() => {
-			applySortFeedPurchaseDate(dispatch, getState)
+			applySortStatus(dispatch, getState, getState().feed.sortStatus)
 		})
 	}
 }
@@ -166,7 +166,7 @@ export function changeSortOrder () {
 const initialState = {
 	isFetching: false,
 	error: '',
-	sortStatus: 'creationDate',
+	sortStatus: 'dateCreated',
 	sortOrder: 'dec',
 	itemIds: [],
 }

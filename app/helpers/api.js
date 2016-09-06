@@ -28,8 +28,8 @@ export function saveHardware (hardware, uid) {
 					bucket: hardwarePhotoRef.bucket,
 					url: url,
 				},
-				dateCreated: Date.now(),
-				dateLastUpdated: Date.now(),
+				dateCreated: new Date().toString(),
+				dateLastUpdated: new Date().toString(),
 			}
 
 			return ref.child(`feed/hardware/${hardwareId}`).set({...newHardware, hardwareId}) // saving hardware to firebase
@@ -57,8 +57,8 @@ export function savePeople (person, uid) {
 					bucket: personPhotoRef.bucket,
 					url: url,
 				},
-				dateCreated: Date.now(),
-				dateLastUpdated: Date.now(),
+				dateCreated: new Date().toString(),
+				dateLastUpdated: new Date().toString(),
 			}
 			return ref.child(`feed/people/${personId}`).set({...newPerson, personId}) // saving person to firebase
 				.then(() => ({...newPerson, personId}))
@@ -74,8 +74,8 @@ export function saveItem (item, uid) {
 		itemPersonId: item.itemPersonId,
 		itemHardwareId: item.itemHardwareId,
 		notes: item.notes,
-		dateCreated: Date.now(),
-		dateLastUpdated: Date.now(),
+		dateCreated: new Date().toString(),
+		dateLastUpdated: new Date().toString(),
 	}
 	if (item.photo.size) { // if size exists, photo exists
 		const itemPhotoRef = imagesRef.child(`items/${item.photo.name}`) // Get ref for person photo
