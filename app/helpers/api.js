@@ -69,7 +69,7 @@ export function savePeople (person, uid) {
 export function saveItem (item, uid) {
 	const itemId = ref.child('feed/items').push().key
 	let newItem = {
-		itemId: item.itemId,
+		serial: item.serial,
 		purchasedAtDate: item.purchasedAtDate,
 		itemPersonId: item.itemPersonId,
 		itemHardwareId: item.itemHardwareId,

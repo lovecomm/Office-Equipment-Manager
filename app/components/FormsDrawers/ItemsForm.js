@@ -8,7 +8,7 @@ const	{ func, bool, object, string, any } = PropTypes
 ItemsForm.propTypes = {
 	isOpen: bool.isRequired,
 	purchasedAtDate: any.isRequired,
-	itemId: string.isRequired,
+	serial: string.isRequired,
 	itemPerson: string.isRequired,
 	itemPersonId: string.isRequired,
 	itemHardware: string.isRequired,
@@ -19,7 +19,7 @@ ItemsForm.propTypes = {
 	people: object.isRequired,
 	// START Bound to dispatch
 	closeItemsForm: func.isRequired,
-	updateItemId: func.isRequired,
+	updateSerial: func.isRequired,
 	updatePurchasedAtDate: func.isRequired,
 	updateFormNotes: func.isRequired,
 	updateFormPhotos: func.isRequired,
@@ -56,7 +56,7 @@ export default function ItemsForm (props, context) {
 	function submitItems () {
 		props.itemsFanout(formatItem(
 			props.purchasedAtDate,
-			props.itemId,
+			props.serial,
 			props.itemPersonId,
 			props.itemHardwareId,
 			props.notes,
@@ -72,9 +72,9 @@ export default function ItemsForm (props, context) {
 			</div>
 			<div className={formWrapper}>
 				<Input
-					onChange={(value) => props.updateItemId(value)}
+					onChange={(value) => props.updateSerial(value)}
 					label='Serial #'
-					value={props.itemId}
+					value={props.serial}
 					required={true}/>
 				<br />
 				<Autocomplete

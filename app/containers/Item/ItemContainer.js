@@ -21,7 +21,7 @@ const ItemsContainer = React.createClass({
 function mapStateToProps ({items, people, hardware}, props) {
 	const item = items[props.itemId]
 	return {
-		itemId: item.itemId,
+		serial: item.serial,
 		dateCreated: item.dateCreated,
 		itemHardware: hardware[item.itemHardwareId],
 		itemPerson: people[item.itemPersonId],

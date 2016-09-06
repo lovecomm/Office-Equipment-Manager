@@ -14,7 +14,7 @@ const ItemsFormContainer = React.createClass({
 
 function mapStateToProps ({itemsForm, people, hardware}, props) {
 	function disableSubmit () {
-		if (itemsForm.itemId.length <= 0 ||
+		if (itemsForm.serial.length <= 0 ||
 			itemsForm.itemPerson.length <= 0 ||
 			itemsForm.itemHardware.length <= 0 ||
 			itemsForm.purchasedAtDate.length <= 0
@@ -27,7 +27,7 @@ function mapStateToProps ({itemsForm, people, hardware}, props) {
 	return {
 		isOpen: itemsForm.isOpen,
 		purchasedAtDate: itemsForm.purchasedAtDate,
-		itemId: itemsForm.itemId,
+		serial: itemsForm.serial,
 		itemPerson: itemsForm.itemPerson,
 		itemPersonId: itemsForm.itemPersonId,
 		itemHardware: itemsForm.itemHardware,

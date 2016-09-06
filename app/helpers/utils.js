@@ -23,10 +23,10 @@ export function formatPerson (firstName, lastName, email, photo) {
 	}
 }
 
-export function formatItem (purchasedAtDate, itemId, itemPersonId, itemHardwareId, notes, photo) {
+export function formatItem (purchasedAtDate, serial, itemPersonId, itemHardwareId, notes, photo) {
 	return {
 		purchasedAtDate,
-		itemId,
+		serial,
 		itemPersonId,
 		itemHardwareId,
 		notes,
