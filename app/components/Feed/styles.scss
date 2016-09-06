@@ -3,20 +3,14 @@
 	background-color: #ddd;
 	padding: 10px 1em;
 	border-radius: 3px;
-	margin-bottom: 10px;
 	display: flex;
 	justify-content: space-between;
-}
-
-.leftToolbar {
-}
-.rightToolbar {
 }
 
 .dropdownIcon {
 	margin-top: 8px;
 }
 
-.dropdownMenu {
-
+.list {
+	list-style-type: none;
 }

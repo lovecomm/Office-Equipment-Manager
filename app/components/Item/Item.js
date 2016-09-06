@@ -1,4 +1,6 @@
 import React, { PropTypes } from 'react'
+import { Avatar, Button } from 'react-toolbox/lib'
+import { item } from './styles.scss'
 
 Item.PropTypes = {
 	serial: PropTypes.string.isRequired,
@@ -11,10 +13,15 @@ Item.PropTypes = {
 
 export default function Item ({serial, hardware, person, notes, photo, purchasedAtDate}) {
 	return (
-		<li>
-			{serial}
-			<br />
-			{person.firstName} {person.lastName}
+		<li className={item}>
+			<Avatar><img src={hardware.photo.url} /></Avatar>
+			<div>
+				{person.firstName} {person.lastName}
+			</div>
+			<div>
+				{hardware.make} {hardware.model}
+			</div>
+			<Button icon='edit'/>
 		</li>
 	)
 }

@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { ItemContainer } from 'containers'
-import { toolbar, leftToolbar, rightToolbar, dropdownIcon, dropdownMenu } from './styles.scss'
+import { toolbar, dropdownIcon, list } from './styles.scss'
 import { IconMenu, MenuItem } from 'react-toolbox/lib/menu'
 import { FontIcon, Button } from 'react-toolbox/lib'
 
@@ -21,9 +21,8 @@ export default function Feed (props) {
 		? <h1>{'Getting your items...'}</h1>
 		: <div>
 			<div className={toolbar}>
-				<div className={leftToolbar}>
+				<div>
 					<IconMenu
-						className={dropdownMenu}
 						icon={<FontIcon value='sort' className={dropdownIcon}/>}
 						position='topLeft'
 						menuRipple={true}>
@@ -35,12 +34,12 @@ export default function Feed (props) {
 					</IconMenu>
 					<span>{' Sort'}</span>
 				</div>
-				<div className={rightToolbar}>
+				<div>
 					<Button icon='cached' label='Change sort order' raised={true}
 						primary={true} onClick={props.changeSortOrder}/>
 				</div>
 			</div>
-			<ul>
+			<ul className={list}>
 				{props.itemIds.map((id) => (
 					<ItemContainer
 						itemId={id}
