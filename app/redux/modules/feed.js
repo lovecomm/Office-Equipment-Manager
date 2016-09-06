@@ -83,7 +83,7 @@ export function setAndHandleFeedListener () {
 	}
 }
 
-function applySortStatus (dispatch, getState, sortStatus) {
+function applySortStatusByDate (dispatch, getState, sortStatus) {
 	dispatch(updateSortStatus(sortStatus))
 	const items = getState().items
 	const itemsArray = []
@@ -121,13 +121,13 @@ function applySortStatus (dispatch, getState, sortStatus) {
 
 export function sortFeedCreationDate () {
 	return function (dispatch, getState) {
-		applySortStatus(dispatch, getState, 'dateCreated')
+		applySortStatusByDate(dispatch, getState, 'dateCreated')
 	}
 }
 
 export function sortFeedPurchaseDate () {
 	return function (dispatch, getState) {
-		applySortStatus(dispatch, getState, 'purchasedAtDate')
+		applySortStatusByDate(dispatch, getState, 'purchasedAtDate')
 	}
 }
 
@@ -137,9 +137,47 @@ export function sortFeedPeople () {
 	}
 }
 
+function applySortStatusHardware(dispatch, getState, sortStatus) {
+	dispatch(updateSortStatus(sortStatus))
+	const items = getState().items
+	const hardwares = getState().hardware
+	const itemsArray = []
+	for (let item in items) {
+		const hardware = hardwares[[items[item]][0].itemHardwareId]
+		itemsArray.push([item, hardware])
+	}
+	if (getState().feed.sortOrder === 'asc') {
+		itemsArray.sort(function (a, b) {
+			const itemA = `${a[1].make} ${a[1].model}`
+			const itemB = `${b[1].make} ${b[1].model}`
+			if (itemA > itemB) {
+				return 1
+			} else if (itemA < itemB) {
+				return -1
+			} else {
+				return 0
+			}
+		})
+	} else { // getState().feed.sortOrder === 'dec'
+		itemsArray.sort(function (a, b) {
+			const itemA = `${a[1].make} ${a[1].model}`
+			const itemB = `${b[1].make} ${b[1].model}`
+			if (itemA < itemB) {
+				return 1
+			} else if (itemA > itemB) {
+				return -1
+			} else {
+				return 0
+			}
+		})
+	}
+	const sortedIds = itemsArray.map((item) => item[0])
+	dispatch(settingFeedListenerSuccess(sortedIds))
+}
+
 export function sortFeedHardware () {
 	return function (dispatch, getState) {
-		console.log('sortFeedHardware')
+		applySortStatusHardware(dispatch, getState, 'hardware')
 	}
 }
 
@@ -157,7 +195,12 @@ export function changeSortOrder () {
 	return function (dispatch, getState) {
 		applyNewSortOrder(dispatch, getState)
 		.then(() => {
-			applySortStatus(dispatch, getState, getState().feed.sortStatus)
+			const sortStatus = getState().feed.sortStatus
+			if (sortStatus === 'purchasedAtDate' || sortStatus === 'dateCreated') {
+				applySortStatusByDate(dispatch, getState, sortStatus)
+			} else if (sortStatus === 'hardware') {
+				applySortStatusHardware(dispatch, getState, sortStatus)
+			}
 		})
 	}
 }
