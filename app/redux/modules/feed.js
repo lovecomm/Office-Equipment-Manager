@@ -7,7 +7,7 @@ import { addHardwareToFeed } from 'redux/modules/hardware'
 const SETTING_FEED_LISTENER = 'SETTING_FEED_LISTENER'
 const SETTING_FEED_LISTENER_ERROR = 'SETTING_FEED_LISTENER_ERROR'
 const SETTING_FEED_LISTENER_SUCCESS = 'SETTING_FEED_LISTENER_SUCCESS'
-// const ADD_NEW_ITEM_TO_FEED = 'ADD_NEW_ITEM_TO_FEED'
+const ADD_NEW_ITEM_TO_FEED = 'ADD_NEW_ITEM_TO_FEED'
 const UPDATE_SORT_STATUS = 'UPDATE_SORT_STATUS'
 const UPDATE_SORT_ORDER = 'UPDATE_SORT_ORDER'
 
@@ -33,12 +33,13 @@ function settingFeedListenerSuccess (itemIds) {
 	}
 }
 
-// function addNewItemToFeed (item) {
-// 	return {
-// 		type: ADD_NEW_ITEM_TO_FEED,
-// 		item,
-// 	}
-// }
+export function addNewItemToFeed (itemId, item) {
+	return {
+		type: ADD_NEW_ITEM_TO_FEED,
+		itemId,
+		item,
+	}
+}
 
 function updateSortOrder (sortOrder) {
 	return {
@@ -290,11 +291,11 @@ export default function feed (state = initialState, action) {
 			...state,
 			sortOrder: action.sortOrder,
 		}
-	// case ADD_NEW_ITEM_TO_FEED:
-	// 	return {
-	// 		...state,
-	// 		newItemToAdd: [action.itemId, ...state.newItemToAdd],
-	// 	}
+	case ADD_NEW_ITEM_TO_FEED:
+		return {
+			...state,
+			itemIds: [action.itemId, ...state.itemIds],
+		}
 	default:
 		return state
 	}

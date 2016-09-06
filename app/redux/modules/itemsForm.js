@@ -1,4 +1,5 @@
 import { saveItem } from 'helpers/api'
+import { addNewItemToFeed } from './feed'
 
 const OPEN_ITEMS_FORM = 'OPEN_ITEMS_FORM'
 const CLOSE_ITEMS_FORM = 'CLOSE_ITEMS_FORM'
@@ -110,8 +111,9 @@ export function itemsFanout (item) {
 	return function (dispatch, getState) {
 		const uid = getState().users.authedId
 		saveItem(item, { uid: uid }) // add item to firebase
-		.then((itemsWithId) => {
-			dispatch(addItem(itemsWithId)) // add to redux store
+		.then((itemWithId) => {
+			dispatch(addItem(itemWithId)) // add to redux store
+			dispatch(addNewItemToFeed(itemWithId.itemId, itemWithId))
 			dispatch(closeItemsForm())
 		})
 		.catch((err) => {
