@@ -2,7 +2,7 @@ import { saveItem } from 'helpers/api'
 
 const OPEN_ITEMS_FORM = 'OPEN_ITEMS_FORM'
 const CLOSE_ITEMS_FORM = 'CLOSE_ITEMS_FORM'
-const UPDATE_ITEMS_ITEM_ID_TEXT = 'UPDATE_ITEMS_ITEM_ID_TEXT'
+const UPDATE_ITEMS_SERIAL = 'UPDATE_ITEMS_SERIAL'
 const UPDATE_ITEMS_PURCHASED_AT_DATE = 'UPDATE_ITEMS_PURCHASED_AT_DATE'
 const UPDATE_ITEMS_FORM_NOTES = 'UPDATE_ITEMS_FORM_NOTES'
 const UPDATE_ITEMS_FORM_PHOTOS = 'UPDATE_ITEMS_FORM_PHOTOS'
@@ -25,10 +25,10 @@ export function closeItemsForm () {
 	}
 }
 
-export function updateItemId (itemId) {
+export function updateSerial (serial) {
 	return {
-		type: UPDATE_ITEMS_ITEM_ID_TEXT,
-		itemId,
+		type: UPDATE_ITEMS_SERIAL,
+		serial,
 	}
 }
 
@@ -124,7 +124,7 @@ export function itemsFanout (item) {
 const initialState = {
 	isOpen: false,
 	purchasedAtDate: '',
-	itemId: '',
+	serial: '',
 	itemPerson: '',
 	itemPersonId: '',
 	itemHardware: '',
@@ -145,7 +145,7 @@ export default function itemsForm (state = initialState, action) {
 		return {
 			isOpen: false,
 			purchasedAtDate: '',
-			itemId: '',
+			serial: '',
 			itemPerson: '',
 			itemPersonId: '',
 			itemHardware: '',
@@ -154,10 +154,10 @@ export default function itemsForm (state = initialState, action) {
 			photo: {},
 			photoNames: '',
 		}
-	case UPDATE_ITEMS_ITEM_ID_TEXT:
+	case UPDATE_ITEMS_SERIAL:
 		return {
 			...state,
-			itemId: action.itemId,
+			serial: action.serial,
 		}
 	case UPDATE_ITEMS_PURCHASED_AT_DATE:
 		return {
