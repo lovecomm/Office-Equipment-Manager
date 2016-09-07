@@ -7,57 +7,32 @@ $btn-blue: darken(#2196f3, 35%);
 .chips {
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: space-around;
+	justify-content: flex-start;
+	align-items: center;
 
 	span {
 		font-size: 10px;
-		padding: 0px 12px;
+		padding: 5px 12px;
+		border-radius: 32px;
+		background-color: #ddd;
+		height: auto;
+		display: flex;
+		margin-right: 5px;
 	}
 
 	.nameChip {
 		background-color: $btn-blue;
 		color: #fff;
 	}
-}
 
-.statusReplace, .statusWarning {
-	color: white;
-	text-transform: uppercase;
-}
+	.statusReplace, .statusWarning {
+		color: white;
+		text-transform: uppercase;
+	}
 
-.statusReplace { background-color: darken(red, 15%); }
-.statusWarning { background-color: darken(orange, 15%); }
-//
-// .item {
-// 	padding: 2em 1em;
-// 	border-bottom: 1px solid #eee;
-// 	display: flex;
-// 	justify-content: space-between;
-// 	text-align: left;
-// 	cursor: pointer;
-// 	transition: background 0.3s ease;
-//
-// 	&:hover { background-color: lighten(#1976D2, 49%);; }
-// }
-//
-// .col1 {
-// 	display: flex;
-// 	flex-direction: column;
-// 	justify-content: center;
-// 	margin-right: 2em;
-// 	align-items: center;
-// }
-//
-// .avatar { margin-bottom: 0.5em; }
-//
-// .leftSide {
-// 	display: flex;
-// 	align-items: center;
-// }
-//
-// .edit {
-// 	align-self: center;
-// }
+	.statusReplace { background-color: darken(red, 15%); }
+	.statusWarning { background-color: darken(orange, 15%); }
+}
 
 .small {
 	font-size: 0.75em;
