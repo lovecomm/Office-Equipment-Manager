@@ -26,11 +26,14 @@
 }
 
 .small {
-	font-size: 0.65em;
+	font-size: 0.75em;
 	color: #666;
 }
 
-*[class*='status'] { font-size: 0.65em; }
+.status span {
+	font-size: 0.75em;
+	display: inline-block;
 
-.statusReplace { color: darken(red, 15%); }
-.statusWarning { color: darken(orange, 15%); }
+	&.statusReplace { color: darken(red, 15%); }
+	&.statusWarning { color: darken(yellow, 25%); }
+}

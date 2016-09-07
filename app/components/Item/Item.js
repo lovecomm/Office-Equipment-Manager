@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
-import { Avatar, IconButton } from 'react-toolbox/lib'
-import { item, edit, name, hardware, leftSide, avatar, small, col1, statusWarning, statusReplace } from './styles.scss'
+import { Avatar, IconButton, Chip } from 'react-toolbox/lib'
+import { item, edit, name, hardware, leftSide, avatar, small, col1, statusWarning, statusReplace, status } from './styles.scss'
 
 Item.PropTypes = {
 	serial: PropTypes.string.isRequired,
@@ -28,24 +28,26 @@ export default function Item ({serial, hardware, person, notes, photo, purchased
 					<div>
 						<span className={small}>{purchasedAtDate}</span>
 						<br />
-						{(() => {
-							// Calculating Item's status
-							if (hardware.isComputer === true) {
-								if (getYearsOld >= '5') {
-									return (<span className={statusReplace}>This computer was purchased more than {getYearsOld} years ago. It needs to be replaced!</span>)
-								} else if (getYearsOld >= '3') {
-									return (<span className={statusWarning}>This computer was purchased more than {getYearsOld} years ago. You should think about replacing it soon.</span>)
+						<div className={status}>
+							{(() => {
+								// Calculating Item's status
+								if (hardware.isComputer === true) {
+									if (getYearsOld >= '5') {
+										return (<span className={statusReplace}>This computer was purchased more than {getYearsOld} years ago. It needs to be replaced!</span>)
+									} else if (getYearsOld >= '3') {
+										return (<span className={statusWarning}>This computer was purchased more than {getYearsOld} years ago. You should think about replacing it soon.</span>)
+									} else if (getYearsOld >= '1') {
+										return (<span className={small}>This computer was purchased more than {getYearsOld} year(s) ago.</span>)
+									} else {
+										return (<span className={small}>This computer was purchased less than a year ago.</span>)
+									}
 								} else if (getYearsOld >= '1') {
-									return (<span className={small}>This computer was purchased more than {getYearsOld} year(s) ago.</span>)
+									return (<span className={small}>This item was purchased more than {getYearsOld} year(s) ago.</span>)
 								} else {
-									return (<span className={small}>This computer was purchased less than a year ago.</span>)
+									return (<span className={small}>This item was purchased less than a year ago.</span>)
 								}
-							} else if (getYearsOld >= '1') {
-								return (<span className={small}>This item was purchased more than {getYearsOld} year(s) ago.</span>)
-							} else {
-								return (<span className={small}>This item was purchased less than a year ago.</span>)
-							}
-						})()}
+							})()}
+						</div>
 					</div>
 				</div>
 			</div>
