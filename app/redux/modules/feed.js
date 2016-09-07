@@ -145,7 +145,6 @@ function applySortStatusPeople (dispatch, getState, sortStatus, name) {
 		itemsArray.sort(function (a, b) {
 			const itemA = a[1][name]
 			const itemB = b[1][name]
-			console.log(itemA, itemB)
 			if (itemA > itemB) {
 				return 1
 			} else if (itemA < itemB) {
@@ -158,7 +157,6 @@ function applySortStatusPeople (dispatch, getState, sortStatus, name) {
 		itemsArray.sort(function (a, b) {
 			const itemA = a[1][name]
 			const itemB = b[1][name]
-			console.log(itemA, itemB)
 			if (itemA < itemB) {
 				return 1
 			} else if (itemA > itemB) {

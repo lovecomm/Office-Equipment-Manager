@@ -1,46 +1,60 @@
 import React, { PropTypes } from 'react'
-import { Button } from 'react-toolbox/lib'
-import { Card, CardMedia, CardTitle, CardText, CardActions } from 'react-toolbox/lib/card';
-import { statusWarning, statusReplace, status, card, chips, nameChip } from './styles.scss'
+import { FontIcon } from 'react-toolbox/lib'
+import { Card, CardMedia, CardTitle, CardText, CardActions } from 'react-toolbox/lib/card'
+import { statusWarning, statusReplace, status, card, chips, nameChip, gear } from './styles.scss'
 
-Item.PropTypes = {
+Item.propTypes = {
+	itemPerson: PropTypes.object.isRequired,
 	serial: PropTypes.string.isRequired,
-	person: PropTypes.object.isRequired,
-	hardware: PropTypes.object.isRequired,
+	itemHardware: PropTypes.object.isRequired,
 	notes: PropTypes.string.isRequired,
-	photo: PropTypes.object,
+	// photo: PropTypes.object.isRequired,
 	collapsed: PropTypes.bool.isRequired,
-	purchasedAtDate: PropTypes.string.isRequired,
 	getYearsOld: PropTypes.string.isRequired,
-	handleCollapsed: PropTypes.func.isRequired,
+	envokeHandleCollapsed: PropTypes.func.isRequired,
 }
 
-export default function Item ({serial, hardware, person, notes, photo, purchasedAtDate, getYearsOld, handleCollapsed}) {
-	console.log(handleCollapsed)
-	console.log('photo', photo)
+export default function Item (props) {
 	return (
-		<Card style={{width: '250px'}} className={card}>
+		<Card style={{width: '250px', maxWidth: '100%'}} className={card} onClick={props.envokeHandleCollapsed}>
+			<FontIcon value='settings' className={gear}/>
 			<CardTitle
-				avatar={hardware.photo.url}
-				title={(() => `#${serial}`)()}
-				subtitle={(() => hardware.isComputer ? `${hardware.model}` : `${hardware.make} ${hardware.model}`)()}/>
+				avatar={props.itemHardware.photo.url}
+				title={props.serial}
+				subtitle={(() => props.itemHardware.isComputer ? `${props.itemHardware.model}` : `${props.itemHardware.make} ${props.itemHardware.model}`)()}/>
 			<CardText className={chips}>
-				<span className={nameChip}>{person.firstName}{' '}{person.lastName}</span>
+				<span className={nameChip}>{(() => `${props.itemPerson.firstName} ${props.itemPerson.lastName}`)()}</span>
 				<div className={status}>
 					{(() => {
-						// Calculating Item's status
-						if (getYearsOld === '0') { return (<span>{'< '}{1}{' year old'}</span>) }
-						else if (getYearsOld === '1') { return (<span>{getYearsOld}{' year old'}</span>) }
-						else if (getYearsOld >= '3' && getYearsOld < '5' && hardware.isComputer) { return (<span className={statusWarning}>{getYearsOld}{' years old!'}</span>) }
-						else if (getYearsOld >= '5' && hardware.isComputer) { return (<span className={statusReplace}>{getYearsOld}{' years old!'}</span>) }
-						else { return (<span>{getYearsOld}{' years old'}</span>) }
+						// Calculating Item's age
+						if (props.getYearsOld === '0') {
+							return (<span>{'< '}{1}{' year old'}</span>)
+						} else if (props.getYearsOld === '1') {
+							return (<span>{props.getYearsOld}{' year old'}</span>)
+						} else if (props.getYearsOld >= '3' && props.getYearsOld < '5' && props.itemHardware.isComputer) {
+							return (<span className={statusWarning}>{props.getYearsOld}{' years old!'}</span>)
+						} else if (props.getYearsOld >= '5' && props.itemHardware.isComputer) {
+							return (<span className={statusReplace}>{props.getYearsOld}{' years old!'}</span>)
+						} else {
+							return (<span>{props.getYearsOld}{' years old'}</span>)
+						}
 					})()}
 				</div>
 			</CardText>
-			<CardActions>
-				<Button label='Expand' />
-				<Button label='Edit' />
-			</CardActions>
+			{!props.collapsed
+				? <div>
+						<CardTitle
+							avatar={props.itemPerson.photo.url}
+							title={(() => `#${props.itemPerson.firstName} ${props.itemPerson.lastName}`)()}
+							subtitle={props.itemPerson.email} />
+					</div>
+				: ''}
 		</Card>
 	)
 }
+
+// notes
+// item photo
+// make – computers-only
+// hardware description
+// person email

@@ -18,7 +18,7 @@ Feed.propTypes = {
 
 export default function Feed (props) {
 	return props.isFetching === true
-		? <h1>{'Getting your items...'}</h1>
+		? <h3>{'Getting your items...'}</h3>
 		: <div>
 			<div className={toolbar}>
 				<div>

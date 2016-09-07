@@ -2,6 +2,22 @@ $btn-blue: darken(#2196f3, 35%);
 
 .card {
 	margin: 7px 5px;
+	cursor: pointer;
+	position: relative;
+	height: 0%; // prevents items from matching height of all other items on the same row
+}
+
+.gear {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 5px;
+	color: #ddd;
+	font-size: 18px;
+	transform: rotate(30deg);
+	transition: color 0.3s ease;
+
+	&:hover { color: $btn-blue; }
 }
 
 .chips {

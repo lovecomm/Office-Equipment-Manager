@@ -97,8 +97,8 @@ export function saveItem (item, uid) {
 			})
 		})
 	} else {
-		return ref.child(`feed/items/${itemId}`).set({...newItem, itemId}) // saving person to firebase
-			.then(() => ({...newItem, itemId}))
+		return ref.child(`feed/items/${itemId}`).set({...newItem, photo: {}, itemId}) // saving person to firebase
+			.then(() => ({...newItem, photo: item.photo, itemId}))
 	}
 }
 

@@ -7,20 +7,14 @@ import * as itemActionCreators from 'redux/modules/items'
 const ItemsContainer = React.createClass({
 	propTypes: {
 		serial: PropTypes.string.isRequired,
-		purchasedAtDate: PropTypes.string.isRequired,
 		itemHardware: PropTypes.object.isRequired,
 		itemPerson: PropTypes.object.isRequired,
-		notes: PropTypes.string,
-		photo: PropTypes.object,
-	},
-	formatDate () {
-		let date = new Date(this.props.purchasedAtDate)
-		var monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-			'July', 'August', 'September', 'October', 'November', 'December',
-		]
-		let year = date.getFullYear()
-		let month = monthNames[date.getMonth()]
-		return `${month} ${year}`
+		notes: PropTypes.string.isRequired,
+		// photo: PropTypes.object.isRequired,
+		purchasedAtDate: PropTypes.string.isRequired,
+		itemId: PropTypes.string.isRequired,
+		collapsed: PropTypes.bool.isRequired,
+		handleCollapsed: PropTypes.func.isRequired,
 	},
 	getYearsOld () {
 		const itemDate = new Date(this.props.purchasedAtDate)
@@ -29,18 +23,16 @@ const ItemsContainer = React.createClass({
 		const diffYears = Math.ceil(timeDiff / (1000 * 3600 * 24)) / 365
 		return Math.floor(diffYears).toString()
 	},
+	envokeHandleCollapsed () {
+		const newCollapse = !this.props.collapsed
+		this.props.handleCollapsed(this.props.itemId, newCollapse)
+	},
 	render () {
 		return (
 			<Item
-				serial={this.props.serial}
-				hardware={this.props.itemHardware}
-				person={this.props.itemPerson}
-				notes={this.props.notes}
-				purchasedAtDate={this.formatDate()}
+				{...this.props}
 				getYearsOld={this.getYearsOld()}
-				photo={this.props.photo !== undefined
-					? this.props.photo.url
-					: ''}/>
+				envokeHandleCollapsed={this.envokeHandleCollapsed}/>
 		)
 	},
 })
@@ -49,11 +41,12 @@ function mapStateToProps ({items, people, hardware}, props) {
 	const item = items[props.itemId]
 	return {
 		serial: item.serial,
-		purchasedAtDate: item.purchasedAtDate,
+		itemId: item.itemId,
 		itemHardware: hardware[item.itemHardwareId],
 		itemPerson: people[item.itemPersonId],
 		notes: item.notes,
 		photo: item.photo,
+		purchasedAtDate: item.purchasedAtDate,
 		collapsed: item.collapsed,
 	}
 }

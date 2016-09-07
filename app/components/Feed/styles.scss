@@ -4,6 +4,7 @@
 	padding: 10px 1em;
 	margin-bottom: 10px;
 	border-radius: 3px;
+	align-items: flex-start;
 	display: flex;
 	justify-content: space-between;
 }
@@ -17,4 +18,5 @@
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content: space-around;
+	height: auto;
 }

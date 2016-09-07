@@ -1,5 +1,6 @@
 const ADD_ITEMS_TO_FEED = 'ADD_ITEMS_TO_FEED'
 const UPDATE_COLLAPSED = 'UPDATE_COLLAPSED'
+const COLLAPSE_ITEM = 'COLLAPSE_ITEM'
 
 export function addItemsToFeed (items) {
 	return {
@@ -8,16 +9,30 @@ export function addItemsToFeed (items) {
 	}
 }
 
-export function handleCollapsed () {
-	return function (dispatch, state) {
-		console.log('state')
+export function handleCollapsed (itemId, collapsed) {
+	return function (dispatch, getState) {
+		const items = Object.keys(getState().items)
+		return new Promise((resolve, reject) => {
+			items.forEach((itemId) => {
+				dispatch(updateCollapseItem(itemId))
+			})
+			resolve()
+		})
+		.then(() => dispatch(updateCollapsed(itemId, collapsed)))
 	}
 }
 
-function updateCollapsed (item, collapsed) {
+function updateCollapseItem (itemId) {
+	return {
+		type: COLLAPSE_ITEM,
+		itemId,
+	}
+}
+
+function updateCollapsed (itemId, collapsed) {
 	return {
 		type: UPDATE_COLLAPSED,
-		item,
+		itemId,
 		collapsed,
 	}
 }
@@ -27,12 +42,15 @@ const initialItemState = {}
 
 function item (state = initialItemState, action) {
 	switch (action.type) {
+	case COLLAPSE_ITEM:
+		return {
+			...state,
+			collapsed: true,
+		}
 	case UPDATE_COLLAPSED:
 		return {
 			...state,
-			[action.item.itemId]: {
-				collapsed: action.collapsed,
-			},
+			collapsed: action.collapsed,
 		}
 	default :
 		return state
@@ -48,10 +66,11 @@ export default function items (state = initialState, action) {
 			...state,
 			...action.items,
 		}
+	case COLLAPSE_ITEM:
 	case UPDATE_COLLAPSED:
 		return {
 			...state,
-			items: item(state[action.item], action),
+			[action.itemId]: item(state[action.itemId], action),
 		}
 	default :
 		return state
