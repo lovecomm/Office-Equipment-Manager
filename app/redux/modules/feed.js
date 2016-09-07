@@ -145,6 +145,7 @@ function applySortStatusPeople (dispatch, getState, sortStatus, name) {
 		itemsArray.sort(function (a, b) {
 			const itemA = a[1][name]
 			const itemB = b[1][name]
+			console.log(itemA, itemB)
 			if (itemA > itemB) {
 				return 1
 			} else if (itemA < itemB) {
@@ -157,6 +158,7 @@ function applySortStatusPeople (dispatch, getState, sortStatus, name) {
 		itemsArray.sort(function (a, b) {
 			const itemA = a[1][name]
 			const itemB = b[1][name]
+			console.log(itemA, itemB)
 			if (itemA < itemB) {
 				return 1
 			} else if (itemA > itemB) {
@@ -172,13 +174,13 @@ function applySortStatusPeople (dispatch, getState, sortStatus, name) {
 
 export function sortFeedLastName () {
 	return function (dispatch, getState) {
-		applySortStatusPeople(dispatch, getState, 'people', 'lastName')
+		applySortStatusPeople(dispatch, getState, 'peopleLastName', 'lastName')
 	}
 }
 
 export function sortFeedFirstName () {
 	return function (dispatch, getState) {
-		applySortStatusPeople(dispatch, getState, 'people', 'firstName')
+		applySortStatusPeople(dispatch, getState, 'peopleFirstName', 'firstName')
 	}
 }
 
@@ -245,8 +247,10 @@ export function changeSortOrder () {
 				applySortStatusByDate(dispatch, getState, sortStatus)
 			} else if (sortStatus === 'hardware') {
 				applySortStatusHardware(dispatch, getState, sortStatus)
-			} else if (sortStatus === 'people') {
+			} else if (sortStatus === 'peopleLastName') {
 				applySortStatusPeople(dispatch, getState, sortStatus, 'lastName')
+			} else if (sortStatus === 'peopleFirstName') {
+				applySortStatusPeople(dispatch, getState, sortStatus, 'firstName')
 			}
 		})
 	}
