@@ -20,8 +20,22 @@ const ItemsContainer = React.createClass({
 		let month = monthNames[date.getMonth()]
 		return `${month} ${year}`
 	},
+	getStatus () {
+		const yearsOld = this.getYearsOld()
+		if (yearsOld >= '5') {
+			return 'replace'
+		} else if (yearsOld >= '3') {
+			return 'warning'
+		}
+	},
+	getYearsOld () {
+		const itemDate = new Date(this.props.purchasedAtDate)
+		const currentDate = new Date()
+		const timeDiff = Math.abs(currentDate.getTime() - itemDate.getTime())
+		const diffYears = Math.ceil(timeDiff / (1000 * 3600 * 24)) / 365
+		return Math.floor(diffYears).toString()
+	},
 	render () {
-		// console.log(this.props)
 		return (
 			<Item
 				serial={this.props.serial}
@@ -29,6 +43,8 @@ const ItemsContainer = React.createClass({
 				person={this.props.itemPerson}
 				notes={this.props.notes}
 				purchasedAtDate={this.formatDate()}
+				getStatus={this.getStatus()}
+				getYearsOld={this.getYearsOld()}
 				photo={this.props.photo !== undefined
 					? this.props.photo.url
 					: ''}/>

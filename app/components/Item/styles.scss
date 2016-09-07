@@ -1,6 +1,36 @@
 .item {
-	padding: 1em;
+	padding: 2em 1em;
 	border-bottom: 1px solid #eee;
 	display: flex;
 	justify-content: space-between;
+	text-align: left;
 }
+
+.col1 {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	margin-right: 2em;
+	align-items: center;
+}
+
+.avatar { margin-bottom: 0.5em; }
+
+.leftSide {
+	display: flex;
+	align-items: center;
+}
+
+.edit {
+	align-self: center;
+}
+
+.small {
+	font-size: 0.65em;
+	color: #666;
+}
+
+*[class*='status'] { font-size: 0.65em; }
+
+.statusReplace { color: darken(red, 15%); }
+.statusWarning { color: darken(orange, 15%); }
