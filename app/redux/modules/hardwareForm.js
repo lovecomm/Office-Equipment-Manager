@@ -7,6 +7,7 @@ const UPDATE_HARDWARE_MAKE_TEXT = 'UPDATE_HARDWARE_MAKE_TEXT'
 const UPDATE_HARDWARE_MODEL_TEXT = 'UPDATE_HARDWARE_MODEL_TEXT'
 const UPDATE_HARDWARE_DESCRIPTION_TEXT = 'UPDATE_HARDWARE_DESCRIPTION_TEXT'
 const UPDATE_HARDWARE_PHOTO = 'UPDATE_HARDWARE_PHOTO'
+const UPDATE_IS_COMPUTER = 'UPDATE_IS_COMPUTER'
 
 // ACTIONS
 export function openHardwareForm () {
@@ -49,6 +50,13 @@ export function updatePhoto (photo) {
 	}
 }
 
+export function updateIsComputer (isComputer) {
+	return {
+		type: UPDATE_IS_COMPUTER,
+		isComputer,
+	}
+}
+
 function addHardware (hardware) {
 	return {
 		type: ADD_HARDWARE,
@@ -77,6 +85,7 @@ const initialState = {
 	descriptionText: '',
 	photo: {},
 	photoNameText: '',
+	isComputer: false,
 	isOpen: false,
 }
 
@@ -94,6 +103,7 @@ export default function hardwareForm (state = initialState, action) {
 			descriptionText: '',
 			photo: {},
 			photoNameText: '',
+			isComputer: false,
 			isOpen: false,
 		}
 	case UPDATE_HARDWARE_MAKE_TEXT:
@@ -116,6 +126,11 @@ export default function hardwareForm (state = initialState, action) {
 			...state,
 			photo: action.photo,
 			photoNameText: action.photo.name,
+		}
+	case UPDATE_IS_COMPUTER:
+		return {
+			...state,
+			isComputer: action.isComputer,
 		}
 	case ADD_HARDWARE:
 		return {

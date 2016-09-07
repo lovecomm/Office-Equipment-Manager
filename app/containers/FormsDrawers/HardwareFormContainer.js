@@ -7,7 +7,6 @@ function mapStateToProps ({hardwareForm}, props) {
 	function disableSubmit () {
 		if (hardwareForm.makeText.length <= 0 ||
 			hardwareForm.modelText.length <= 0 ||
-			hardwareForm.descriptionText.length <= 0 ||
 			// testing to see if no photo has been selected is empty
 			Object.keys(hardwareForm.photo).length === 0 && hardwareForm.photo.constructor === Object) {
 			return true
@@ -21,6 +20,7 @@ function mapStateToProps ({hardwareForm}, props) {
 		descriptionText: hardwareForm.descriptionText,
 		photo: hardwareForm.photo,
 		photoNameText: hardwareForm.photoNameText,
+		isComputer: hardwareForm.isComputer,
 		isOpen: hardwareForm.isOpen,
 		isSubmitDisabled: disableSubmit(),
 	}

@@ -9,11 +9,10 @@ Item.PropTypes = {
 	notes: PropTypes.string.isRequired,
 	photo: PropTypes.object.isRequired,
 	purchasedAtDate: PropTypes.string.isRequired,
-	getStatus: PropTypes.string.isRequired,
 	getYearsOld: PropTypes.string.isRequired,
 }
 
-export default function Item ({serial, hardware, person, notes, photo, purchasedAtDate, getStatus, getYearsOld}) {
+export default function Item ({serial, hardware, person, notes, photo, purchasedAtDate, getYearsOld}) {
 	return (
 		<li className={item}>
 			<div className={leftSide}>
@@ -28,16 +27,29 @@ export default function Item ({serial, hardware, person, notes, photo, purchased
 					<br />
 					<div>
 						<span className={small}>{purchasedAtDate}</span>
-						{getStatus === 'warning'
-							? <div><span className={statusWarning}>{'This was purchased more than '}{getYearsOld}{' years ago. If it\'s a computer, you should think about replacing it soon'}</span></div>
-							: ''}
-						{getStatus === 'replace'
-							? <div><span className={statusReplace}>{'This was purchased more than '}{getYearsOld}{' years ago. If it\'s a computer, It needs to be replaced!'}</span></div>
-							: ''}
+						<br />
+						{(() => {
+							// Calculating Item's status
+							if (hardware.isComputer === true) {
+								if (getYearsOld >= '5') {
+									return (<span className={statusReplace}>This computer was purchased more than {getYearsOld} years ago. It needs to be replaced!</span>)
+								} else if (getYearsOld >= '3') {
+									return (<span className={statusWarning}>This computer was purchased more than {getYearsOld} years ago. You should think about replacing it soon.</span>)
+								} else if (getYearsOld >= '1') {
+									return (<span className={small}>This computer was purchased more than {getYearsOld} year(s) ago.</span>)
+								} else {
+									return (<span className={small}>This computer was purchased less than a year ago.</span>)
+								}
+							} else if (getYearsOld >= '1') {
+								return (<span className={small}>This item was purchased more than {getYearsOld} year(s) ago.</span>)
+							} else {
+								return (<span className={small}>This item was purchased less than a year ago.</span>)
+							}
+						})()}
 					</div>
 				</div>
 			</div>
-			<IconButton icon='edit' className={edit} accent={true} />
+			<IconButton icon='edit' className={edit} />
 		</li>
 	)
 }

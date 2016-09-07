@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Drawer, Input, Button } from 'react-toolbox/lib'
+import { Drawer, Input, Button, Checkbox } from 'react-toolbox/lib'
 import { drawer, button, headline, formWrapper, selectedPhoto, imageInput } from './styles.scss'
 import { formatHardware } from 'helpers/utils'
 
@@ -11,6 +11,7 @@ HardwareForm.propTypes = {
 	descriptionText: string.isRequired,
 	photo: object.isRequired,
 	photoNameText: string.isRequired,
+	isComputer: bool.isRequired,
 	isOpen: bool.isRequired,
 	closeHardwareForm: func.isRequired,
 	isSubmitDisabled: bool.isRequired,
@@ -28,6 +29,7 @@ export default function HardwareForm (props, context) {
 			props.modelText,
 			props.descriptionText,
 			props.photo,
+			props.isComputer,
 		))
 	}
 	return (
@@ -50,6 +52,11 @@ export default function HardwareForm (props, context) {
 					label='Model'
 					value={props.modelText}
 					required={true}/>
+				<br />
+				<Checkbox
+          checked={props.isComputer}
+					onChange={(value) => props.updateIsComputer(value)}
+          label='Is this a computer?'/>
 				<br />
 				<Input
 					onChange={(value) => props.updateDescriptionText(value)}

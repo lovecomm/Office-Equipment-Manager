@@ -20,14 +20,24 @@ const ItemsContainer = React.createClass({
 		let month = monthNames[date.getMonth()]
 		return `${month} ${year}`
 	},
-	getStatus () {
-		const yearsOld = this.getYearsOld()
-		if (yearsOld >= '5') {
-			return 'replace'
-		} else if (yearsOld >= '3') {
-			return 'warning'
-		}
-	},
+	// getStatus () {
+	// 	const yearsOld = this.getYearsOld()
+	// 	if (this.props.itemHardware.isComputer === true) {
+	// 		if (yearsOld >= '5') {
+	// 			return `This computer was purchased more than ${yearsOld} years ago. It needs to be replaced!`
+	// 		} else if (yearsOld >= '3') {
+	// 			return `This computer was purchased more than ${yearsOld} years ago. You should think about replacing it soon.`
+	// 		} else if (yearsOld >= '1') {
+	// 			return `This computer was purchased more than ${yearsOld} year(s) ago.`
+	// 		} else {
+	// 			return 'This computer was purchased less than a year ago.'
+	// 		}
+	// 	} else if (yearsOld >= '1') {
+	// 		return `This item was purchased more than ${yearsOld} year(s) ago.`
+	// 	} else {
+	// 		return 'This item was purchased less than a year ago.'
+	// 	}
+	// },
 	getYearsOld () {
 		const itemDate = new Date(this.props.purchasedAtDate)
 		const currentDate = new Date()
@@ -43,7 +53,6 @@ const ItemsContainer = React.createClass({
 				person={this.props.itemPerson}
 				notes={this.props.notes}
 				purchasedAtDate={this.formatDate()}
-				getStatus={this.getStatus()}
 				getYearsOld={this.getYearsOld()}
 				photo={this.props.photo !== undefined
 					? this.props.photo.url

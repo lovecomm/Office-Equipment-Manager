@@ -28,6 +28,7 @@ export function saveHardware (hardware, uid) {
 					bucket: hardwarePhotoRef.bucket,
 					url: url,
 				},
+				isComputer: hardware.isComputer,
 				dateCreated: new Date().toString(),
 				dateLastUpdated: new Date().toString(),
 			}

@@ -5,12 +5,13 @@ export function formatUserInfo (name, uid) {
 	}
 }
 
-export function formatHardware (make, model, description, photo) {
+export function formatHardware (make, model, description, photo, isComputer) {
 	return {
 		make,
 		model,
 		description,
 		photo,
+		isComputer,
 	}
 }
 
