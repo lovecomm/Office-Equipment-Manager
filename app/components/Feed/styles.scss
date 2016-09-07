@@ -2,6 +2,7 @@
 	width: 100%;
 	background-color: #ddd;
 	padding: 10px 1em;
+	margin-bottom: 10px;
 	border-radius: 3px;
 	display: flex;
 	justify-content: space-between;
@@ -12,5 +13,8 @@
 }
 
 .list {
-	list-style-type: none;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-around;
 }

@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Item } from 'components'
+import { bindActionCreators } from 'redux'
+import * as itemActionCreators from 'redux/modules/items'
 
 const ItemsContainer = React.createClass({
 	propTypes: {
@@ -52,7 +54,11 @@ function mapStateToProps ({items, people, hardware}, props) {
 		itemPerson: people[item.itemPersonId],
 		notes: item.notes,
 		photo: item.photo,
+		collapsed: item.collapsed,
 	}
 }
 
-export default connect(mapStateToProps)(ItemsContainer)
+export default connect(
+	mapStateToProps,
+	(dispatch) => bindActionCreators(itemActionCreators, dispatch)
+)(ItemsContainer)

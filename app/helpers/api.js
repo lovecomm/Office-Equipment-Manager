@@ -26,7 +26,7 @@ export function saveHardware (hardware, uid) {
 					size: hardware.photo.size,
 					type: hardware.photo.type,
 					bucket: hardwarePhotoRef.bucket,
-					url: url,
+					url,
 				},
 				isComputer: hardware.isComputer,
 				dateCreated: new Date().toString(),
@@ -56,7 +56,7 @@ export function savePeople (person, uid) {
 					size: person.photo.size,
 					type: person.photo.type,
 					bucket: personPhotoRef.bucket,
-					url: url,
+					url,
 				},
 				dateCreated: new Date().toString(),
 				dateLastUpdated: new Date().toString(),
@@ -75,6 +75,7 @@ export function saveItem (item, uid) {
 		itemPersonId: item.itemPersonId,
 		itemHardwareId: item.itemHardwareId,
 		notes: item.notes,
+		collapsed: true,
 		dateCreated: new Date().toString(),
 		dateLastUpdated: new Date().toString(),
 	}
@@ -82,15 +83,18 @@ export function saveItem (item, uid) {
 		const itemPhotoRef = imagesRef.child(`items/${item.photo.name}`) // Get ref for person photo
 		return itemPhotoRef.put(item.photo) // saving person photo to firebase
 		.then((photoSnapshot) => {
-			const photo = {
-				name: itemPhotoRef.name,
-				fullPath: itemPhotoRef.fullPath,
-				size: item.photo.size,
-				type: item.photo.type,
-				bucket: itemPhotoRef.bucket,
-			}
-			return ref.child(`feed/items/${itemId}`).set({...newItem, photo, itemId}) // saving person to firebase
-				.then(() => ({...newItem, photo, itemId}))
+			return firebaseHref(itemPhotoRef.fullPath).then((url) => {
+				const photo = {
+					name: itemPhotoRef.name,
+					fullPath: itemPhotoRef.fullPath,
+					size: item.photo.size,
+					type: item.photo.type,
+					bucket: itemPhotoRef.bucket,
+					url,
+				}
+				return ref.child(`feed/items/${itemId}`).set({...newItem, photo, itemId}) // saving person to firebase
+					.then(() => ({...newItem, photo, itemId}))
+			})
 		})
 	} else {
 		return ref.child(`feed/items/${itemId}`).set({...newItem, itemId}) // saving person to firebase

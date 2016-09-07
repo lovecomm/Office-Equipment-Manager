@@ -39,12 +39,12 @@ export default function Feed (props) {
 						primary={true} onClick={props.changeSortOrder}/>
 				</div>
 			</div>
-			<ul className={list}>
+			<div className={list}>
 				{props.itemIds.map((id) => (
 					<ItemContainer
 						itemId={id}
 						key={id} />
 				))}
-			</ul>
+			</div>
 		</div>
 }

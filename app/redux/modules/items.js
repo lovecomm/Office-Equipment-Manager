@@ -1,90 +1,37 @@
-// import { saveItems } from 'helpers/api'
-
-const ADD_ITEM = 'ADD_ITEM'
-const FETCHING_ITEMS = 'FETCHING_ITEMS'
-const FETCHING_ITEMS_ERROR = 'FETCHING_ITEMS_ERROR'
-const FETCHING_ITEMS_SUCCESS = 'FETCHING_ITEMS_SUCCESS'
-const REMOVE_FETCHING_ITEMS = 'REMOVE_FETCHING_ITEMS'
 const ADD_ITEMS_TO_FEED = 'ADD_ITEMS_TO_FEED'
+const UPDATE_COLLAPSED = 'UPDATE_COLLAPSED'
 
 export function addItemsToFeed (items) {
 	return {
 		type: ADD_ITEMS_TO_FEED,
-		items
+		items,
 	}
 }
 
-function fetchingItems () {
-	return {
-		type: FETCHING_ITEMS,
+export function handleCollapsed () {
+	return function (dispatch, state) {
+		console.log('state')
 	}
 }
 
-function fetchingItemsError (error) {
+function updateCollapsed (item, collapsed) {
 	return {
-		type: FETCHING_ITEMS_ERROR,
-		error: error,
-	}
-}
-
-export function fetchingItemsSuccess (uid, user, timestamp) {
-	return {
-		type: FETCHING_ITEMS_SUCCESS,
-		uid,
-		user,
-		timestamp,
-	}
-}
-
-export function removeFetchingItems () {
-	return {
-		type: REMOVE_FETCHING_ITEMS,
-	}
-}
-
-function addItem (item, timestamp) {
-	return {
-		type: ADD_ITEM,
+		type: UPDATE_COLLAPSED,
 		item,
-		timestamp,
-	}
-}
-
-export function itemsFanout (items) {
-	return function (dispatch, getState) {
-		// const uid = getState().users.authedId
-		// saveItems(items, { uid: uid })
-		// .then((itemsWithId) => {
-		// 	dispatch(addItem(itemsWithId))
-		// 	dispatch(closeItemsForm())
-		// })
-		// .catch((err) => {
-		// 	console.warn('Error in itemsFanout', err)
-		// })
+		collapsed,
 	}
 }
 
 // REDUCERS
-const initialItemState = {
-	lastUpdated: Date.now(),
-	info: {
-		itemId: '',
-		purchasedAtDate: '',
-		assignedAtDate: '',
-		viability: '',
-		photos: {},
-		notes: {},
-	},
-}
+const initialItemState = {}
 
 function item (state = initialItemState, action) {
 	switch (action.type) {
-	case ADD_ITEM:
+	case UPDATE_COLLAPSED:
 		return {
 			...state,
-			[action.itemId]: {
-				info: action.item,
-				lastUpdated: action.timestamp,
+			[action.item.itemId]: {
+				collapsed: action.collapsed,
 			},
 		}
 	default :
@@ -92,41 +39,19 @@ function item (state = initialItemState, action) {
 	}
 }
 
-const initialState = {
-	// isFetching: false,
-	// error: '',
-	// lastUpdated: Date.now(),
-}
+const initialState = {}
 
 export default function items (state = initialState, action) {
 	switch (action.type) {
-	case FETCHING_ITEMS:
-		return {
-			...state,
-			// isFetching: true,
-		}
-	case FETCHING_ITEMS_ERROR:
-		return {
-			...state,
-			// isFetching: false,
-			error: action.error,
-		}
-	case FETCHING_ITEMS_SUCCESS:
-	case ADD_ITEM:
-		return action.item === null
-		? {
-			...state,
-			// isFetching: false,
-			// error: '',
-		}
-		: {
-			...state,
-			items: item(state[action.item], action),
-		}
 	case ADD_ITEMS_TO_FEED:
 		return {
 			...state,
-			...action.items
+			...action.items,
+		}
+	case UPDATE_COLLAPSED:
+		return {
+			...state,
+			items: item(state[action.item], action),
 		}
 	default :
 		return state
