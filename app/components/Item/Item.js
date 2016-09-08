@@ -1,14 +1,14 @@
 import React, { PropTypes } from 'react'
 import { FontIcon } from 'react-toolbox/lib'
 import { Card, CardMedia, CardTitle, CardText, CardActions } from 'react-toolbox/lib/card'
-import { statusWarning, statusReplace, status, card, chips, nameChip, gear } from './styles.scss'
+import { statusWarning, statusReplace, status, card, chips, nameChip, gear, notEmptyExpansion, emptyExpansion } from './styles.scss'
 
 Item.propTypes = {
 	itemPerson: PropTypes.object.isRequired,
 	serial: PropTypes.string.isRequired,
 	itemHardware: PropTypes.object.isRequired,
 	notes: PropTypes.string.isRequired,
-	// photo: PropTypes.object.isRequired,
+	photo: PropTypes.object,
 	collapsed: PropTypes.bool.isRequired,
 	getYearsOld: PropTypes.string.isRequired,
 	envokeHandleCollapsed: PropTypes.func.isRequired,
@@ -42,12 +42,14 @@ export default function Item (props) {
 				</div>
 			</CardText>
 			{!props.collapsed
-				? <div>
-						<CardTitle
-							avatar={props.itemPerson.photo.url}
-							title={(() => `#${props.itemPerson.firstName} ${props.itemPerson.lastName}`)()}
-							subtitle={props.itemPerson.email} />
-					</div>
+				? <CardText>
+						{props.itemHardware.description
+							? <p><strong>Hardware Description:</strong><br />{props.itemHardware.description}</p>
+							: ''}
+						{props.notes
+							? <p><strong>Item Notes:</strong><br />{props.notes}</p>
+							: ''}
+					</CardText>
 				: ''}
 		</Card>
 	)

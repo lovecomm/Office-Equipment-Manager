@@ -110,7 +110,7 @@ function addItem (item) {
 export function itemsFanout (item) {
 	return function (dispatch, getState) {
 		const uid = getState().users.authedId
-		saveItem(item, { uid: uid }) // add item to firebase
+		saveItem(item, {uid: uid}) // add item to firebase
 		.then((itemWithId) => {
 			dispatch(addItem(itemWithId)) // add to redux store
 			dispatch(addNewItemToFeed(itemWithId.itemId, itemWithId))

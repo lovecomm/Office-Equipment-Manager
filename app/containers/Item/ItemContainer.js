@@ -10,7 +10,7 @@ const ItemsContainer = React.createClass({
 		itemHardware: PropTypes.object.isRequired,
 		itemPerson: PropTypes.object.isRequired,
 		notes: PropTypes.string.isRequired,
-		// photo: PropTypes.object.isRequired,
+		photo: PropTypes.object,
 		purchasedAtDate: PropTypes.string.isRequired,
 		itemId: PropTypes.string.isRequired,
 		collapsed: PropTypes.bool.isRequired,
@@ -27,11 +27,17 @@ const ItemsContainer = React.createClass({
 		const newCollapse = !this.props.collapsed
 		this.props.handleCollapsed(this.props.itemId, newCollapse)
 	},
+	expandedContentStyles () {
+		if (this.props.itemHardware.description === '' && this.props.notes === '') {
+			return {padding: 0}
+		} else { return {} }
+	},
 	render () {
 		return (
 			<Item
 				{...this.props}
 				getYearsOld={this.getYearsOld()}
+				expandedContentStyles={this.expandedContentStyles()}
 				envokeHandleCollapsed={this.envokeHandleCollapsed}/>
 		)
 	},

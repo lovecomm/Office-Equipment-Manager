@@ -7,6 +7,9 @@ $btn-blue: darken(#2196f3, 35%);
 	height: 0%; // prevents items from matching height of all other items on the same row
 }
 
+.emptyExpansion { padding: 0 !important; }
+.notEmptyExpansion { color: blue; }
+
 .gear {
 	position: absolute;
 	top: 0;
@@ -50,7 +53,10 @@ $btn-blue: darken(#2196f3, 35%);
 	.statusWarning { background-color: darken(orange, 15%); }
 }
 
-.small {
-	font-size: 0.75em;
-	color: #666;
+strong {
+	font-weight: 400;
+	text-transform: uppercase;
+	text-decoration: underline;
+	font-size: 0.85em;
+	margin-top: 15px;
 }

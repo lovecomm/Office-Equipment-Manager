@@ -76,8 +76,6 @@ export function setAndHandleFeedListener () {
 			dispatch(addHardwareToFeed(hardware))
 			if (initialFetch === true) {
 				dispatch(settingFeedListenerSuccess(sortedItemIds))
-			} else {
-				// dispatch(addNewItemToFeed(sortedIds[0]))
 			}
 			initialFetch = false
 		}, (error) => dispatch(settingFeedListenerError(error)))
