@@ -96,8 +96,8 @@ export function saveItem (item, uid) {
 							bucket: itemPhotoRef.bucket,
 							url: url,
 						}
-						return ref.child(`feed/items/${itemId}`).set({...newItem, ...photo, itemId}) // saving item to firebase
-							.then(() => ({...newItem, ...photo, itemId}))
+						return ref.child(`feed/items/${itemId}`).set({...newItem, photo, itemId}) // saving item to firebase
+							.then(() => ({...newItem, photo, itemId}))
 					})
 				}))
 			} else {

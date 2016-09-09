@@ -1,27 +1,28 @@
 import React, { PropTypes } from 'react'
 import { FontIcon } from 'react-toolbox/lib'
-import { Card, CardMedia, CardTitle, CardText, CardActions } from 'react-toolbox/lib/card'
-import { statusWarning, statusReplace, status, card, chips, nameChip, gear, notEmptyExpansion, emptyExpansion } from './styles.scss'
+import { Card, CardMedia, CardTitle, CardText } from 'react-toolbox/lib/card'
+import { statusWarning, statusReplace, status, chips, nameChip, gear, fullWidthPhoto} from './styles.scss'
 
 Item.propTypes = {
 	itemPerson: PropTypes.object.isRequired,
 	serial: PropTypes.string.isRequired,
 	itemHardware: PropTypes.object.isRequired,
+	hasSubContent: PropTypes.bool.isRequired,
 	notes: PropTypes.string.isRequired,
 	photo: PropTypes.object,
 	collapsed: PropTypes.bool.isRequired,
 	getYearsOld: PropTypes.string.isRequired,
 	envokeHandleCollapsed: PropTypes.func.isRequired,
+	cardClass: PropTypes.string.isRequired,
 }
 
 export default function Item (props) {
 	return (
-		<Card style={{width: '250px', maxWidth: '100%'}} className={card} onClick={props.envokeHandleCollapsed}>
-			<FontIcon value='settings' className={gear}/>
+		<Card style={{width: '250px'}} className={props.cardClass} onClick={props.envokeHandleCollapsed}>
 			<CardTitle
 				avatar={props.itemHardware.photo.url}
 				title={props.serial}
-				subtitle={(() => props.itemHardware.isComputer ? `${props.itemHardware.model}` : `${props.itemHardware.make} ${props.itemHardware.model}`)()}/>
+				subtitle={(() => `${props.itemHardware.make} ${props.itemHardware.model}`)()}/>
 			<CardText className={chips}>
 				<span className={nameChip}>{(() => `${props.itemPerson.firstName} ${props.itemPerson.lastName}`)()}</span>
 				<div className={status}>
@@ -41,22 +42,24 @@ export default function Item (props) {
 					})()}
 				</div>
 			</CardText>
-			{!props.collapsed
-				? <CardText>
-						{props.itemHardware.description
-							? <p><strong>Hardware Description:</strong><br />{props.itemHardware.description}</p>
-							: ''}
-						{props.notes
-							? <p><strong>Item Notes:</strong><br />{props.notes}</p>
-							: ''}
-					</CardText>
+			{props.hasSubContent && !props.collapsed
+				? <div>
+						{props.photo
+						? <CardMedia
+								aspectRatio='wide'
+								className={fullWidthPhoto}
+								image={props.photo.url}/>
+						: ''}
+						<CardText>
+							{props.itemHardware.description
+								? <div><h4>Hardware Description:</h4><p>{props.itemHardware.description}</p></div>
+								: ''}
+							{props.notes
+								? <div><h4>Item Note:</h4><p>{props.notes}</p></div>
+								: ''}
+						</CardText>
+					</div>
 				: ''}
 		</Card>
 	)
 }
-
-// notes
-// item photo
-// make – computers-only
-// hardware description
-// person email

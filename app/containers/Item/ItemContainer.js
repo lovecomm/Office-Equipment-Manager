@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Item } from 'components'
 import { bindActionCreators } from 'redux'
 import * as itemActionCreators from 'redux/modules/items'
+import { cardExpandable, cardNoExpand } from './styles.scss'
 
 const ItemsContainer = React.createClass({
 	propTypes: {
@@ -11,6 +12,7 @@ const ItemsContainer = React.createClass({
 		itemPerson: PropTypes.object.isRequired,
 		notes: PropTypes.string.isRequired,
 		photo: PropTypes.object,
+		hasSubContent: PropTypes.bool.isRequired,
 		purchasedAtDate: PropTypes.string.isRequired,
 		itemId: PropTypes.string.isRequired,
 		collapsed: PropTypes.bool.isRequired,
@@ -27,17 +29,17 @@ const ItemsContainer = React.createClass({
 		const newCollapse = !this.props.collapsed
 		this.props.handleCollapsed(this.props.itemId, newCollapse)
 	},
-	expandedContentStyles () {
-		if (this.props.itemHardware.description === '' && this.props.notes === '') {
-			return {padding: 0}
-		} else { return {} }
+	cardClass () {
+		if (this.props.hasSubContent) {
+			return cardExpandable
+		} else { return cardNoExpand }
 	},
 	render () {
 		return (
 			<Item
 				{...this.props}
 				getYearsOld={this.getYearsOld()}
-				expandedContentStyles={this.expandedContentStyles()}
+				cardClass={this.cardClass()}
 				envokeHandleCollapsed={this.envokeHandleCollapsed}/>
 		)
 	},
@@ -47,6 +49,7 @@ function mapStateToProps ({items, people, hardware}, props) {
 	const item = items[props.itemId]
 	return {
 		serial: item.serial,
+		hasSubContent: item.hasSubContent,
 		itemId: item.itemId,
 		itemHardware: hardware[item.itemHardwareId],
 		itemPerson: people[item.itemPersonId],

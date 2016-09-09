@@ -1,14 +1,20 @@
-$btn-blue: darken(#2196f3, 35%);
+$blue: darken(#2196f3, 35%);
 
-.card {
-	margin: 7px 5px;
-	cursor: pointer;
+*[class*='card'] {
+	// margin: 7px 5px;
 	position: relative;
 	height: 0%; // prevents items from matching height of all other items on the same row
+
+	h4 {
+		font-weight: 600;
+		text-transform: uppercase;
+		text-decoration: underline;
+		font-size: 0.85em;
+		margin-top: 15px;
+	}
 }
 
-.emptyExpansion { padding: 0 !important; }
-.notEmptyExpansion { color: blue; }
+.fullWidthPhoto { margin: 0; }
 
 .gear {
 	position: absolute;
@@ -20,7 +26,7 @@ $btn-blue: darken(#2196f3, 35%);
 	transform: rotate(30deg);
 	transition: color 0.3s ease;
 
-	&:hover { color: $btn-blue; }
+	&:hover { color: $blue; }
 }
 
 .chips {
@@ -40,7 +46,7 @@ $btn-blue: darken(#2196f3, 35%);
 	}
 
 	.nameChip {
-		background-color: $btn-blue;
+		background-color: $blue;
 		color: #fff;
 	}
 
@@ -51,12 +57,4 @@ $btn-blue: darken(#2196f3, 35%);
 
 	.statusReplace { background-color: darken(red, 15%); }
 	.statusWarning { background-color: darken(orange, 15%); }
-}
-
-strong {
-	font-weight: 400;
-	text-transform: uppercase;
-	text-decoration: underline;
-	font-size: 0.85em;
-	margin-top: 15px;
 }
