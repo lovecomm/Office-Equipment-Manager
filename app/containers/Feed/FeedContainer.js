@@ -19,11 +19,12 @@ const FeedContainer = React.createClass({
 })
 
 function mapStateToProps ({feed}) {
-	const { isFetching, error, itemIds } = feed
+	const { isFetching, error, itemIds, filter } = feed
 	return {
 		isFetching,
 		error,
 		itemIds,
+		filter,
 	}
 }
 

@@ -7,7 +7,7 @@ import { firebaseAuth } from 'config/constants'
 import { Loader, Navigation } from 'components'
 import { FormsDrawersContainer } from 'containers'
 import { ThemeProvider } from 'react-css-themr'
-import { container, innerContainer } from './styles.css'
+import { container, innerContainer } from './styles.scss'
 
 const MainContainer = React.createClass({
 	propTypes: {

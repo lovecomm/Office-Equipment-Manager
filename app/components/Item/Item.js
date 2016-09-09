@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { FontIcon } from 'react-toolbox/lib'
 import { Card, CardMedia, CardTitle, CardText } from 'react-toolbox/lib/card'
-import { statusWarning, statusReplace, status, chips, nameChip, gear, fullWidthPhoto} from './styles.scss'
+import { statusWarning, statusReplace, status, chips, gear, fullWidthPhoto} from './styles.scss'
 
 Item.propTypes = {
 	itemPerson: PropTypes.object.isRequired,
@@ -19,12 +19,13 @@ Item.propTypes = {
 export default function Item (props) {
 	return (
 		<Card style={{width: '250px'}} className={props.cardClass} onClick={props.envokeHandleCollapsed}>
+			<FontIcon value='settings' className={gear}/>
 			<CardTitle
 				avatar={props.itemHardware.photo.url}
 				title={props.serial}
 				subtitle={(() => `${props.itemHardware.make} ${props.itemHardware.model}`)()}/>
 			<CardText className={chips}>
-				<span className={nameChip}>{(() => `${props.itemPerson.firstName} ${props.itemPerson.lastName}`)()}</span>
+				<span>{(() => `${props.itemPerson.firstName} ${props.itemPerson.lastName}`)()}</span>
 				<div className={status}>
 					{(() => {
 						// Calculating Item's age

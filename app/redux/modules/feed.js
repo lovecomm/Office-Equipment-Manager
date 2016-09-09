@@ -10,6 +10,9 @@ const SETTING_FEED_LISTENER_SUCCESS = 'SETTING_FEED_LISTENER_SUCCESS'
 const ADD_NEW_ITEM_TO_FEED = 'ADD_NEW_ITEM_TO_FEED'
 const UPDATE_SORT_STATUS = 'UPDATE_SORT_STATUS'
 const UPDATE_SORT_ORDER = 'UPDATE_SORT_ORDER'
+const	ADD_FILTER_OPTIONS = 'ADD_FILTER_OPTIONS'
+const UPDATE_FILTER_NAME_AND_TYPE = 'UPDATE_FILTER_NAME_AND_TYPE'
+const UPDATE_IS_FILTERING = 'UPDATE_IS_FILTERING'
 
 // ACTIONS
 function settingFeedListener () {
@@ -74,6 +77,7 @@ export function setAndHandleFeedListener () {
 			dispatch(addItemsToFeed(items))
 			dispatch(addPeopleToFeed(people))
 			dispatch(addHardwareToFeed(hardware))
+			buildFilterOptions(dispatch, items, people, hardware)
 			if (initialFetch === true) {
 				dispatch(settingFeedListenerSuccess(sortedItemIds))
 			}
@@ -252,13 +256,176 @@ export function changeSortOrder () {
 	}
 }
 
+function addFilterOptions (options) {
+	return {
+		type: ADD_FILTER_OPTIONS,
+		options,
+	}
+}
+
+function updateFilterName (name, filterType) {
+	return {
+		type: UPDATE_FILTER_NAME_AND_TYPE,
+		name,
+		filterType,
+	}
+}
+
+export function disableIsFiltering () {
+	return function (dispatch, getState) {
+		dispatch(updateIsFiltering())
+		switch (getState().feed.sortStatus) {
+		case 'purchasedAtDate':
+			applySortStatusByDate(dispatch, getState, 'purchasedAtDate')
+			return
+		case 'peopleLastName':
+			applySortStatusPeople(dispatch, getState, 'peopleLastName', 'lastName')
+			return
+		case 'peopleFirstName':
+			applySortStatusPeople(dispatch, getState, 'peoplefirstName', 'firstName')
+			return
+		case 'hardware':
+			applySortStatusHardware(dispatch, getState, 'hardware')
+			return
+		default: // dateCreated
+			applySortStatusByDate(dispatch, getState, 'dateCreated')
+			return
+		}
+	}
+}
+
+function updateIsFiltering () {
+	return {
+		type: UPDATE_IS_FILTERING,
+	}
+}
+
+function filterByItem (dispatch, getState, itemId) {
+	dispatch(settingFeedListenerSuccess([itemId]))
+}
+
+function filterByPerson (dispatch, getState, personId) {
+	const items = getState().items
+	const sortedIds = []
+	for (let item in items) {
+		items[item].itemPersonId === personId ? sortedIds.push(item) : ''
+	}
+	dispatch(settingFeedListenerSuccess(sortedIds))
+}
+
+function filterByHardware (dispatch, getState, hardwareId) {
+	const items = getState().items
+	const sortedIds = []
+	for (let item in items) {
+		items[item].itemHardwareId === hardwareId ? sortedIds.push(item) : ''
+	}
+	dispatch(settingFeedListenerSuccess(sortedIds))
+}
+
+export function updateAndHandleFilter (nameId) {
+	return function (dispatch, getState) {
+		return findFilterNameAndType(getState, nameId)
+		.then(({name, filterType}) => {
+			dispatch(updateFilterName(name, filterType))
+			switch (filterType) {
+			case 'people':
+				filterByPerson(dispatch, getState, nameId[0])
+			case 'hardware':
+				filterByHardware(dispatch, getState, nameId[0])
+			default:
+				filterByItem(dispatch, getState, nameId[0])
+			}
+		})
+	}
+}
+
+function findFilterNameAndType (getState, nameId) {
+	return new Promise((resolve, reject) => {
+		const items = getState().items
+		const people = getState().people
+		const hardware = getState().hardware
+		for (const i in items) {
+			if (items[i].itemId === nameId[0]) {
+				resolve({ filterType: 'item', name: items[i].serial })
+			}
+		}
+		for (const i in people) {
+			if (people[i].personId === nameId[0]) {
+				resolve({ filterType: 'people', name: `${people[i].firstName} ${people[i].lastName}` })
+			}
+		}
+		for (const i in hardware) {
+			if (hardware[i].hardwareId === nameId[0]) {
+				resolve({ filterType: 'hardware', name: `${hardware[i].make} ${hardware[i].model}` })
+			}
+		}
+	})
+}
+
+function buildFilterOptions (dispatch, items, people, hardware) {
+	let options = {}
+	for (const i in items) {
+		const item = items[i]
+		options = {
+			...options,
+			[item.itemId]: `${item.serial}`,
+		}
+	}
+	for (const i in people) {
+		const person = people[i]
+		options = {
+			...options,
+			[person.personId]: `${person.firstName} ${person.lastName}`,
+		}
+	}
+	for (const i in hardware) {
+		const aHardware = hardware[i]
+		options = {
+			...options,
+			[aHardware.hardwareId]: `${aHardware.make} ${aHardware.model}`,
+		}
+	}
+	dispatch(addFilterOptions(options))
+}
+
+function filter (state, action) {
+	switch (action.type) {
+	case ADD_FILTER_OPTIONS:
+		return {
+			...state,
+			options: action.options,
+		}
+	case UPDATE_FILTER_NAME_AND_TYPE:
+		return {
+			...state,
+			isFiltering: true,
+			name: action.name,
+			filterType: action.filterType,
+		}
+	case UPDATE_IS_FILTERING: {
+		return {
+			...state,
+			isFiltering: false,
+		}
+	}
+	default:
+		return state
+	}
+}
+
 // REDUCERS
 const initialState = {
 	isFetching: false,
 	error: '',
+	itemIds: [],
 	sortStatus: 'dateCreated',
 	sortOrder: 'asc',
-	itemIds: [],
+	filter: {
+		isFiltering: false,
+		options: {},
+		filterType: '',
+		name: '',
+	},
 }
 
 export default function feed (state = initialState, action) {
@@ -295,6 +462,13 @@ export default function feed (state = initialState, action) {
 		return {
 			...state,
 			itemIds: [action.itemId, ...state.itemIds],
+		}
+	case ADD_FILTER_OPTIONS:
+	case UPDATE_FILTER_NAME_AND_TYPE:
+	case UPDATE_IS_FILTERING:
+		return {
+			...state,
+			filter: filter(state.filter, action),
 		}
 	default:
 		return state

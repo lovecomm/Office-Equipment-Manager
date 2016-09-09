@@ -3,7 +3,7 @@ import { Link } from 'react-router'
 import { IconMenu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu'
 import FontIcon from 'react-toolbox/lib/font_icon'
 import { AppBar } from 'react-toolbox/lib/app_bar'
-import { title, appBar, dropdownIcon, dropdownMenu } from './styles.scss'
+import { title, dropdownIcon, dropdownMenu, container } from './styles.scss'
 import { HardwareFormToggleContainer, PeopleFormToggleContainer, ItemsFormToggleContainer } from 'containers'
 
  Navigation.propTypes = MenuItems.propTypes = {
@@ -30,9 +30,11 @@ function MenuItems ({isAuthed}) {
 
 export default function Navigation ({isAuthed}) {
 	return (
-		<AppBar className={appBar}>
-			<Link to='/' className={title}>Equipment Manager</Link>
-			<MenuItems isAuthed={isAuthed} />
+		<AppBar>
+			<div className={container}>
+				<Link to='/' className={title}>Equipment Manager</Link>
+				<MenuItems isAuthed={isAuthed} />
+			</div>
 		</AppBar>
 	)
 }

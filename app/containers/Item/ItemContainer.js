@@ -46,6 +46,7 @@ const ItemsContainer = React.createClass({
 })
 
 function mapStateToProps ({items, people, hardware}, props) {
+	// not all items are used at once, so this needs to get only the items on the feed.itemIds
 	const item = items[props.itemId]
 	return {
 		serial: item.serial,
