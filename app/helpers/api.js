@@ -78,7 +78,7 @@ export function saveItem (item, uid) {
 				itemHardwareId: item.itemHardwareId,
 				notes: item.notes,
 				collapsed: true,
-				hasSubContent: (item.notes !== '' && item.photo.size !== undefined && hardware.description !== ''),
+				hasSubContent: (item.notes !== '' || item.photo.size !== undefined || hardware.description !== ''),
 				createdBy: uid.uid,
 				dateCreated: new Date().toString(),
 				dateLastUpdated: new Date().toString(),
