@@ -7,6 +7,7 @@ const UPDATE_PEOPLE_FIRST_NAME_TEXT = 'UPDATE_PEOPLE_FIRST_NAME_TEXT'
 const UPDATE_PEOPLE_LAST_NAME_TEXT = 'UPDATE_PEOPLE_LAST_NAME_TEXT'
 const UPDATE_PEOPLE_EMAIL_TEXT = 'UPDATE_PEOPLE_EMAIL_TEXT'
 const UPDATE_PEOPLE_PHOTO = 'UPDATE_PEOPLE_PHOTO'
+const UPDATE_PEOPLE_FORM_ERROR = 'UPDATE_PEOPLE_FORM_ERROR'
 
 // ACTIONS
 export function openPeopleForm () {
@@ -49,6 +50,13 @@ export function updatePhoto (photo) {
 	}
 }
 
+function updatePeopleFormError (error) {
+	return {
+		type: UPDATE_PEOPLE_FORM_ERROR,
+		error
+	}
+}
+
 function addPeople (people) {
 	return {
 		type: ADD_PEOPLE,
@@ -64,8 +72,8 @@ export function peopleFanout (people) {
 			dispatch(addPeople(peopleWithId))
 			dispatch(closePeopleForm())
 		})
-		.catch((err) => {
-			console.warn('Error in peopleFanout', err)
+		.catch((error) => {
+			dispatch(updatePeopleFormError(error))
 		})
 	}
 }
@@ -78,6 +86,7 @@ const initialState = {
 	photo: {},
 	photoNameText: '',
 	isOpen: false,
+	error: '',
 }
 
 export default function peopleForm (state = initialState, action) {
@@ -95,6 +104,7 @@ export default function peopleForm (state = initialState, action) {
 			photo: {},
 			photoNameText: '',
 			isOpen: false,
+			error: '',
 		}
 	case UPDATE_PEOPLE_FIRST_NAME_TEXT:
 		return {
@@ -121,6 +131,11 @@ export default function peopleForm (state = initialState, action) {
 		return {
 			...state,
 			[action.people.peopleId]: action.people,
+		}
+	case UPDATE_PEOPLE_FORM_ERROR:
+		return {
+			...state,
+			error: action.error
 		}
 	default :
 		return state

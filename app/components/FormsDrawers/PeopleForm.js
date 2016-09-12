@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Drawer, Input, Button } from 'react-toolbox/lib'
-import { button, headline, formWrapper, selectedPhoto, drawer, imageInput } from './styles.scss'
+import { button, headline, formWrapper, selectedPhoto, drawer, imageInput, error } from './styles.scss'
 import { formatPerson } from 'helpers/utils'
 
 const	{ func, bool, string, object } = PropTypes
@@ -19,6 +19,7 @@ PeopleForm.propTypes = {
 	updateEmailText: func.isRequired,
 	updatePhoto: func.isRequired,
 	peopleFanout: func.isRequired,
+	error: string.isRequired,
 }
 
 export default function PeopleForm (props, context) {
@@ -77,6 +78,7 @@ export default function PeopleForm (props, context) {
 					onClick={submitPeople}
 					disabled={props.isSubmitDisabled}
 					className={button} />
+				<span className={error}>{props.error}</span>
 			</div>
 		</Drawer>
 	)

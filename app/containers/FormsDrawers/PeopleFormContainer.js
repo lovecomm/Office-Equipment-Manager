@@ -23,6 +23,7 @@ function mapStateToProps ({peopleForm}, props) {
 		photo: peopleForm.photo,
 		photoNameText: peopleForm.photoNameText,
 		isOpen: peopleForm.isOpen,
+		error: peopleForm.error,
 		isSubmitDisabled: disableSubmit(),
 	}
 }
