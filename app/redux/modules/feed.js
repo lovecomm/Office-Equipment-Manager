@@ -330,10 +330,13 @@ export function updateAndHandleFilter (nameId) {
 			switch (filterType) {
 			case 'people':
 				filterByPerson(dispatch, getState, nameId[0])
+				return
 			case 'hardware':
 				filterByHardware(dispatch, getState, nameId[0])
+				return
 			default:
 				filterByItem(dispatch, getState, nameId[0])
+				return
 			}
 		})
 	}

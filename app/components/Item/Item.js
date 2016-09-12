@@ -22,8 +22,8 @@ export default function Item (props) {
 			<FontIcon value='settings' className={gear}/>
 			<CardTitle
 				avatar={props.itemHardware.photo.url}
-				title={props.serial}
-				subtitle={(() => `${props.itemHardware.make} ${props.itemHardware.model}`)()}/>
+				subtitle={props.serial}
+				title={(() => `${props.itemHardware.make} ${props.itemHardware.model}`)()}/>
 			<CardText className={chips}>
 				<span>{(() => `${props.itemPerson.firstName} ${props.itemPerson.lastName}`)()}</span>
 				<div className={status}>
