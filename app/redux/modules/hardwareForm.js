@@ -8,6 +8,7 @@ const UPDATE_HARDWARE_MODEL_TEXT = 'UPDATE_HARDWARE_MODEL_TEXT'
 const UPDATE_HARDWARE_DESCRIPTION_TEXT = 'UPDATE_HARDWARE_DESCRIPTION_TEXT'
 const UPDATE_HARDWARE_PHOTO = 'UPDATE_HARDWARE_PHOTO'
 const UPDATE_IS_COMPUTER = 'UPDATE_IS_COMPUTER'
+const UPDATE_HARDWARE_FORM_ERROR = 'UPDATE_HARDWARE_FORM_ERROR'
 
 // ACTIONS
 export function openHardwareForm () {
@@ -57,6 +58,13 @@ export function updateIsComputer (isComputer) {
 	}
 }
 
+function updateHardwareFormError (error) {
+	return {
+		type: UPDATE_HARDWARE_FORM_ERROR,
+		error,
+	}
+}
+
 function addHardware (hardware) {
 	return {
 		type: ADD_HARDWARE,
@@ -73,7 +81,7 @@ export function hardwareFanout (hardware) {
 			dispatch(closeHardwareForm())
 		})
 		.catch((err) => {
-			console.warn('Error in hardwareFanout', err)
+			dispatch(updateHardwareFormError(err))
 		})
 	}
 }
@@ -87,6 +95,7 @@ const initialState = {
 	photoNameText: '',
 	isComputer: false,
 	isOpen: false,
+	error: '',
 }
 
 export default function hardwareForm (state = initialState, action) {
@@ -105,6 +114,7 @@ export default function hardwareForm (state = initialState, action) {
 			photoNameText: '',
 			isComputer: false,
 			isOpen: false,
+			error: '',
 		}
 	case UPDATE_HARDWARE_MAKE_TEXT:
 		return {
@@ -131,6 +141,11 @@ export default function hardwareForm (state = initialState, action) {
 		return {
 			...state,
 			isComputer: action.isComputer,
+		}
+	case UPDATE_HARDWARE_FORM_ERROR:
+		return {
+			...state,
+			error: action.error,
 		}
 	case ADD_HARDWARE:
 		return {

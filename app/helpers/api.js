@@ -10,33 +10,54 @@ export function firebaseHref (fullPath) {
 	})
 }
 
+function verifyHardware (aHardware) {
+	return new Promise((resolve, reject) => {
+		getHardware((hardware) => {
+			for (const hardwareId in hardware) {
+				// Test for Make & Model duplicate
+				if (`${hardware[hardwareId].make} ${hardware[hardwareId].model}`.toUpperCase()	===
+				`${aHardware.make} ${aHardware.model}`.toUpperCase()) {
+					reject(`Sorry, but the hardware, ${aHardware.make} ${aHardware.model} is already registered.`)
+				}
+			}
+			// Mark as verified if email and fullname is not in use
+			resolve(true)
+		}, (error) => console.warn(error))
+	})
+}
+
 export function saveHardware (hardware, uid) {
 	const hardwareId = ref.child('feed/hardware').push().key
 	const hardwarePhotoRef = imagesRef.child(`hardware/${hardware.photo.name}`) // Create a reference to hardware image in firebase
-	return hardwarePhotoRef.put(hardware.photo) // Store photo to firebase
-	.then((photoSnapshot) => {
-		return firebaseHref(hardwarePhotoRef.fullPath).then((url) => {
-			const newHardware = {
-				make: hardware.make,
-				model: hardware.model,
-				description: hardware.description,
-				photo: {
-					name: hardwarePhotoRef.name,
-					fullPath: hardwarePhotoRef.fullPath,
-					size: hardware.photo.size,
-					type: hardware.photo.type,
-					bucket: hardwarePhotoRef.bucket,
-					url: url,
-				},
-				isComputer: hardware.isComputer,
-				dateCreated: new Date().toString(),
-				dateLastUpdated: new Date().toString(),
-				createdBy: uid.uid,
-			}
+	return verifyHardware(hardware)
+	.then((isVerified) => {
+		if (isVerified) {
+			return hardwarePhotoRef.put(hardware.photo) // Store photo to firebase
+			.then((photoSnapshot) => {
+				return firebaseHref(hardwarePhotoRef.fullPath).then((url) => {
+					const newHardware = {
+						make: hardware.make,
+						model: hardware.model,
+						description: hardware.description,
+						photo: {
+							name: hardwarePhotoRef.name,
+							fullPath: hardwarePhotoRef.fullPath,
+							size: hardware.photo.size,
+							type: hardware.photo.type,
+							bucket: hardwarePhotoRef.bucket,
+							url: url,
+						},
+						isComputer: hardware.isComputer,
+						dateCreated: new Date().toString(),
+						dateLastUpdated: new Date().toString(),
+						createdBy: uid.uid,
+					}
 
-			return ref.child(`feed/hardware/${hardwareId}`).set({...newHardware, hardwareId}) // saving hardware to firebase
-				.then(() => ({...newHardware, hardwareId}))
-		})
+					return ref.child(`feed/hardware/${hardwareId}`).set({...newHardware, hardwareId}) // saving hardware to firebase
+						.then(() => ({...newHardware, hardwareId}))
+				})
+			})
+		}
 	})
 }
 

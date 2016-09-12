@@ -7,7 +7,7 @@ const UPDATE_PEOPLE_FIRST_NAME_TEXT = 'UPDATE_PEOPLE_FIRST_NAME_TEXT'
 const UPDATE_PEOPLE_LAST_NAME_TEXT = 'UPDATE_PEOPLE_LAST_NAME_TEXT'
 const UPDATE_PEOPLE_EMAIL_TEXT = 'UPDATE_PEOPLE_EMAIL_TEXT'
 const UPDATE_PEOPLE_PHOTO = 'UPDATE_PEOPLE_PHOTO'
-const UPDATE_PEOPLE_FORM_ERROR = 'UPDATE_PEOPLE_FORM_ERROR'
+const UPDATE_PEOPLE_FORM_ERROR = 'HARDWARE'
 
 // ACTIONS
 export function openPeopleForm () {
@@ -53,7 +53,7 @@ export function updatePhoto (photo) {
 function updatePeopleFormError (error) {
 	return {
 		type: UPDATE_PEOPLE_FORM_ERROR,
-		error
+		error,
 	}
 }
 
@@ -135,7 +135,7 @@ export default function peopleForm (state = initialState, action) {
 	case UPDATE_PEOPLE_FORM_ERROR:
 		return {
 			...state,
-			error: action.error
+			error: action.error,
 		}
 	default :
 		return state

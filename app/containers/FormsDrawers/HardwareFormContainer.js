@@ -22,6 +22,7 @@ function mapStateToProps ({hardwareForm}, props) {
 		photoNameText: hardwareForm.photoNameText,
 		isComputer: hardwareForm.isComputer,
 		isOpen: hardwareForm.isOpen,
+		error: hardwareForm.error,
 		isSubmitDisabled: disableSubmit(),
 	}
 }
