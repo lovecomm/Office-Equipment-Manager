@@ -115,44 +115,64 @@ export function savePeople (person, uid) {
 	})
 }
 
+function verifyItem (item) {
+	return new Promise((resolve, reject) => {
+		getItems(({items, sortedItemIds}) => {
+			for (const itemId in items) {
+				// Test for Make & Model duplicate
+				if (`${items[itemId].serial}`.toUpperCase()	=== `${item.serial}`.toUpperCase()) {
+					reject(`Sorry, but the serial number, ${item.serial} is already in use.`)
+				}
+			}
+			// Mark as verified if email and fullname is not in use
+			resolve(true)
+		}, (error) => console.warn(error))
+	})
+}
+
 export function saveItem (item, uid) {
 	const itemId = ref.child('feed/items').push().key
-	return new Promise((resolve, reject) => {
-		getSingleHardware(item.itemHardwareId, (hardware) => {
-			let newItem = {
-				serial: item.serial,
-				purchasedAtDate: item.purchasedAtDate.toString(),
-				itemPersonId: item.itemPersonId,
-				itemHardwareId: item.itemHardwareId,
-				notes: item.notes,
-				collapsed: true,
-				hasSubContent: (item.notes !== '' || item.photo.size !== undefined || hardware.description !== ''),
-				createdBy: uid.uid,
-				dateCreated: new Date().toString(),
-				dateLastUpdated: new Date().toString(),
-			}
-			if (item.photo.size) { // if size exists, photo exists
-				const itemPhotoRef = imagesRef.child(`items/${item.photo.name}`) // Get ref for person photo
-				resolve(itemPhotoRef.put(item.photo) // saving person photo to firebase
-				.then((photoSnapshot) => {
-					return firebaseHref(itemPhotoRef.fullPath).then((url) => {
-						const photo = {
-							name: itemPhotoRef.name,
-							fullPath: itemPhotoRef.fullPath,
-							size: item.photo.size,
-							type: item.photo.type,
-							bucket: itemPhotoRef.bucket,
-							url: url,
-						}
-						return ref.child(`feed/items/${itemId}`).set({...newItem, photo, itemId}) // saving item to firebase
-							.then(() => ({...newItem, photo, itemId}))
-					})
-				}))
-			} else {
-				resolve(ref.child(`feed/items/${itemId}`).set({...newItem, itemId}) // saving item to firebase
-					.then(() => ({...newItem, itemId})))
-			}
-		}, (err) => console.warn(err))
+	return verifyItem(item)
+	.then((isVerified) => {
+		if (isVerified) {
+			return new Promise((resolve, reject) => {
+				getSingleHardware(item.itemHardwareId, (hardware) => {
+					let newItem = {
+						serial: item.serial,
+						purchasedAtDate: item.purchasedAtDate.toString(),
+						itemPersonId: item.itemPersonId,
+						itemHardwareId: item.itemHardwareId,
+						notes: item.notes,
+						collapsed: true,
+						hasSubContent: (item.notes !== '' || item.photo.size !== undefined || hardware.description !== ''),
+						createdBy: uid.uid,
+						dateCreated: new Date().toString(),
+						dateLastUpdated: new Date().toString(),
+					}
+					if (item.photo.size) { // if size exists, photo exists
+						const itemPhotoRef = imagesRef.child(`items/${item.photo.name}`) // Get ref for person photo
+						resolve(itemPhotoRef.put(item.photo) // saving person photo to firebase
+						.then((photoSnapshot) => {
+							return firebaseHref(itemPhotoRef.fullPath).then((url) => {
+								const photo = {
+									name: itemPhotoRef.name,
+									fullPath: itemPhotoRef.fullPath,
+									size: item.photo.size,
+									type: item.photo.type,
+									bucket: itemPhotoRef.bucket,
+									url: url,
+								}
+								return ref.child(`feed/items/${itemId}`).set({...newItem, photo, itemId}) // saving item to firebase
+									.then(() => ({...newItem, photo, itemId}))
+							})
+						}))
+					} else {
+						resolve(ref.child(`feed/items/${itemId}`).set({...newItem, itemId}) // saving item to firebase
+							.then(() => ({...newItem, itemId})))
+					}
+				}, (err) => console.warn(err))
+			})
+		}
 	})
 }
 

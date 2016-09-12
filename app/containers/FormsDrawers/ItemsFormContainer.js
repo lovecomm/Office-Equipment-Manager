@@ -37,6 +37,7 @@ function mapStateToProps ({itemsForm, people, hardware}, props) {
 		photoNames: itemsForm.photoNames,
 		people,
 		hardware,
+		error: itemsForm.error,
 		isSubmitDisabled: disableSubmit(),
 	}
 }

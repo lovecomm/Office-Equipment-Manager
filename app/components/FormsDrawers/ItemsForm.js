@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Drawer, Input, Button, DatePicker, Autocomplete } from 'react-toolbox/lib'
-import { button, headline, formWrapper, drawer, imageInput, selectedPhoto } from './styles.scss'
+import { button, headline, formWrapper, drawer, imageInput, selectedPhoto, error } from './styles.scss'
 import { formatItem } from 'helpers/utils'
 
 const	{ func, bool, object, string, any } = PropTypes
@@ -17,6 +17,7 @@ ItemsForm.propTypes = {
 	photo: object.isRequired,
 	photoNames: string.isRequired,
 	people: object.isRequired,
+	error: string.isRequired,
 	// START Bound to dispatch
 	closeItemsForm: func.isRequired,
 	updateSerial: func.isRequired,
@@ -128,6 +129,7 @@ export default function ItemsForm (props, context) {
 					onClick={submitItems}
 					disabled={props.isSubmitDisabled}
 					className={button} />
+				<span className={error}>{props.error}</span>
 			</div>
 		</Drawer>
 	)

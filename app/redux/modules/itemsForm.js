@@ -11,6 +11,7 @@ const UPDATE_ITEM_PERSON = 'UPDATE_ITEM_PERSON'
 const UPDATE_ITEM_PERSON_ID = 'UPDATE_ITEM_PERSON_ID'
 const UPDATE_ITEM_HARDWARE = 'UPDATE_ITEM_HARDWARE'
 const UPDATE_ITEM_HARDWARE_ID = 'UPDATE_ITEM_HARDWARE_ID'
+const UPDATE_ITEM_FORM_ERROR = 'UPDATE_ITEM_FORM_ERROR'
 const ADD_ITEM = 'ADD_ITEM'
 
 // ACTIONS
@@ -100,6 +101,13 @@ export function updateItemHardwareInfo (itemHardwareId) {
 	}
 }
 
+function updateItemFormError (error) {
+	return {
+		type: UPDATE_ITEM_FORM_ERROR,
+		error,
+	}
+}
+
 function addItem (item) {
 	return {
 		type: ADD_ITEM,
@@ -117,7 +125,7 @@ export function itemsFanout (item) {
 			dispatch(closeItemsForm())
 		})
 		.catch((err) => {
-			console.warn('Error in itemsFanout', err)
+			dispatch(updateItemFormError(err))
 		})
 	}
 }
@@ -134,6 +142,7 @@ const initialState = {
 	notes: '',
 	photo: {},
 	photoNames: '',
+	error: '',
 }
 
 export default function itemsForm (state = initialState, action) {
@@ -155,6 +164,7 @@ export default function itemsForm (state = initialState, action) {
 			notes: '',
 			photo: {},
 			photoNames: '',
+			error: '',
 		}
 	case UPDATE_ITEMS_SERIAL:
 		return {
@@ -196,6 +206,11 @@ export default function itemsForm (state = initialState, action) {
 		return {
 			...state,
 			itemHardwareId: action.itemHardwareId,
+		}
+	case UPDATE_ITEM_FORM_ERROR:
+		return {
+			...state,
+			error: action.error,
 		}
 	case ADD_ITEM:
 		return {
