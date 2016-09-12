@@ -86,40 +86,77 @@ export function setAndHandleFeedListener () {
 	}
 }
 
+function getActiveItems (getState, sortStatus) {
+	return new Promise((resolve, reject) => {
+		let items = getState().items
+		let activeIds = getState().feed.itemIds
+		let itemsArray = []
+		if (sortStatus === 'peopleLastName' || sortStatus === 'peopleFirstName') {
+			const people = getState().people
+			for (let i in activeIds) {
+				const itemId = activeIds[i]
+				for (let i in items) {
+					const item = items[i]
+					if (item.itemId === itemId) {
+						const person = people[item.itemPersonId]
+						itemsArray.push([itemId, person])
+					}
+				}
+			}
+		} else if (sortStatus === 'hardware') {
+			const hardware = getState().hardware
+			for (let i in activeIds) {
+				const itemId = activeIds[i]
+				for (let i in items) {
+					const item = items[i]
+					if (item.itemId === itemId) {
+						const aHardware = hardware[item.itemHardwareId]
+						itemsArray.push([itemId, aHardware])
+					}
+				}
+			}
+		} else { // sort status === 'items'
+			for (let i in activeIds) {
+				const itemId = activeIds[i]
+				itemsArray.push([itemId, items[itemId]])
+			}
+		}
+		resolve(itemsArray)
+	})
+}
+
 function applySortStatusByDate (dispatch, getState, sortStatus) {
 	dispatch(updateSortStatus(sortStatus))
-	const items = getState().items
-	const itemsArray = []
-	for (let item in items) {
-		itemsArray.push([item, items[item]])
-	}
-	if (getState().feed.sortOrder === 'asc') {
-		itemsArray.sort(function (a, b) {
-			const itemA = new Date(a[1][sortStatus])
-			const itemB = new Date(b[1][sortStatus])
-			if (itemA > itemB) {
-				return 1
-			} else if (itemA < itemB) {
-				return -1
-			} else {
-				return 0
-			}
-		})
-	} else { // getState().feed.sortOrder === 'dec'
-		itemsArray.sort(function (a, b) {
-			const itemA = new Date(a[1][sortStatus])
-			const itemB = new Date(b[1][sortStatus])
-			if (itemA < itemB) {
-				return 1
-			} else if (itemA > itemB) {
-				return -1
-			} else {
-				return 0
-			}
-		})
-	}
-	const sortedIds = itemsArray.map((item) => item[0])
-	dispatch(settingFeedListenerSuccess(sortedIds))
+	getActiveItems(getState, sortStatus)
+	.then((itemsArray) => {
+		if (getState().feed.sortOrder === 'asc') {
+			itemsArray.sort(function (a, b) {
+				const itemA = new Date(a[1][sortStatus])
+				const itemB = new Date(b[1][sortStatus])
+				if (itemA > itemB) {
+					return 1
+				} else if (itemA < itemB) {
+					return -1
+				} else {
+					return 0
+				}
+			})
+		} else { // getState().feed.sortOrder === 'dec'
+			itemsArray.sort(function (a, b) {
+				const itemA = new Date(a[1][sortStatus])
+				const itemB = new Date(b[1][sortStatus])
+				if (itemA < itemB) {
+					return 1
+				} else if (itemA > itemB) {
+					return -1
+				} else {
+					return 0
+				}
+			})
+		}
+		const sortedIds = itemsArray.map((item) => item[0])
+		dispatch(settingFeedListenerSuccess(sortedIds))
+	})
 }
 
 export function sortFeedCreationDate () {
@@ -136,40 +173,36 @@ export function sortFeedPurchaseDate () {
 
 function applySortStatusPeople (dispatch, getState, sortStatus, name) {
 	dispatch(updateSortStatus(sortStatus))
-	const items = getState().items
-	const people = getState().people
-	const itemsArray = []
-	for (let item in items) {
-		const person = people[[items[item]][0].itemPersonId]
-		itemsArray.push([item, person])
-	}
-	if (getState().feed.sortOrder === 'asc') {
-		itemsArray.sort(function (a, b) {
-			const itemA = a[1][name]
-			const itemB = b[1][name]
-			if (itemA > itemB) {
-				return 1
-			} else if (itemA < itemB) {
-				return -1
-			} else {
-				return 0
-			}
-		})
-	} else { // getState().feed.sortOrder === 'dec'
-		itemsArray.sort(function (a, b) {
-			const itemA = a[1][name]
-			const itemB = b[1][name]
-			if (itemA < itemB) {
-				return 1
-			} else if (itemA > itemB) {
-				return -1
-			} else {
-				return 0
-			}
-		})
-	}
-	const sortedIds = itemsArray.map((item) => item[0])
-	dispatch(settingFeedListenerSuccess(sortedIds))
+	getActiveItems(getState, sortStatus)
+	.then((itemsArray) => {
+		if (getState().feed.sortOrder === 'asc') {
+			itemsArray.sort(function (a, b) {
+				const itemA = a[1][name]
+				const itemB = b[1][name]
+				if (itemA > itemB) {
+					return 1
+				} else if (itemA < itemB) {
+					return -1
+				} else {
+					return 0
+				}
+			})
+		} else { // getState().feed.sortOrder === 'dec'
+			itemsArray.sort(function (a, b) {
+				const itemA = a[1][name]
+				const itemB = b[1][name]
+				if (itemA < itemB) {
+					return 1
+				} else if (itemA > itemB) {
+					return -1
+				} else {
+					return 0
+				}
+			})
+		}
+		const sortedIds = itemsArray.map((item) => item[0])
+		dispatch(settingFeedListenerSuccess(sortedIds))
+	})
 }
 
 export function sortFeedLastName () {
@@ -186,40 +219,36 @@ export function sortFeedFirstName () {
 
 function applySortStatusHardware (dispatch, getState, sortStatus) {
 	dispatch(updateSortStatus(sortStatus))
-	const items = getState().items
-	const hardwares = getState().hardware
-	const itemsArray = []
-	for (let item in items) {
-		const hardware = hardwares[[items[item]][0].itemHardwareId]
-		itemsArray.push([item, hardware])
-	}
-	if (getState().feed.sortOrder === 'asc') {
-		itemsArray.sort(function (a, b) {
-			const itemA = `${a[1].make} ${a[1].model}`
-			const itemB = `${b[1].make} ${b[1].model}`
-			if (itemA > itemB) {
-				return 1
-			} else if (itemA < itemB) {
-				return -1
-			} else {
-				return 0
-			}
-		})
-	} else { // getState().feed.sortOrder === 'dec'
-		itemsArray.sort(function (a, b) {
-			const itemA = `${a[1].make} ${a[1].model}`
-			const itemB = `${b[1].make} ${b[1].model}`
-			if (itemA < itemB) {
-				return 1
-			} else if (itemA > itemB) {
-				return -1
-			} else {
-				return 0
-			}
-		})
-	}
-	const sortedIds = itemsArray.map((item) => item[0])
-	dispatch(settingFeedListenerSuccess(sortedIds))
+	getActiveItems(getState, sortStatus)
+	.then((itemsArray) => {
+		if (getState().feed.sortOrder === 'asc') {
+			itemsArray.sort(function (a, b) {
+				const itemA = `${a[1].make} ${a[1].model}`
+				const itemB = `${b[1].make} ${b[1].model}`
+				if (itemA > itemB) {
+					return 1
+				} else if (itemA < itemB) {
+					return -1
+				} else {
+					return 0
+				}
+			})
+		} else { // getState().feed.sortOrder === 'dec'
+			itemsArray.sort(function (a, b) {
+				const itemA = `${a[1].make} ${a[1].model}`
+				const itemB = `${b[1].make} ${b[1].model}`
+				if (itemA < itemB) {
+					return 1
+				} else if (itemA > itemB) {
+					return -1
+				} else {
+					return 0
+				}
+			})
+		}
+		const sortedIds = itemsArray.map((item) => item[0])
+		dispatch(settingFeedListenerSuccess(sortedIds))
+	})
 }
 
 export function sortFeedHardware () {
@@ -271,26 +300,39 @@ function updateFilterName (name, filterType) {
 	}
 }
 
+function restoreAllItemsToFeed (dispatch, getState) {
+	return new Promise((resolve, reject) => {
+		const items = getState().items
+		const itemsArray = []
+		for (const itemId in items) { itemsArray.push(itemId)	}
+		dispatch(settingFeedListenerSuccess(itemsArray))
+		resolve()
+	})
+}
+
 export function disableIsFiltering () {
 	return function (dispatch, getState) {
-		dispatch(updateIsFiltering())
-		switch (getState().feed.sortStatus) {
-		case 'purchasedAtDate':
-			applySortStatusByDate(dispatch, getState, 'purchasedAtDate')
-			return
-		case 'peopleLastName':
-			applySortStatusPeople(dispatch, getState, 'peopleLastName', 'lastName')
-			return
-		case 'peopleFirstName':
-			applySortStatusPeople(dispatch, getState, 'peoplefirstName', 'firstName')
-			return
-		case 'hardware':
-			applySortStatusHardware(dispatch, getState, 'hardware')
-			return
-		default: // dateCreated
-			applySortStatusByDate(dispatch, getState, 'dateCreated')
-			return
-		}
+		restoreAllItemsToFeed(dispatch, getState)
+		.then(() => {
+			dispatch(updateIsFiltering())
+			switch (getState().feed.sortStatus) {
+			case 'purchasedAtDate':
+				applySortStatusByDate(dispatch, getState, 'purchasedAtDate')
+				return
+			case 'peopleLastName':
+				applySortStatusPeople(dispatch, getState, 'peopleLastName', 'lastName')
+				return
+			case 'peopleFirstName':
+				applySortStatusPeople(dispatch, getState, 'peoplefirstName', 'firstName')
+				return
+			case 'hardware':
+				applySortStatusHardware(dispatch, getState, 'hardware')
+				return
+			default: // dateCreated
+				applySortStatusByDate(dispatch, getState, 'dateCreated')
+				return
+			}
+		})
 	}
 }
 
