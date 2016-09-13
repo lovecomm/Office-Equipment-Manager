@@ -5,8 +5,6 @@ const OPEN_PEOPLE_FORM = 'OPEN_PEOPLE_FORM'
 const CLOSE_PEOPLE_FORM = 'CLOSE_PEOPLE_FORM'
 const UPDATE_PEOPLE_FIRST_NAME_TEXT = 'UPDATE_PEOPLE_FIRST_NAME_TEXT'
 const UPDATE_PEOPLE_LAST_NAME_TEXT = 'UPDATE_PEOPLE_LAST_NAME_TEXT'
-const UPDATE_PEOPLE_EMAIL_TEXT = 'UPDATE_PEOPLE_EMAIL_TEXT'
-const UPDATE_PEOPLE_PHOTO = 'UPDATE_PEOPLE_PHOTO'
 const UPDATE_PEOPLE_FORM_ERROR = 'HARDWARE'
 
 // ACTIONS
@@ -33,20 +31,6 @@ export function updateLastNameText (lastNameText) {
 	return {
 		type: UPDATE_PEOPLE_LAST_NAME_TEXT,
 		lastNameText,
-	}
-}
-
-export function updateEmailText (emailText) {
-	return {
-		type: UPDATE_PEOPLE_EMAIL_TEXT,
-		emailText,
-	}
-}
-
-export function updatePhoto (photo) {
-	return {
-		type: UPDATE_PEOPLE_PHOTO,
-		photo,
 	}
 }
 
@@ -82,9 +66,6 @@ export function peopleFanout (people) {
 const initialState = {
 	firstNameText: '',
 	lastNameText: '',
-	emailText: '',
-	photo: {},
-	photoNameText: '',
 	isOpen: false,
 	error: '',
 }
@@ -100,9 +81,6 @@ export default function peopleForm (state = initialState, action) {
 		return {
 			firstNameText: '',
 			lastNameText: '',
-			emailText: '',
-			photo: {},
-			photoNameText: '',
 			isOpen: false,
 			error: '',
 		}
@@ -115,17 +93,6 @@ export default function peopleForm (state = initialState, action) {
 		return {
 			...state,
 			lastNameText: action.lastNameText,
-		}
-	case UPDATE_PEOPLE_EMAIL_TEXT:
-		return {
-			...state,
-			emailText: action.emailText,
-		}
-	case UPDATE_PEOPLE_PHOTO:
-		return {
-			...state,
-			photo: action.photo,
-			photoNameText: action.photo.name,
 		}
 	case ADD_PEOPLE:
 		return {

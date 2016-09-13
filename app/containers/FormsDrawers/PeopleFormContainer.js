@@ -6,10 +6,8 @@ import * as peopleActionCreators from 'redux/modules/peopleForm'
 function mapStateToProps ({peopleForm}, props) {
 	function disableSubmit () {
 		if (peopleForm.firstNameText.length <= 0 ||
-			peopleForm.lastNameText.length <= 0 ||
-			peopleForm.emailText.length <= 0 ||
+			peopleForm.lastNameText.length <= 0
 			// testing to see if no photo has been selected is empty
-			Object.keys(peopleForm.photo).length === 0 && peopleForm.photo.constructor === Object
 		) {
 			return true
 		} else {
@@ -19,9 +17,6 @@ function mapStateToProps ({peopleForm}, props) {
 	return {
 		firstNameText: peopleForm.firstNameText,
 		lastNameText: peopleForm.lastNameText,
-		emailText: peopleForm.emailText,
-		photo: peopleForm.photo,
-		photoNameText: peopleForm.photoNameText,
 		isOpen: peopleForm.isOpen,
 		error: peopleForm.error,
 		isSubmitDisabled: disableSubmit(),

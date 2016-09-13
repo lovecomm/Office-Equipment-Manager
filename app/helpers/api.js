@@ -65,11 +65,6 @@ function verifyPerson (person) {
 	return new Promise((resolve, reject) => {
 		getPeople((people) => {
 			for (const peopleId in people) {
-				// Test for duplicate email address
-				if (`${people[peopleId].email}`.toUpperCase() ===
-				`${person.email}`.toUpperCase()) {
-					reject(`Sorry, but the email, ${person.email} is already in use by another user.`)
-				}
 				// Test for full name duplicate
 				if (`${people[peopleId].firstName} ${people[peopleId].lastName}`.toUpperCase()	===
 				`${person.firstName} ${person.lastName}`.toUpperCase()) {
@@ -84,33 +79,18 @@ function verifyPerson (person) {
 
 export function savePeople (person, uid) {
 	const personId = ref.child('feed/people').push().key
-	const personPhotoRef = imagesRef.child(`people/${person.photo.name}`) // Get ref for person photo
 	return verifyPerson(person)
 	.then((isVerified) => {
 		if (verifyPerson) {
-			return personPhotoRef.put(person.photo) // saving person photo to firebase
-			.then((photoSnapshot) => {
-				return firebaseHref(personPhotoRef.fullPath).then((url) => {
-					const newPerson = {
-						firstName: person.firstName,
-						lastName: person.lastName,
-						email: person.email,
-						photo: {
-							name: personPhotoRef.name,
-							fullPath: personPhotoRef.fullPath,
-							size: person.photo.size,
-							type: person.photo.type,
-							bucket: personPhotoRef.bucket,
-							url: url,
-						},
-						dateCreated: new Date().toString(),
-						dateLastUpdated: new Date().toString(),
-						createdBy: uid.uid,
-					}
-					return ref.child(`feed/people/${personId}`).set({...newPerson, personId}) // saving person to firebase
-						.then(() => ({...newPerson, personId}))
-				})
-			})
+			const newPerson = {
+				firstName: person.firstName,
+				lastName: person.lastName,
+				dateCreated: new Date().toString(),
+				dateLastUpdated: new Date().toString(),
+				createdBy: uid.uid,
+			}
+			return ref.child(`feed/people/${personId}`).set({...newPerson, personId}) // saving person to firebase
+				.then(() => ({...newPerson, personId}))
 		}
 	})
 }
