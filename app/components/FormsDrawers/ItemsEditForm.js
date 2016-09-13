@@ -5,9 +5,10 @@ import { formatItem } from 'helpers/utils'
 
 const	{ func, bool, object, string, any } = PropTypes
 
-ItemsForm.propTypes = {
+ItemsEditForm.propTypes = {
 	isOpen: bool.isRequired,
 	purchasedAtDate: any.isRequired,
+	itemId: string.isRequired,
 	serial: string.isRequired,
 	itemPerson: string.isRequired,
 	itemPersonId: string.isRequired,
@@ -19,19 +20,19 @@ ItemsForm.propTypes = {
 	people: object.isRequired,
 	error: string.isRequired,
 	// START Bound to dispatch
-	closeItemsForm: func.isRequired,
-	updateSerial: func.isRequired,
-	updatePurchasedAtDate: func.isRequired,
-	updateFormNotes: func.isRequired,
-	updateFormPhotos: func.isRequired,
-	updateItemPersonInfo: func.isRequired,
-	updateItemHardwareInfo: func.isRequired,
-	itemsFanout: func.isRequired,
+	closeItemEditForm: func.isRequired,
+	updateItemEditFormSerial: func.isRequired,
+	updateItemEditFormPurchasedAtDate: func.isRequired,
+	updateItemEditFormNotes: func.isRequired,
+	updateItemEditFormPhoto: func.isRequired,
+	updateItemEditFormPersonInfo: func.isRequired,
+	updateItemEditFormHardwareInfo: func.isRequired,
+	itemEditedFanout: func.isRequired,
 	// END Bound to dispatch
 	isSubmitDisabled: bool.isRequired,
 }
 
-export default function ItemsForm (props, context) {
+export default function ItemsEditForm (props, context) {
 	function formatPeopleList () {
 		let peopleList = {}
 		Object.keys(props.people).forEach((person) => {
@@ -55,8 +56,8 @@ export default function ItemsForm (props, context) {
 		return hardwareList
 	}
 	function submitItems () {
-		props.itemsFanout(formatItem(
-			'', // empty itemId so that we know it's a new item
+		props.itemEditedFanout(formatItem(
+			props.itemId,
 			props.purchasedAtDate,
 			props.serial,
 			props.itemPersonId,
@@ -68,13 +69,13 @@ export default function ItemsForm (props, context) {
 	return (
 		<Drawer active={props.isOpen}
 			className={drawer}
-			onOverlayClick={props.closeItemsForm}>
+			onOverlayClick={props.closeItemEditForm}>
 			<div className={headline}>
-				New Item
+				{'Editing Item '}{props.serial}
 			</div>
 			<div className={formWrapper}>
 				<Input
-					onChange={(value) => props.updateSerial(value)}
+					onChange={(value) => props.updateItemEditFormSerial(value)}
 					label='Serial #'
 					value={props.serial}
 					required={true}/>
@@ -85,7 +86,7 @@ export default function ItemsForm (props, context) {
 					direction='down'
 					selectedPosition='above'
 					label='Assign item to:'
-					onChange={(value) => props.updateItemPersonInfo(value)}
+					onChange={(value) => props.updateItemEditFormPersonInfo(value)}
 					source={formatPeopleList()}
 					value={props.itemPerson} />
 					<Autocomplete
@@ -94,7 +95,7 @@ export default function ItemsForm (props, context) {
 						direction='down'
 						selectedPosition='above'
 						label='This is what kind of hardware?'
-						onChange={(value) => props.updateItemHardwareInfo(value)}
+						onChange={(value) => props.updateItemEditFormHardwareInfo(value)}
 						source={formatHardwareList()}
 						value={props.itemHardware} />
 				<br />
@@ -102,11 +103,11 @@ export default function ItemsForm (props, context) {
 					label='When was the item purchased?'
 					autoOk={true}
 					value={props.purchasedAtDate}
-					onChange={(value) => props.updatePurchasedAtDate(value)}
+					onChange={(value) => props.updateItemEditFormPurchasedAtDate(value)}
 					required={true}/>
 				<br />
 				<Input
-					onChange={(value) => props.updateFormNotes(value)}
+					onChange={(value) => props.updateItemEditFormNotes(value)}
 					label='Add note to this item?'
 					value={props.notes}
 					multiline={true}
@@ -117,14 +118,14 @@ export default function ItemsForm (props, context) {
 						raised={true}
 						label='Add photo to this item?'
 						primary={true} />
-					<input type='file' onChange={(e) => props.updateFormPhotos(e.target.files[0])} className={imageInput}/>
+					<input type='file' onChange={(e) => props.updateItemEditFormPhoto(e.target.files[0])} className={imageInput}/>
 				</div>
 				<br />
 				{props.photoNames !== ''
 					? <p className={selectedPhoto}>{props.photoNames}</p>
 					: ''}
 				<br />
-				<Button label='Add Item' type='submit' raised={true}
+				<Button label='Save Item' type='submit' raised={true}
 					accent={true}
 					primary={false}
 					onClick={submitItems}

@@ -1,0 +1,16 @@
+.editMenu {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding-right: 5px;
+	font-size: 18px;
+
+	button { color: #ddd !important; }
+
+	ul li  {
+		
+		span[class*='caption'] {
+			font-size: 14px;
+		}
+	}
+}

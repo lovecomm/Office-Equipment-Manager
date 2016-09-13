@@ -95,13 +95,21 @@ export function savePeople (person, uid) {
 	})
 }
 
-function verifyItem (item) {
+function verifyItem (item, isBeingEdited) {
 	return new Promise((resolve, reject) => {
 		getItems(({items, sortedItemIds}) => {
 			for (const itemId in items) {
 				// Test for Make & Model duplicate
 				if (`${items[itemId].serial}`.toUpperCase()	=== `${item.serial}`.toUpperCase()) {
-					reject(`Sorry, but the serial number, ${item.serial} is already in use.`)
+					if (!isBeingEdited) {
+						reject(`Sorry, but the serial number, ${item.serial} is already in use.`)
+					} else { // we want the user to be able to edit an item, without changing the serial number of that item.
+						getSingleItem(item.itemId, (storedItem) => {
+							storedItem.serial !== item.serial
+							? reject(`Sorry, but the serial number, ${item.serial} is already in use.`)
+							: resolve(true)
+						}, (err) => console.warn(err))
+					}
 				}
 			}
 			// Mark as verified if email and fullname is not in use
@@ -111,13 +119,15 @@ function verifyItem (item) {
 }
 
 export function saveItem (item, uid) {
-	const itemId = ref.child('feed/items').push().key
-	return verifyItem(item)
+	const isBeingEdited = item.itemId === '' ? false : true
+	const itemId = isBeingEdited ? item.itemId : ref.child('feed/items').push().key
+	return verifyItem(item, isBeingEdited)
 	.then((isVerified) => {
 		if (isVerified) {
 			return new Promise((resolve, reject) => {
 				getSingleHardware(item.itemHardwareId, (hardware) => {
 					let newItem = {
+						itemId: itemId,
 						serial: item.serial,
 						purchasedAtDate: item.purchasedAtDate.toString(),
 						itemPersonId: item.itemPersonId,
@@ -142,13 +152,23 @@ export function saveItem (item, uid) {
 									bucket: itemPhotoRef.bucket,
 									url: url,
 								}
-								return ref.child(`feed/items/${itemId}`).set({...newItem, photo, itemId}) // saving item to firebase
-									.then(() => ({...newItem, photo, itemId}))
+								if (isBeingEdited) {
+									return ref.child(`feed/items/${itemId}`).update({...newItem, photo}) // saving new item to firebase
+										.then(() => ({...newItem, photo}))
+								} else {
+									return ref.child(`feed/items/${itemId}`).set({...newItem, photo}) // saving new item to firebase
+										.then(() => ({...newItem, photo}))
+								}
 							})
 						}))
 					} else {
-						resolve(ref.child(`feed/items/${itemId}`).set({...newItem, itemId}) // saving item to firebase
-							.then(() => ({...newItem, itemId})))
+						if (isBeingEdited) {
+							resolve(ref.child(`feed/items/${itemId}`).update({...newItem}) // saving new item to firebase
+								.then(() => ({...newItem})))
+						} else {
+							resolve(ref.child(`feed/items/${itemId}`).set({...newItem}) // saving new item to firebase
+								.then(() => ({...newItem})))
+						}
 					}
 				}, (err) => console.warn(err))
 			})
@@ -162,6 +182,13 @@ function getItems (cb, errorCB) {
 		const items = snapshot.val() || {}
 		const sortedItemIds = Object.keys(items).sort((a, b) => items[b].dateCreated - items[a].dateCreated)
 		cb({items, sortedItemIds})
+	}, errorCB)
+}
+
+function getSingleItem (itemId, cb, errorCB) {
+	ref.child(`feed/items/${itemId}`).on('value', (snapshot) => {
+		const item = snapshot.val() || {}
+		cb(item)
 	}, errorCB)
 }
 

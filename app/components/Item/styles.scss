@@ -1,9 +1,7 @@
-$blue: darken(#2196f3, 35%);
-
 *[class*='card'] {
 	margin: 0 7px 7px;
 	position: relative;
-	height: 0%; // prevents items from matching height of all other items on the same row
+	// height: 0%; // prevents items from matching height of all other items on the same row
 
 	h4 {
 		font-weight: 600;
@@ -15,19 +13,6 @@ $blue: darken(#2196f3, 35%);
 }
 
 .fullWidthPhoto { margin: 0; }
-
-.gear {
-	position: absolute;
-	top: 0;
-	right: 0;
-	padding: 5px;
-	color: #ddd;
-	font-size: 18px;
-	transform: rotate(30deg);
-	transition: color 0.3s ease;
-
-	&:hover { color: $blue; }
-}
 
 .chips {
 	display: flex;
