@@ -4,7 +4,7 @@ import { IconMenu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu'
 import FontIcon from 'react-toolbox/lib/font_icon'
 import { AppBar } from 'react-toolbox/lib/app_bar'
 import { title, dropdownIcon, dropdownMenu, container } from './styles.scss'
-import { HardwareFormToggleContainer, PeopleFormToggleContainer, ItemsFormToggleContainer } from 'containers'
+import { HardwareFormToggleContainer, PersonFormToggleContainer, ItemsFormToggleContainer } from 'containers'
 
  Navigation.propTypes = MenuItems.propTypes = {
 	isAuthed: PropTypes.bool.isRequired,
@@ -18,7 +18,7 @@ function MenuItems ({isAuthed}) {
 			position='topRight'
 			menuRipple={true}>
 			<ItemsFormToggleContainer editing={false}/>
-			<PeopleFormToggleContainer editing={false}/>
+			<PersonFormToggleContainer editing={false}/>
 			<HardwareFormToggleContainer editing={false}/>
 			<MenuDivider />
 			<Link to='/logout'><MenuItem icon='close' value='Sign Out' caption='Sign Out' /></Link>

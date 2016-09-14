@@ -1,6 +1,6 @@
 import React from 'react'
 import HardwareFormContainer from './HardwareFormContainer'
-import PeopleFormContainer from './PeopleFormContainer'
+import PersonFormContainer from './PersonFormContainer'
 import ItemsFormContainer from './ItemsFormContainer'
 import ItemsEditFormContainer from './ItemsEditFormContainer'
 
@@ -10,7 +10,7 @@ export default function FormsDrawersContainer (props) {
 			<ItemsFormContainer />
 			<ItemsEditFormContainer />
 			<HardwareFormContainer />
-			<PeopleFormContainer />
+			<PersonFormContainer />
 		</div>
 	)
 }

@@ -1,7 +1,7 @@
 const ADD_PEOPLE_TO_FEED = 'ADD_PEOPLE_TO_FEED'
 
 // ACTIONS
-export function addPeopleToFeed (people) {
+export function addPersonToFeed (people) {
 	return {
 		type: ADD_PEOPLE_TO_FEED,
 		people,

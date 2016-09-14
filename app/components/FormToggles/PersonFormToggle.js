@@ -1,14 +1,14 @@
 import React, { PropTypes } from 'react'
 import { MenuItem } from 'react-toolbox/lib/menu'
 
-PeopleFormToggle.propTypes = {
+PersonFormToggle.propTypes = {
 	handleOpenEditForm: PropTypes.func.isRequired,
 	person: PropTypes.any.isRequired,
 }
 
-export default function PeopleFormToggle ({handleOpenEditForm, person}) {
+export default function PersonFormToggle ({handleOpenEditForm, person}) {
 	return (
 		<MenuItem icon='people' onClick={handleOpenEditForm}
-			caption={(() => person === '' ? 'New Person' : `Editing ${person.firstName} ${person.lastName}`)()}/>
+			caption={(() => person === '' ? 'New Person' : `Edit ${person.firstName} ${person.lastName}`)()}/>
 	)
 }

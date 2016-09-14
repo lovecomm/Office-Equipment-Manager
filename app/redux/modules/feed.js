@@ -1,7 +1,7 @@
 import { addListener } from 'redux/modules/listeners'
 import { listenToFeed } from 'helpers/api'
 import { addItemsToFeed } from 'redux/modules/items'
-import { addPeopleToFeed } from 'redux/modules/people'
+import { addPersonToFeed } from 'redux/modules/people'
 import { addHardwareToFeed } from 'redux/modules/hardware'
 
 const SETTING_FEED_LISTENER = 'SETTING_FEED_LISTENER'
@@ -75,7 +75,7 @@ export function setAndHandleFeedListener () {
 			hardware,
 		}) => {
 			dispatch(addItemsToFeed(items))
-			dispatch(addPeopleToFeed(people))
+			dispatch(addPersonToFeed(people))
 			dispatch(addHardwareToFeed(hardware))
 			buildFilterOptions(dispatch, items, people, hardware)
 			if (initialFetch === true) {

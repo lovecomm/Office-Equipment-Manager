@@ -77,7 +77,7 @@ function verifyPerson (person) {
 	})
 }
 
-export function savePeople (person, uid) {
+export function savePerson (person, uid) {
 	const personId = person.editing ? person.personId : ref.child('feed/people').push().key
 	return verifyPerson(person)
 	.then((isVerified) => {

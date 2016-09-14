@@ -5,50 +5,50 @@ import { formatPerson } from 'helpers/utils'
 
 const	{ func, bool, string } = PropTypes
 
-PeopleForm.propTypes = {
+PersonForm.propTypes = {
 	personId: string.isRequired,
-	firstNameText: string.isRequired,
-	lastNameText: string.isRequired,
+	firstName: string.isRequired,
+	lastName: string.isRequired,
 	isOpen: bool.isRequired,
 	editing: bool.isRequired,
-	closePeopleForm: func.isRequired,
+	closePersonForm: func.isRequired,
 	isSubmitDisabled: bool.isRequired,
-	updateFirstNameText: func.isRequired,
-	updateLastNameText: func.isRequired,
-	peopleFanout: func.isRequired,
+	updateFirstName: func.isRequired,
+	updateLastName: func.isRequired,
+	personFanout: func.isRequired,
 	error: string.isRequired,
 }
 
-export default function PeopleForm (props, context) {
+export default function PersonForm (props, context) {
 	function submitPeople () {
-		props.peopleFanout(formatPerson(
+		props.personFanout(formatPerson(
 			props.editing,
 			props.personId,
-			props.firstNameText,
-			props.lastNameText,
+			props.firstName,
+			props.lastName,
 		))
 	}
 	return (
 		<Drawer active={props.isOpen}
 			className={drawer}
-			onOverlayClick={props.closePeopleForm}>
+			onOverlayClick={props.closePersonForm}>
 			<div className={headline}>
 				{props.editing === false
 				? 'New Person'
-				: `Editing ${props.firstNameText} ${props.lastNameText}`}
+				: `Editing ${props.firstName} ${props.lastName}`}
 			</div>
 			<div className={formWrapper}>
 				<Input
-					onChange={(value) => props.updateFirstNameText(value)}
+					onChange={(value) => props.updateFirstName(value)}
 					label='First Name'
-					value={props.firstNameText}
+					value={props.firstName}
 					hint='First Name'
 					required={true}/>
 				<br />
 				<Input
-					onChange={(value) => props.updateLastNameText(value)}
+					onChange={(value) => props.updateLastName(value)}
 					label='Last Name'
-					value={props.lastNameText}
+					value={props.lastName}
 					hint='Last Name'
 					required={true}/>
 				<br />
