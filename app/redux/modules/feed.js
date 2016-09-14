@@ -98,7 +98,7 @@ function getActiveItems (getState, sortStatus) {
 				for (let i in items) {
 					const item = items[i]
 					if (item.itemId === itemId) {
-						const person = people[item.itemPersonId]
+						const person = people[item.personId]
 						itemsArray.push([itemId, person])
 					}
 				}
@@ -110,7 +110,7 @@ function getActiveItems (getState, sortStatus) {
 				for (let i in items) {
 					const item = items[i]
 					if (item.itemId === itemId) {
-						const aHardware = hardware[item.itemHardwareId]
+						const aHardware = hardware[item.hardwareId]
 						itemsArray.push([itemId, aHardware])
 					}
 				}
@@ -167,7 +167,7 @@ export function sortFeedCreationDate () {
 
 export function sortFeedPurchaseDate () {
 	return function (dispatch, getState) {
-		applySortStatusByDate(dispatch, getState, 'purchasedAtDate')
+		applySortStatusByDate(dispatch, getState, 'purchasedDate')
 	}
 }
 
@@ -272,7 +272,7 @@ export function changeSortOrder () {
 		applyNewSortOrder(dispatch, getState)
 		.then(() => {
 			const sortStatus = getState().feed.sortStatus
-			if (sortStatus === 'purchasedAtDate' || sortStatus === 'dateCreated') {
+			if (sortStatus === 'purchasedDate' || sortStatus === 'dateCreated') {
 				applySortStatusByDate(dispatch, getState, sortStatus)
 			} else if (sortStatus === 'hardware') {
 				applySortStatusHardware(dispatch, getState, sortStatus)
@@ -316,8 +316,8 @@ export function disableIsFiltering () {
 		.then(() => {
 			dispatch(updateIsFiltering())
 			switch (getState().feed.sortStatus) {
-			case 'purchasedAtDate':
-				applySortStatusByDate(dispatch, getState, 'purchasedAtDate')
+			case 'purchasedDate':
+				applySortStatusByDate(dispatch, getState, 'purchasedDate')
 				return
 			case 'peopleLastName':
 				applySortStatusPeople(dispatch, getState, 'peopleLastName', 'lastName')
@@ -350,7 +350,7 @@ function filterByPerson (dispatch, getState, personId) {
 	const items = getState().items
 	const sortedIds = []
 	for (let item in items) {
-		items[item].itemPersonId === personId ? sortedIds.push(item) : ''
+		items[item].personId === personId ? sortedIds.push(item) : ''
 	}
 	dispatch(settingFeedListenerSuccess(sortedIds))
 }
@@ -359,7 +359,7 @@ function filterByHardware (dispatch, getState, hardwareId) {
 	const items = getState().items
 	const sortedIds = []
 	for (let item in items) {
-		items[item].itemHardwareId === hardwareId ? sortedIds.push(item) : ''
+		items[item].hardwareId === hardwareId ? sortedIds.push(item) : ''
 	}
 	dispatch(settingFeedListenerSuccess(sortedIds))
 }

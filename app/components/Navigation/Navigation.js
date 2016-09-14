@@ -4,7 +4,7 @@ import { IconMenu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu'
 import FontIcon from 'react-toolbox/lib/font_icon'
 import { AppBar } from 'react-toolbox/lib/app_bar'
 import { title, dropdownIcon, dropdownMenu, container } from './styles.scss'
-import { HardwareFormToggleContainer, PersonFormToggleContainer, ItemsFormToggleContainer } from 'containers'
+import { HardwareFormToggleContainer, PersonFormToggleContainer, ItemFormToggleContainer } from 'containers'
 
  Navigation.propTypes = MenuItems.propTypes = {
 	isAuthed: PropTypes.bool.isRequired,
@@ -17,7 +17,7 @@ function MenuItems ({isAuthed}) {
 			icon={<FontIcon value='more_vert' className={dropdownIcon}/>}
 			position='topRight'
 			menuRipple={true}>
-			<ItemsFormToggleContainer editing={false}/>
+			<ItemFormToggleContainer editing={false} itemId='' serial=''/>
 			<PersonFormToggleContainer editing={false}/>
 			<HardwareFormToggleContainer editing={false}/>
 			<MenuDivider />

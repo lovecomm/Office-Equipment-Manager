@@ -5,21 +5,21 @@ import { bindActionCreators } from 'redux'
 import * as itemActionCreators from 'redux/modules/items'
 import { cardExpandable, cardNoExpand } from './styles.scss'
 
-const ItemsContainer = React.createClass({
+const ItemContainer = React.createClass({
 	propTypes: {
 		serial: PropTypes.string.isRequired,
-		itemHardware: PropTypes.object.isRequired,
-		itemPerson: PropTypes.object.isRequired,
-		notes: PropTypes.string.isRequired,
+		hardware: PropTypes.object.isRequired,
+		person: PropTypes.object.isRequired,
+		note: PropTypes.string.isRequired,
 		photo: PropTypes.object,
 		hasSubContent: PropTypes.bool.isRequired,
-		purchasedAtDate: PropTypes.string.isRequired,
+		purchasedDate: PropTypes.string.isRequired,
 		itemId: PropTypes.string.isRequired,
 		collapsed: PropTypes.bool.isRequired,
 		handleCollapsed: PropTypes.func.isRequired,
 	},
 	getYearsOld () {
-		const itemDate = new Date(this.props.purchasedAtDate)
+		const itemDate = new Date(this.props.purchasedDate)
 		const currentDate = new Date()
 		const timeDiff = Math.abs(currentDate.getTime() - itemDate.getTime())
 		const diffYears = Math.ceil(timeDiff / (1000 * 3600 * 24)) / 365
@@ -52,11 +52,11 @@ function mapStateToProps ({items, people, hardware}, props) {
 		serial: item.serial,
 		hasSubContent: item.hasSubContent,
 		itemId: item.itemId,
-		itemHardware: hardware[item.itemHardwareId],
-		itemPerson: people[item.itemPersonId],
-		notes: item.notes,
+		hardware: hardware[item.hardwareId],
+		person: people[item.personId],
+		note: item.note,
 		photo: item.photo,
-		purchasedAtDate: item.purchasedAtDate,
+		purchasedDate: item.purchasedDate,
 		collapsed: item.collapsed,
 	}
 }
@@ -64,4 +64,4 @@ function mapStateToProps ({items, people, hardware}, props) {
 export default connect(
 	mapStateToProps,
 	(dispatch) => bindActionCreators(itemActionCreators, dispatch)
-)(ItemsContainer)
+)(ItemContainer)

@@ -5,33 +5,35 @@ import { formatItem } from 'helpers/utils'
 
 const	{ func, bool, object, string, any } = PropTypes
 
-ItemsForm.propTypes = {
+ItemForm.propTypes = {
+	itemId: string.isRequired,
 	isOpen: bool.isRequired,
-	purchasedAtDate: any.isRequired,
+	purchasedDate: any.isRequired,
 	serial: string.isRequired,
-	itemPerson: string.isRequired,
-	itemPersonId: string.isRequired,
-	itemHardware: string.isRequired,
-	itemHardwareId: string.isRequired,
-	notes: string.isRequired,
+	person: string.isRequired,
+	personId: string.isRequired,
+	hardware: string.isRequired,
+	hardwareId: string.isRequired,
+	note: string.isRequired,
 	photo: object.isRequired,
-	photoNames: string.isRequired,
+	photoName: string.isRequired,
 	people: object.isRequired,
+	editing: bool.isRequired,
 	error: string.isRequired,
 	// START Bound to dispatch
-	closeItemsForm: func.isRequired,
+	closeItemForm: func.isRequired,
 	updateSerial: func.isRequired,
-	updatePurchasedAtDate: func.isRequired,
-	updateFormNotes: func.isRequired,
-	updateFormPhotos: func.isRequired,
-	updateItemPersonInfo: func.isRequired,
-	updateItemHardwareInfo: func.isRequired,
-	itemsFanout: func.isRequired,
+	updatePurchasedDate: func.isRequired,
+	updateNote: func.isRequired,
+	updatePhoto: func.isRequired,
+	updatePersonInfo: func.isRequired,
+	updateHardwareInfo: func.isRequired,
+	itemFanout: func.isRequired,
 	// END Bound to dispatch
 	isSubmitDisabled: bool.isRequired,
 }
 
-export default function ItemsForm (props, context) {
+export default function ItemForm (props, context) {
 	function formatPeopleList () {
 		let peopleList = {}
 		Object.keys(props.people).forEach((person) => {
@@ -55,22 +57,24 @@ export default function ItemsForm (props, context) {
 		return hardwareList
 	}
 	function submitItems () {
-		props.itemsFanout(formatItem(
-			'', // empty itemId so that we know it's a new item
-			props.purchasedAtDate,
+		props.itemFanout(formatItem(
+			props.itemId,
+			props.purchasedDate,
 			props.serial,
-			props.itemPersonId,
-			props.itemHardwareId,
-			props.notes,
+			props.personId,
+			props.hardwareId,
+			props.note,
 			props.photo,
 		))
 	}
 	return (
 		<Drawer active={props.isOpen}
 			className={drawer}
-			onOverlayClick={props.closeItemsForm}>
+			onOverlayClick={props.closeItemForm}>
 			<div className={headline}>
-				New Item
+				{props.editing === false
+					? 'New Item'
+					: `Editing Item ${props.serial}`}
 			</div>
 			<div className={formWrapper}>
 				<Input
@@ -85,46 +89,55 @@ export default function ItemsForm (props, context) {
 					direction='down'
 					selectedPosition='above'
 					label='Assign item to:'
-					onChange={(value) => props.updateItemPersonInfo(value)}
+					onChange={(value) => props.updatePersonInfo(value)}
 					source={formatPeopleList()}
-					value={props.itemPerson} />
+					value={props.person} />
 					<Autocomplete
 						required={true}
 						multiple={false}
 						direction='down'
 						selectedPosition='above'
 						label='This is what kind of hardware?'
-						onChange={(value) => props.updateItemHardwareInfo(value)}
+						onChange={(value) => props.updateHardwareInfo(value)}
 						source={formatHardwareList()}
-						value={props.itemHardware} />
+						value={props.hardware} />
 				<br />
 				<DatePicker
 					label='When was the item purchased?'
 					autoOk={true}
-					value={props.purchasedAtDate}
-					onChange={(value) => props.updatePurchasedAtDate(value)}
+					value={props.purchasedDate}
+					onChange={(value) => props.updatePurchasedDate(value)}
 					required={true}/>
 				<br />
 				<Input
-					onChange={(value) => props.updateFormNotes(value)}
+					onChange={(value) => props.updateNote(value)}
 					label='Add note to this item?'
-					value={props.notes}
+					value={props.note}
 					multiline={true}
 					required={false}/>
 				<br />
 				<div className={button}>
 					<Button
 						raised={true}
-						label='Add photo to this item?'
+						label={(() => {
+							if (props.editing && props.photoName !== '') { // I'm testing for photoName here, because I'm loading the photoName into the form when the item is being edited, not the original photo object itself.
+								return 'Change Photo?'
+							} else {
+								return 'Add Photo?'
+							}
+						})()}
 						primary={true} />
-					<input type='file' onChange={(e) => props.updateFormPhotos(e.target.files[0])} className={imageInput}/>
+					<input type='file' onChange={(e) => props.updatePhoto(e.target.files[0])} className={imageInput}/>
 				</div>
 				<br />
-				{props.photoNames !== ''
-					? <p className={selectedPhoto}>{props.photoNames}</p>
+				{props.photoName !== ''
+					? <p className={selectedPhoto}>{props.photoName}</p>
 					: ''}
 				<br />
-				<Button label='Add Item' type='submit' raised={true}
+				<Button label={(() => props.editing
+					? 'Update'
+					: 'Add Item')()}
+					type='submit' raised={true}
 					accent={true}
 					primary={false}
 					onClick={submitItems}

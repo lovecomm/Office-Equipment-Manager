@@ -22,7 +22,8 @@ const PersonFormToggleContainer = React.createClass({
 		return (
 			<PersonFormToggle
 				handleOpenEditForm={this.handleOpenEditForm}
-				person={(() => this.props.person === undefined ? '' : this.props.person)()} />
+				editing={this.props.editing}
+				person={(() => this.props.person === undefined ? {} : this.props.person)()} />
 		)
 	},
 })

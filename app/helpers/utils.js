@@ -24,14 +24,14 @@ export function formatPerson (editing, personId, firstName, lastName) {
 	}
 }
 
-export function formatItem (itemId, purchasedAtDate, serial, itemPersonId, itemHardwareId, notes, photo) {
+export function formatItem (itemId, purchasedDate, serial, personId, hardwareId, note, photo) {
 	return {
 		itemId,
-		purchasedAtDate,
+		purchasedDate,
 		serial,
-		itemPersonId,
-		itemHardwareId,
-		notes,
+		personId,
+		hardwareId,
+		note,
 		photo,
 	}
 }

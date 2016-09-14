@@ -134,16 +134,16 @@ export function saveItem (item, uid) {
 	.then((isVerified) => {
 		if (isVerified) {
 			return new Promise((resolve, reject) => {
-				getSingleHardware(item.itemHardwareId, (hardware) => {
+				getSingleHardware(item.hardwareId, (hardware) => {
 					let newItem = {
 						itemId: itemId,
 						serial: item.serial,
-						purchasedAtDate: item.purchasedAtDate.toString(),
-						itemPersonId: item.itemPersonId,
-						itemHardwareId: item.itemHardwareId,
-						notes: item.notes,
+						purchasedDate: item.purchasedDate.toString(),
+						personId: item.personId,
+						hardwareId: item.hardwareId,
+						note: item.note,
 						collapsed: true,
-						hasSubContent: (item.notes !== '' || item.photo.size !== undefined || hardware.description !== ''),
+						hasSubContent: (item.note !== '' || item.photo.size !== undefined || hardware.description !== ''),
 						createdBy: uid.uid,
 						dateCreated: new Date().toString(),
 						dateLastUpdated: new Date().toString(),

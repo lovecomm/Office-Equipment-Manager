@@ -6,8 +6,8 @@ const EditMenuContainer = React.createClass({
 	propTypes: {
 		itemId: PropTypes.string.isRequired,
 		serial: PropTypes.string.isRequired,
-		itemPerson: PropTypes.object.isRequired,
-		itemHardware: PropTypes.object.isRequired,
+		person: PropTypes.object.isRequired,
+		hardware: PropTypes.object.isRequired,
 	},
 	render () {
 		return (
@@ -21,8 +21,8 @@ function mapStateToProps ({items, people, hardware}, ownProps) {
 	return {
 		itemId: item.itemId,
 		serial: item.serial,
-		itemHardware: hardware[item.itemHardwareId],
-		itemPerson: people[item.itemPersonId],
+		hardware: hardware[item.hardwareId],
+		person: people[item.personId],
 	}
 }
 
