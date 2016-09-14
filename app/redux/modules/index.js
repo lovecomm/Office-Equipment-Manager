@@ -1,6 +1,7 @@
 export users from './users'
 export hardwareForm from './hardwareForm'
 export peopleForm from './peopleForm'
+export peopleEditForm from './peopleEditForm'
 export itemsForm from './itemsForm'
 export itemsEditForm from './itemsEditForm'
 export listeners from './listeners'

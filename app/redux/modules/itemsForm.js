@@ -124,8 +124,8 @@ export function itemsFanout (item) {
 			dispatch(addNewItemToFeed(itemWithId.itemId, itemWithId))
 			dispatch(closeItemsForm())
 		})
-		.catch((err) => {
-			dispatch(updateItemFormError(err))
+		.catch((error) => {
+			dispatch(updateItemFormError(error.toString()))
 		})
 	}
 }

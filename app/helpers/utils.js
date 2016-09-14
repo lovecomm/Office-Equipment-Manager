@@ -15,12 +15,11 @@ export function formatHardware (make, model, description, photo, isComputer) {
 	}
 }
 
-export function formatPerson (firstName, lastName, email, photo) {
+export function formatPerson (personId, firstName, lastName) {
 	return {
+		personId,
 		firstName,
 		lastName,
-		email,
-		photo,
 	}
 }
 

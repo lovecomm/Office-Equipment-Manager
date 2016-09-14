@@ -1,5 +1,4 @@
 import { saveItem } from 'helpers/api'
-// import { addNewItemToFeed } from './feed' ... this should be update item in feed
 
 const OPEN_ITEM_EDIT_FORM = 'OPEN_ITEM_EDIT_FORM'
 const CLOSE_ITEM_EDIT_FORM = 'CLOSE_ITEM_EDIT_FORM'
@@ -20,7 +19,7 @@ const SAVE_EDITED_ITEM = 'SAVE_EDITED_ITEM'
 function activateCurrentItem (dispatch, getState, itemId) {
 	return new Promise((resolve, reject) => {
 		const item = getState().items[itemId]
-		dispatch(updateItemEditFormId(item.itemId))
+		dispatch(updateItemEditFormItemId(item.itemId))
 		dispatch(updateItemEditFormSerial(item.serial))
 		dispatch(updateItemEditFormPurchasedAtDate(new Date(item.purchasedAtDate))) // purchasedAtDate is stored as string, coverting it back to date here.
 		dispatch(updateItemEditFormNotes(item.notes))
@@ -53,7 +52,7 @@ export function closeItemEditForm () {
 	}
 }
 
-function updateItemEditFormId (itemId) {
+function updateItemEditFormItemId (itemId) {
 	return {
 		type: UPDATE_ITEM_EDIT_FORM_ITEMID,
 		itemId,
@@ -161,11 +160,10 @@ export function itemEditedFanout (item) {
 		saveItem(item, {uid: uid}) // add item to firebase
 		.then((itemWithId) => {
 			dispatch(saveEditedItem(itemWithId)) // add to redux store
-			// dispatch(addNewItemToFeed(itemWithId.itemId, itemWithId))
 			dispatch(closeItemEditForm())
 		})
-		.catch((err) => {
-			dispatch(updateItemEditFormError(err))
+		.catch((error) => {
+			dispatch(updateItemEditFormError(error.toString()))
 		})
 	}
 }

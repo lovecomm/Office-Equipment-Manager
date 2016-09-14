@@ -4,14 +4,6 @@ import { connect } from 'react-redux'
 import { ItemsEditForm } from 'components'
 import * as itemsEditFormActionCreators from 'redux/modules/itemsEditForm'
 
-const ItemsEditFormContainer = React.createClass({
-	render () {
-		return (
-			<ItemsEditForm {...this.props} />
-		)
-	},
-})
-
 function mapStateToProps ({itemsEditForm, people, hardware}, props) {
 	function disableSubmit () {
 		if (itemsEditForm.serial.length <= 0 ||
@@ -47,4 +39,4 @@ function mapDispatchToProps (dispatch) {
 	return bindActionCreators(itemsEditFormActionCreators, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ItemsEditFormContainer)
+export default connect(mapStateToProps, mapDispatchToProps)(ItemsEditForm)

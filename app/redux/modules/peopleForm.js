@@ -57,7 +57,7 @@ export function peopleFanout (people) {
 			dispatch(closePeopleForm())
 		})
 		.catch((error) => {
-			dispatch(updatePeopleFormError(error))
+			dispatch(updatePeopleFormError(error.toString()))
 		})
 	}
 }

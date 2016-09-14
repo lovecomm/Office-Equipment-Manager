@@ -80,8 +80,8 @@ export function hardwareFanout (hardware) {
 			dispatch(addHardware(hardwareWithId))
 			dispatch(closeHardwareForm())
 		})
-		.catch((err) => {
-			dispatch(updateHardwareFormError(err))
+		.catch((error) => {
+			dispatch(updateHardwareFormError(error.toString()))
 		})
 	}
 }

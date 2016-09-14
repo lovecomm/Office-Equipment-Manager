@@ -68,7 +68,7 @@ function verifyPerson (person) {
 				// Test for full name duplicate
 				if (`${people[peopleId].firstName} ${people[peopleId].lastName}`.toUpperCase()	===
 				`${person.firstName} ${person.lastName}`.toUpperCase()) {
-					reject(`Sorry, but the person, ${person.firstName} ${person.lastName} is already in use.`)
+					reject(`Sorry, but the name, ${person.firstName} ${person.lastName} is already in use by another person.`)
 				}
 			}
 			// Mark as verified if email and fullname is not in use
@@ -78,19 +78,29 @@ function verifyPerson (person) {
 }
 
 export function savePeople (person, uid) {
-	const personId = ref.child('feed/people').push().key
+	const isBeingEdited = person.personId !== ''
+	const personId = isBeingEdited ? person.personId : ref.child('feed/people').push().key
 	return verifyPerson(person)
 	.then((isVerified) => {
 		if (verifyPerson) {
-			const newPerson = {
+			const personBase = {
+				personId,
 				firstName: person.firstName,
 				lastName: person.lastName,
-				dateCreated: new Date().toString(),
-				dateLastUpdated: new Date().toString(),
 				createdBy: uid.uid,
+				dateLastUpdated: new Date().toString(),
 			}
-			return ref.child(`feed/people/${personId}`).set({...newPerson, personId}) // saving person to firebase
-				.then(() => ({...newPerson, personId}))
+			if (!isBeingEdited) {
+				const newPerson = {
+					...personBase,
+					dateCreated: new Date().toString(),
+				}
+				return ref.child(`feed/people/${personId}`).set({...newPerson}) // saving person to firebase
+					.then(() => ({...newPerson}))
+			} else {
+				return ref.child(`feed/people/${personId}`).update({...personBase}) // saving person to firebase
+					.then(() => ({...personBase}))
+			}
 		}
 	})
 }
@@ -119,7 +129,7 @@ function verifyItem (item, isBeingEdited) {
 }
 
 export function saveItem (item, uid) {
-	const isBeingEdited = item.itemId === '' ? false : true
+	const isBeingEdited = item.itemId !== ''
 	const itemId = isBeingEdited ? item.itemId : ref.child('feed/items').push().key
 	return verifyItem(item, isBeingEdited)
 	.then((isVerified) => {

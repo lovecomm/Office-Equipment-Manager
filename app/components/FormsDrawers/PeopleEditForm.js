@@ -5,22 +5,22 @@ import { formatPerson } from 'helpers/utils'
 
 const	{ func, bool, string } = PropTypes
 
-PeopleForm.propTypes = {
+PeopleEditForm.propTypes = {
 	firstNameText: string.isRequired,
 	lastNameText: string.isRequired,
 	isOpen: bool.isRequired,
-	closePeopleForm: func.isRequired,
+	closePeopleEditForm: func.isRequired,
 	isSubmitDisabled: bool.isRequired,
-	updateFirstNameText: func.isRequired,
-	updateLastNameText: func.isRequired,
-	peopleFanout: func.isRequired,
+	updateEditFormFirstNameText: func.isRequired,
+	updateEditFormLastNameText: func.isRequired,
+	peopleEditFanout: func.isRequired,
 	error: string.isRequired,
 }
 
-export default function PeopleForm (props, context) {
+export default function PeopleEditForm (props, context) {
 	function submitPeople () {
-		props.peopleFanout(formatPerson(
-			'', // empty personId, so we know it's a new person
+		props.peopleEditFanout(formatPerson(
+			props.personId,
 			props.firstNameText,
 			props.lastNameText,
 		))
@@ -28,26 +28,26 @@ export default function PeopleForm (props, context) {
 	return (
 		<Drawer active={props.isOpen}
 			className={drawer}
-			onOverlayClick={props.closePeopleForm}>
+			onOverlayClick={props.closePeopleEditForm}>
 			<div className={headline}>
-				New Person
+				Edit {props.firstNameText} {props.lastNameText}
 			</div>
 			<div className={formWrapper}>
 				<Input
-					onChange={(value) => props.updateFirstNameText(value)}
+					onChange={(value) => props.updateEditFormFirstNameText(value)}
 					label='First Name'
 					value={props.firstNameText}
 					hint='First Name'
 					required={true}/>
 				<br />
 				<Input
-					onChange={(value) => props.updateLastNameText(value)}
+					onChange={(value) => props.updateEditFormLastNameText(value)}
 					label='Last Name'
 					value={props.lastNameText}
 					hint='Last Name'
 					required={true}/>
 				<br />
-				<Button label='Add Person' type='submit' raised={true}
+				<Button label='Save Person' type='submit' raised={true}
 					accent={true}
 					primary={false}
 					onClick={submitPeople}
