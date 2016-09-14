@@ -17,9 +17,9 @@ function MenuItems ({isAuthed}) {
 			icon={<FontIcon value='more_vert' className={dropdownIcon}/>}
 			position='topRight'
 			menuRipple={true}>
-			<ItemsFormToggleContainer />
-			<PeopleFormToggleContainer />
-			<HardwareFormToggleContainer />
+			<ItemsFormToggleContainer editing={false}/>
+			<PeopleFormToggleContainer editing={false}/>
+			<HardwareFormToggleContainer editing={false}/>
 			<MenuDivider />
 			<Link to='/logout'><MenuItem icon='close' value='Sign Out' caption='Sign Out' /></Link>
 		</IconMenu>)

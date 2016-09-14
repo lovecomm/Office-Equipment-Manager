@@ -78,8 +78,7 @@ function verifyPerson (person) {
 }
 
 export function savePeople (person, uid) {
-	const isBeingEdited = person.personId !== ''
-	const personId = isBeingEdited ? person.personId : ref.child('feed/people').push().key
+	const personId = person.editing ? person.personId : ref.child('feed/people').push().key
 	return verifyPerson(person)
 	.then((isVerified) => {
 		if (verifyPerson) {
@@ -90,7 +89,7 @@ export function savePeople (person, uid) {
 				createdBy: uid.uid,
 				dateLastUpdated: new Date().toString(),
 			}
-			if (!isBeingEdited) {
+			if (!person.editing) {
 				const newPerson = {
 					...personBase,
 					dateCreated: new Date().toString(),

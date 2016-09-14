@@ -15,10 +15,12 @@ function mapStateToProps ({peopleForm}, props) {
 		}
 	}
 	return {
+		personId: peopleForm.personId,
 		firstNameText: peopleForm.firstNameText,
 		lastNameText: peopleForm.lastNameText,
 		isOpen: peopleForm.isOpen,
 		error: peopleForm.error,
+		editing: peopleForm.editing,
 		isSubmitDisabled: disableSubmit(),
 	}
 }

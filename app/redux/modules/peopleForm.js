@@ -5,7 +5,9 @@ const OPEN_PEOPLE_FORM = 'OPEN_PEOPLE_FORM'
 const CLOSE_PEOPLE_FORM = 'CLOSE_PEOPLE_FORM'
 const UPDATE_PEOPLE_FIRST_NAME_TEXT = 'UPDATE_PEOPLE_FIRST_NAME_TEXT'
 const UPDATE_PEOPLE_LAST_NAME_TEXT = 'UPDATE_PEOPLE_LAST_NAME_TEXT'
-const UPDATE_PEOPLE_FORM_ERROR = 'HARDWARE'
+const UPDATE_PEOPLE_PERSON_ID = 'UPDATE_PEOPLE_PERSON_ID'
+const UPDATE_PEOPLE_FORM_ERROR = 'UPDATE_PEOPLE_FORM_ERROR'
+const UPDATE_PEOPLE_FORM_EDITING = 'UPDATE_PEOPLE_FORM_EDITING'
 
 // ACTIONS
 export function openPeopleForm () {
@@ -17,6 +19,13 @@ export function openPeopleForm () {
 export function closePeopleForm () {
 	return {
 		type: CLOSE_PEOPLE_FORM,
+	}
+}
+
+function updatePeoplePersonId (personId) {
+	return {
+		type: UPDATE_PEOPLE_PERSON_ID,
+		personId,
 	}
 }
 
@@ -41,6 +50,12 @@ function updatePeopleFormError (error) {
 	}
 }
 
+function updatePeopleFormEditing () {
+	return {
+		type: UPDATE_PEOPLE_FORM_EDITING,
+	}
+}
+
 function addPeople (people) {
 	return {
 		type: ADD_PEOPLE,
@@ -48,12 +63,33 @@ function addPeople (people) {
 	}
 }
 
-export function peopleFanout (people) {
+function activateCurrentPerson (dispatch, getState, personId) {
+	return new Promise((resolve, reject) => {
+		const person = getState().people[personId]
+		dispatch(updatePeoplePersonId(person.personId))
+		dispatch(updateFirstNameText(person.firstName))
+		dispatch(updateLastNameText(person.lastName))
+		dispatch(updatePeopleFormEditing())
+		resolve(true)
+	})
+}
+
+export function initiatePeopleForm (personId) {
+	console.log('in initiatePeopleForm')
+	return function (dispatch, getState) {
+		activateCurrentPerson(dispatch, getState, personId)
+		.then(() => {
+			dispatch(openPeopleForm())
+		})
+	}
+}
+
+export function peopleFanout (person) {
 	return function (dispatch, getState) {
 		const uid = getState().users.authedId
-		savePeople(people, { uid: uid })
-		.then((peopleWithId) => {
-			dispatch(addPeople(peopleWithId))
+		savePeople(person, { uid: uid })
+		.then((personWithId) => {
+			dispatch(addPeople(personWithId))
 			dispatch(closePeopleForm())
 		})
 		.catch((error) => {
@@ -64,10 +100,12 @@ export function peopleFanout (people) {
 
 // REDUCERS
 const initialState = {
+	personId: '',
 	firstNameText: '',
 	lastNameText: '',
 	isOpen: false,
 	error: '',
+	editing: false,
 }
 
 export default function peopleForm (state = initialState, action) {
@@ -79,10 +117,17 @@ export default function peopleForm (state = initialState, action) {
 		}
 	case CLOSE_PEOPLE_FORM:
 		return {
+			personId: '',
 			firstNameText: '',
 			lastNameText: '',
 			isOpen: false,
 			error: '',
+			editing: false,
+		}
+	case UPDATE_PEOPLE_PERSON_ID:
+		return {
+			...state,
+			personId: action.personId,
 		}
 	case UPDATE_PEOPLE_FIRST_NAME_TEXT:
 		return {
@@ -93,6 +138,11 @@ export default function peopleForm (state = initialState, action) {
 		return {
 			...state,
 			lastNameText: action.lastNameText,
+		}
+	case UPDATE_PEOPLE_FORM_EDITING:
+		return {
+			...state,
+			editing: true,
 		}
 	case ADD_PEOPLE:
 		return {

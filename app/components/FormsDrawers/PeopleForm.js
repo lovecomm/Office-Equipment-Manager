@@ -6,9 +6,11 @@ import { formatPerson } from 'helpers/utils'
 const	{ func, bool, string } = PropTypes
 
 PeopleForm.propTypes = {
+	personId: string.isRequired,
 	firstNameText: string.isRequired,
 	lastNameText: string.isRequired,
 	isOpen: bool.isRequired,
+	editing: bool.isRequired,
 	closePeopleForm: func.isRequired,
 	isSubmitDisabled: bool.isRequired,
 	updateFirstNameText: func.isRequired,
@@ -20,7 +22,8 @@ PeopleForm.propTypes = {
 export default function PeopleForm (props, context) {
 	function submitPeople () {
 		props.peopleFanout(formatPerson(
-			'', // empty personId, so we know it's a new person
+			props.editing,
+			props.personId,
 			props.firstNameText,
 			props.lastNameText,
 		))
@@ -30,7 +33,9 @@ export default function PeopleForm (props, context) {
 			className={drawer}
 			onOverlayClick={props.closePeopleForm}>
 			<div className={headline}>
-				New Person
+				{props.editing === false
+				? 'New Person'
+				: `Editing ${props.firstNameText} ${props.lastNameText}`}
 			</div>
 			<div className={formWrapper}>
 				<Input
@@ -47,7 +52,7 @@ export default function PeopleForm (props, context) {
 					hint='Last Name'
 					required={true}/>
 				<br />
-				<Button label='Add Person' type='submit' raised={true}
+				<Button label={(() => props.editing ? 'Update' : 'Save Person')()} type='submit' raised={true}
 					accent={true}
 					primary={false}
 					onClick={submitPeople}

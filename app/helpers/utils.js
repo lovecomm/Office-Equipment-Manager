@@ -15,8 +15,9 @@ export function formatHardware (make, model, description, photo, isComputer) {
 	}
 }
 
-export function formatPerson (personId, firstName, lastName) {
+export function formatPerson (editing, personId, firstName, lastName) {
 	return {
+		editing,
 		personId,
 		firstName,
 		lastName,
