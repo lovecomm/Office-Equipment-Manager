@@ -142,7 +142,7 @@ export function updateHardwareId (hardwareId) {
 
 export function updateHardwareInfo (hardwareId) {
 	return function (dispatch, getState) {
-		const hardware = getState().hardware[hardwareId]
+		const hardware = getState().hardwares[hardwareId]
 		const hardwareName = `${hardware.make} ${hardware.model}`
 		dispatch(updateHardware(hardwareName))
 		dispatch(updateHardwareId(hardwareId))

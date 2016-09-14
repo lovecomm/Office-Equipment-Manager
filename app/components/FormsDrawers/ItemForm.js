@@ -47,11 +47,11 @@ export default function ItemForm (props, context) {
 	}
 	function formatHardwareList () {
 		let hardwareList = {}
-		Object.keys(props.hardware).forEach((hardwareId) => {
-			let hardwareItem = props.hardware[hardwareId]
+		Object.keys(props.hardwares).forEach((hardwareId) => {
+			let hardware = props.hardwares[hardwareId]
 			hardwareList = {
 				...hardwareList,
-				[hardwareId]: `${hardwareItem.make} ${hardwareItem.model}`,
+				[hardwareId]: `${hardware.make} ${hardware.model}`,
 			}
 		})
 		return hardwareList

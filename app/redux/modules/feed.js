@@ -2,7 +2,7 @@ import { addListener } from 'redux/modules/listeners'
 import { listenToFeed } from 'helpers/api'
 import { addItemsToFeed } from 'redux/modules/items'
 import { addPersonToFeed } from 'redux/modules/people'
-import { addHardwareToFeed } from 'redux/modules/hardware'
+import { addHardwareToFeed } from 'redux/modules/hardwares'
 
 const SETTING_FEED_LISTENER = 'SETTING_FEED_LISTENER'
 const SETTING_FEED_LISTENER_ERROR = 'SETTING_FEED_LISTENER_ERROR'
@@ -67,17 +67,17 @@ export function setAndHandleFeedListener () {
 		dispatch(settingFeedListener())
 		dispatch(addListener('feed'))
 		dispatch(addListener('people'))
-		dispatch(addListener('hardware'))
+		dispatch(addListener('hardwares'))
 		listenToFeed(({
 			items,
 			sortedItemIds,
 			people,
-			hardware,
+			hardwares,
 		}) => {
 			dispatch(addItemsToFeed(items))
 			dispatch(addPersonToFeed(people))
-			dispatch(addHardwareToFeed(hardware))
-			buildFilterOptions(dispatch, items, people, hardware)
+			dispatch(addHardwareToFeed(hardwares))
+			buildFilterOptions(dispatch, items, people, hardwares)
 			if (initialFetch === true) {
 				dispatch(settingFeedListenerSuccess(sortedItemIds))
 			}
@@ -103,15 +103,15 @@ function getActiveItems (getState, sortStatus) {
 					}
 				}
 			}
-		} else if (sortStatus === 'hardware') {
-			const hardware = getState().hardware
+		} else if (sortStatus === 'hardwares') {
+			const hardwares = getState().hardwares
 			for (let i in activeIds) {
 				const itemId = activeIds[i]
 				for (let i in items) {
 					const item = items[i]
 					if (item.itemId === itemId) {
-						const aHardware = hardware[item.hardwareId]
-						itemsArray.push([itemId, aHardware])
+						const hardware = hardwares[item.hardwareId]
+						itemsArray.push([itemId, hardware])
 					}
 				}
 			}
@@ -253,7 +253,7 @@ function applySortStatusHardware (dispatch, getState, sortStatus) {
 
 export function sortFeedHardware () {
 	return function (dispatch, getState) {
-		applySortStatusHardware(dispatch, getState, 'hardware')
+		applySortStatusHardware(dispatch, getState, 'hardwares')
 	}
 }
 
@@ -274,7 +274,7 @@ export function changeSortOrder () {
 			const sortStatus = getState().feed.sortStatus
 			if (sortStatus === 'purchasedDate' || sortStatus === 'dateCreated') {
 				applySortStatusByDate(dispatch, getState, sortStatus)
-			} else if (sortStatus === 'hardware') {
+			} else if (sortStatus === 'hardwares') {
 				applySortStatusHardware(dispatch, getState, sortStatus)
 			} else if (sortStatus === 'peopleLastName') {
 				applySortStatusPeople(dispatch, getState, sortStatus, 'lastName')
@@ -325,8 +325,8 @@ export function disableIsFiltering () {
 			case 'peopleFirstName':
 				applySortStatusPeople(dispatch, getState, 'peoplefirstName', 'firstName')
 				return
-			case 'hardware':
-				applySortStatusHardware(dispatch, getState, 'hardware')
+			case 'hardwares':
+				applySortStatusHardware(dispatch, getState, 'hardwares')
 				return
 			default: // dateCreated
 				applySortStatusByDate(dispatch, getState, 'dateCreated')
@@ -373,7 +373,7 @@ export function updateAndHandleFilter (nameId) {
 			case 'people':
 				filterByPerson(dispatch, getState, nameId[0])
 				return
-			case 'hardware':
+			case 'hardwares':
 				filterByHardware(dispatch, getState, nameId[0])
 				return
 			default:
@@ -388,7 +388,7 @@ function findFilterNameAndType (getState, nameId) {
 	return new Promise((resolve, reject) => {
 		const items = getState().items
 		const people = getState().people
-		const hardware = getState().hardware
+		const hardwares = getState().hardwares
 		for (const i in items) {
 			if (items[i].itemId === nameId[0]) {
 				resolve({ filterType: 'item', name: items[i].serial })
@@ -399,15 +399,15 @@ function findFilterNameAndType (getState, nameId) {
 				resolve({ filterType: 'people', name: `${people[i].firstName} ${people[i].lastName}` })
 			}
 		}
-		for (const i in hardware) {
-			if (hardware[i].hardwareId === nameId[0]) {
-				resolve({ filterType: 'hardware', name: `${hardware[i].make} ${hardware[i].model}` })
+		for (const i in hardwares) {
+			if (hardwares[i].hardwareId === nameId[0]) {
+				resolve({ filterType: 'hardwares', name: `${hardwares[i].make} ${hardwares[i].model}` })
 			}
 		}
 	})
 }
 
-function buildFilterOptions (dispatch, items, people, hardware) {
+function buildFilterOptions (dispatch, items, people, hardwares) {
 	let options = {}
 	for (const i in items) {
 		const item = items[i]
@@ -423,11 +423,11 @@ function buildFilterOptions (dispatch, items, people, hardware) {
 			[person.personId]: `${person.firstName} ${person.lastName}`,
 		}
 	}
-	for (const i in hardware) {
-		const aHardware = hardware[i]
+	for (const i in hardwares) {
+		const hardware = hardwares[i]
 		options = {
 			...options,
-			[aHardware.hardwareId]: `${aHardware.make} ${aHardware.model}`,
+			[hardware.hardwareId]: `${hardware.make} ${hardware.model}`,
 		}
 	}
 	dispatch(addFilterOptions(options))

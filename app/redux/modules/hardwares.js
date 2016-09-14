@@ -11,7 +11,7 @@ export function addHardwareToFeed (hardware) {
 // REDUCERS
 const initialState = {}
 
-export default function hardware (state = initialState, action) {
+export default function hardwares (state = initialState, action) {
 	switch (action.type) {
 	case ADD_HARDWARE_TO_FEED:
 		return {

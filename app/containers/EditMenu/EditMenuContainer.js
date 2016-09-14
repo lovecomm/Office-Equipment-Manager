@@ -16,12 +16,12 @@ const EditMenuContainer = React.createClass({
 	},
 })
 
-function mapStateToProps ({items, people, hardware}, ownProps) {
+function mapStateToProps ({items, people, hardwares}, ownProps) {
 	const item = items[ownProps.itemId]
 	return {
 		itemId: item.itemId,
 		serial: item.serial,
-		hardware: hardware[item.hardwareId],
+		hardware: hardwares[item.hardwareId],
 		person: people[item.personId],
 	}
 }

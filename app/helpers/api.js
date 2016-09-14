@@ -10,14 +10,14 @@ export function firebaseHref (fullPath) {
 	})
 }
 
-function verifyHardware (aHardware) {
+function verifyHardware (hardware) {
 	return new Promise((resolve, reject) => {
-		getHardware((hardware) => {
-			for (const hardwareId in hardware) {
+		getHardwares((hardwares) => {
+			for (const hardwareId in hardwares) {
 				// Test for Make & Model duplicate
-				if (`${hardware[hardwareId].make} ${hardware[hardwareId].model}`.toUpperCase()	===
-				`${aHardware.make} ${aHardware.model}`.toUpperCase()) {
-					reject(`Sorry, but the hardware, ${aHardware.make} ${aHardware.model} is already registered.`)
+				if (`${hardwares[hardwareId].make} ${hardwares[hardwareId].model}`.toUpperCase()	===
+				`${hardware.make} ${hardware.model}`.toUpperCase()) {
+					reject(`Sorry, but the hardware, ${hardware.make} ${hardware.model} is already registered.`)
 				}
 			}
 			// Mark as verified if email and fullname is not in use
@@ -27,37 +27,35 @@ function verifyHardware (aHardware) {
 }
 
 export function saveHardware (hardware, uid) {
-	const hardwareId = ref.child('feed/hardware').push().key
-	const hardwarePhotoRef = imagesRef.child(`hardware/${hardware.photo.name}`) // Create a reference to hardware image in firebase
+	const hardwareId = ref.child('feed/hardwares').push().key
+	const hardwarePhotoRef = imagesRef.child(`hardwares/${hardware.photo.name}`) // Create a reference to hardware image in firebase
 	return verifyHardware(hardware)
-	.then((isVerified) => {
-		if (isVerified) {
-			return hardwarePhotoRef.put(hardware.photo) // Store photo to firebase
-			.then((photoSnapshot) => {
-				return firebaseHref(hardwarePhotoRef.fullPath).then((url) => {
-					const newHardware = {
-						make: hardware.make,
-						model: hardware.model,
-						description: hardware.description,
-						photo: {
-							name: hardwarePhotoRef.name,
-							fullPath: hardwarePhotoRef.fullPath,
-							size: hardware.photo.size,
-							type: hardware.photo.type,
-							bucket: hardwarePhotoRef.bucket,
-							url: url,
-						},
-						isComputer: hardware.isComputer,
-						dateCreated: new Date().toString(),
-						dateLastUpdated: new Date().toString(),
-						createdBy: uid.uid,
-					}
+	.then(() => {
+		return hardwarePhotoRef.put(hardware.photo) // Store photo to firebase
+		.then((photoSnapshot) => {
+			return firebaseHref(hardwarePhotoRef.fullPath).then((url) => {
+				const newHardware = {
+					make: hardware.make,
+					model: hardware.model,
+					description: hardware.description,
+					photo: {
+						name: hardwarePhotoRef.name,
+						fullPath: hardwarePhotoRef.fullPath,
+						size: hardware.photo.size,
+						type: hardware.photo.type,
+						bucket: hardwarePhotoRef.bucket,
+						url: url,
+					},
+					isComputer: hardware.isComputer,
+					dateCreated: new Date().toString(),
+					dateLastUpdated: new Date().toString(),
+					createdBy: uid.uid,
+				}
 
-					return ref.child(`feed/hardware/${hardwareId}`).set({...newHardware, hardwareId}) // saving hardware to firebase
-						.then(() => ({...newHardware, hardwareId}))
-				})
+				return ref.child(`feed/hardwares/${hardwareId}`).set({...newHardware, hardwareId}) // saving hardwares to firebase
+					.then(() => ({...newHardware, hardwareId}))
 			})
-		}
+		})
 	})
 }
 
@@ -80,26 +78,24 @@ function verifyPerson (person) {
 export function savePerson (person, uid) {
 	const personId = person.editing ? person.personId : ref.child('feed/people').push().key
 	return verifyPerson(person)
-	.then((isVerified) => {
-		if (verifyPerson) {
-			const personBase = {
-				personId,
-				firstName: person.firstName,
-				lastName: person.lastName,
-				createdBy: uid.uid,
-				dateLastUpdated: new Date().toString(),
+	.then(() => {
+		const personBase = {
+			personId,
+			firstName: person.firstName,
+			lastName: person.lastName,
+			createdBy: uid.uid,
+			dateLastUpdated: new Date().toString(),
+		}
+		if (!person.editing) {
+			const newPerson = {
+				...personBase,
+				dateCreated: new Date().toString(),
 			}
-			if (!person.editing) {
-				const newPerson = {
-					...personBase,
-					dateCreated: new Date().toString(),
-				}
-				return ref.child(`feed/people/${personId}`).set({...newPerson}) // saving person to firebase
-					.then(() => ({...newPerson}))
-			} else {
-				return ref.child(`feed/people/${personId}`).update({...personBase}) // saving person to firebase
-					.then(() => ({...personBase}))
-			}
+			return ref.child(`feed/people/${personId}`).set({...newPerson}) // saving person to firebase
+				.then(() => ({...newPerson}))
+		} else {
+			return ref.child(`feed/people/${personId}`).update({...personBase}) // saving person to firebase
+				.then(() => ({...personBase}))
 		}
 	})
 }
@@ -113,7 +109,7 @@ function verifyItem (item, isBeingEdited) {
 					if (!isBeingEdited) {
 						reject(`Sorry, but the serial number, ${item.serial} is already in use.`)
 					} else { // we want the user to be able to edit an item, without changing the serial number of that item.
-						getSingleItem(item.itemId, (storedItem) => {
+						getItem(item.itemId, (storedItem) => {
 							storedItem.serial !== item.serial
 							? reject(`Sorry, but the serial number, ${item.serial} is already in use.`)
 							: resolve(true)
@@ -131,57 +127,55 @@ export function saveItem (item, uid) {
 	const isBeingEdited = item.itemId !== ''
 	const itemId = isBeingEdited ? item.itemId : ref.child('feed/items').push().key
 	return verifyItem(item, isBeingEdited)
-	.then((isVerified) => {
-		if (isVerified) {
-			return new Promise((resolve, reject) => {
-				getSingleHardware(item.hardwareId, (hardware) => {
-					let newItem = {
-						itemId: itemId,
-						serial: item.serial,
-						purchasedDate: item.purchasedDate.toString(),
-						personId: item.personId,
-						hardwareId: item.hardwareId,
-						note: item.note,
-						collapsed: true,
-						hasSubContent: (item.note !== '' || item.photo.size !== undefined || hardware.description !== ''),
-						createdBy: uid.uid,
-						dateCreated: new Date().toString(),
-						dateLastUpdated: new Date().toString(),
-					}
-					if (item.photo.size) { // if size exists, photo exists
-						const itemPhotoRef = imagesRef.child(`items/${item.photo.name}`) // Get ref for person photo
-						resolve(itemPhotoRef.put(item.photo) // saving person photo to firebase
-						.then((photoSnapshot) => {
-							return firebaseHref(itemPhotoRef.fullPath).then((url) => {
-								const photo = {
-									name: itemPhotoRef.name,
-									fullPath: itemPhotoRef.fullPath,
-									size: item.photo.size,
-									type: item.photo.type,
-									bucket: itemPhotoRef.bucket,
-									url: url,
-								}
-								if (isBeingEdited) {
-									return ref.child(`feed/items/${itemId}`).update({...newItem, photo}) // saving new item to firebase
-										.then(() => ({...newItem, photo}))
-								} else {
-									return ref.child(`feed/items/${itemId}`).set({...newItem, photo}) // saving new item to firebase
-										.then(() => ({...newItem, photo}))
-								}
-							})
-						}))
+	.then(() => {
+		return new Promise((resolve, reject) => {
+			getHardware(item.hardwareId, (hardware) => {
+				let newItem = {
+					itemId: itemId,
+					serial: item.serial,
+					purchasedDate: item.purchasedDate.toString(),
+					personId: item.personId,
+					hardwareId: item.hardwareId,
+					note: item.note,
+					collapsed: true,
+					hasSubContent: (item.note !== '' || item.photo.size !== undefined || hardware.description !== ''),
+					createdBy: uid.uid,
+					dateCreated: new Date().toString(),
+					dateLastUpdated: new Date().toString(),
+				}
+				if (item.photo.size) { // if size exists, photo exists
+					const itemPhotoRef = imagesRef.child(`items/${item.photo.name}`) // Get ref for person photo
+					resolve(itemPhotoRef.put(item.photo) // saving person photo to firebase
+					.then((photoSnapshot) => {
+						return firebaseHref(itemPhotoRef.fullPath).then((url) => {
+							const photo = {
+								name: itemPhotoRef.name,
+								fullPath: itemPhotoRef.fullPath,
+								size: item.photo.size,
+								type: item.photo.type,
+								bucket: itemPhotoRef.bucket,
+								url: url,
+							}
+							if (isBeingEdited) {
+								return ref.child(`feed/items/${itemId}`).update({...newItem, photo}) // saving new item to firebase
+									.then(() => ({...newItem, photo}))
+							} else {
+								return ref.child(`feed/items/${itemId}`).set({...newItem, photo}) // saving new item to firebase
+									.then(() => ({...newItem, photo}))
+							}
+						})
+					}))
+				} else {
+					if (isBeingEdited) {
+						resolve(ref.child(`feed/items/${itemId}`).update({...newItem}) // saving new item to firebase
+							.then(() => ({...newItem})))
 					} else {
-						if (isBeingEdited) {
-							resolve(ref.child(`feed/items/${itemId}`).update({...newItem}) // saving new item to firebase
-								.then(() => ({...newItem})))
-						} else {
-							resolve(ref.child(`feed/items/${itemId}`).set({...newItem}) // saving new item to firebase
-								.then(() => ({...newItem})))
-						}
+						resolve(ref.child(`feed/items/${itemId}`).set({...newItem}) // saving new item to firebase
+							.then(() => ({...newItem})))
 					}
-				}, (err) => console.warn(err))
-			})
-		}
+				}
+			}, (err) => console.warn(err))
+		})
 	})
 }
 
@@ -194,7 +188,7 @@ function getItems (cb, errorCB) {
 	}, errorCB)
 }
 
-function getSingleItem (itemId, cb, errorCB) {
+function getItem (itemId, cb, errorCB) {
 	ref.child(`feed/items/${itemId}`).on('value', (snapshot) => {
 		const item = snapshot.val() || {}
 		cb(item)
@@ -208,15 +202,15 @@ function getPeople (cb, errorCB) {
 	}, errorCB)
 }
 
-function getHardware (cb, errorCB) {
-	ref.child('feed/hardware').on('value', (snapshot) => {
+function getHardwares (cb, errorCB) {
+	ref.child('feed/hardwares').on('value', (snapshot) => {
 		const hardware = snapshot.val() || {}
 		cb(hardware)
 	}, errorCB)
 }
 
-function getSingleHardware (hardwareId, cb, errorCB) {
-	ref.child(`feed/hardware/${hardwareId}`).on('value', (snapshot) => {
+function getHardware (hardwareId, cb, errorCB) {
+	ref.child(`feed/hardwares/${hardwareId}`).on('value', (snapshot) => {
 		const hardware = snapshot.val() || {}
 		cb(hardware)
 	}, errorCB)
@@ -225,11 +219,11 @@ function getSingleHardware (hardwareId, cb, errorCB) {
 export function listenToFeed (cb, errorCB) {
 	getItems(({items, sortedItemIds}) => {
 		getPeople((people) => {
-			getHardware((hardware) => cb({
+			getHardwares((hardwares) => cb({
 				items,
 				sortedItemIds,
 				people,
-				hardware,
+				hardwares,
 			}))
 		})
 	})
