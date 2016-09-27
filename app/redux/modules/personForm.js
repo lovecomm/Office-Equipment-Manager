@@ -66,10 +66,10 @@ function addPerson (people) {
 function activateCurrentPerson (dispatch, getState, personId) {
 	return new Promise((resolve, reject) => {
 		const person = getState().people[personId]
+		dispatch(updateEditing())
 		dispatch(updatePersonId(person.personId))
 		dispatch(updateFirstName(person.firstName))
 		dispatch(updateLastName(person.lastName))
-		dispatch(updateEditing())
 		resolve(true)
 	})
 }

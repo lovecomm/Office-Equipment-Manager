@@ -5,8 +5,8 @@ import * as hardwareActionCreators from 'redux/modules/hardwareForm'
 
 function mapStateToProps ({hardwareForm}, props) {
 	function disableSubmit () {
-		if (hardwareForm.makeText.length <= 0 ||
-			hardwareForm.modelText.length <= 0 ||
+		if (hardwareForm.make.length <= 0 ||
+			hardwareForm.model.length <= 0 ||
 			// testing to see if no photo has been selected is empty
 			Object.keys(hardwareForm.photo).length === 0 && hardwareForm.photo.constructor === Object) {
 			return true
@@ -15,14 +15,16 @@ function mapStateToProps ({hardwareForm}, props) {
 		}
 	}
 	return {
-		makeText: hardwareForm.makeText,
-		modelText: hardwareForm.modelText,
-		descriptionText: hardwareForm.descriptionText,
+		hardwareId: hardwareForm.hardwareId,
+		make: hardwareForm.make,
+		model: hardwareForm.model,
+		description: hardwareForm.description,
 		photo: hardwareForm.photo,
-		photoNameText: hardwareForm.photoNameText,
+		photoName: hardwareForm.photoName,
 		isComputer: hardwareForm.isComputer,
 		isOpen: hardwareForm.isOpen,
 		error: hardwareForm.error,
+		editing: hardwareForm.editing,
 		isSubmitDisabled: disableSubmit(),
 	}
 }

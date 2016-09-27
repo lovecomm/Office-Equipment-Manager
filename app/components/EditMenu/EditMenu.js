@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { editMenu } from './styles.scss'
 import { IconMenu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu'
-import { ItemFormToggleContainer, PersonFormToggleContainer } from 'containers'
+import { ItemFormToggleContainer, PersonFormToggleContainer, HardwareFormToggleContainer } from 'containers'
 
 EditMenu.propTypes = {
 	itemId: PropTypes.string.isRequired,
@@ -16,6 +16,7 @@ export default function EditMenu (props) {
 			className={editMenu}>
 			<ItemFormToggleContainer itemId={props.itemId} serial={props.serial} editing={true}/>
 			<PersonFormToggleContainer person={props.person} editing={true}/>
+			<HardwareFormToggleContainer editing={true} hardware={props.hardware}/>
 			<MenuDivider />
 			<MenuItem icon='delete' caption={(() => `Delete ${props.serial}`)()} />
 			<MenuItem icon='delete' caption={(() => `Delete ${props.person.firstName} ${props.person.lastName}`)()} />

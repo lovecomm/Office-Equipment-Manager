@@ -3,12 +3,15 @@ import { saveHardware } from 'helpers/api'
 const ADD_HARDWARE = 'ADD_HARDWARE'
 const OPEN_HARDWARE_FORM = 'OPEN_HARDWARE_FORM'
 const CLOSE_HARDWARE_FORM = 'CLOSE_HARDWARE_FORM'
-const UPDATE_HARDWARE_MAKE_TEXT = 'UPDATE_HARDWARE_MAKE_TEXT'
-const UPDATE_HARDWARE_MODEL_TEXT = 'UPDATE_HARDWARE_MODEL_TEXT'
-const UPDATE_HARDWARE_DESCRIPTION_TEXT = 'UPDATE_HARDWARE_DESCRIPTION_TEXT'
-const UPDATE_HARDWARE_PHOTO = 'UPDATE_HARDWARE_PHOTO'
+const UPDATE_MAKE = 'UPDATE_MAKE'
+const UPDATE_MODEL = 'UPDATE_MODEL'
+const UPDATE_DESCRIPTION = 'UPDATE_DESCRIPTION'
+const UPDATE_PHOTO = 'UPDATE_PHOTO'
+const UPDATE_PHOTO_NAME = 'UPDATE_PHOTO_NAME'
 const UPDATE_IS_COMPUTER = 'UPDATE_IS_COMPUTER'
-const UPDATE_HARDWARE_FORM_ERROR = 'UPDATE_HARDWARE_FORM_ERROR'
+const UPDATE_ERROR = 'UPDATE_ERROR'
+const UPDATE_EDITING = 'UPDATE_EDITING'
+const UPDATE_HARDWARE_ID = 'UPDATE_HARDWARE_ID'
 
 // ACTIONS
 export function openHardwareForm () {
@@ -23,30 +26,37 @@ export function closeHardwareForm () {
 	}
 }
 
-export function updateMakeText (makeText) {
+function updateHardwareId (hardwareId) {
 	return {
-		type: UPDATE_HARDWARE_MAKE_TEXT,
-		makeText,
+		type: UPDATE_HARDWARE_ID,
+		hardwareId,
 	}
 }
 
-export function updateModelText (modelText) {
+export function updateMake (make) {
 	return {
-		type: UPDATE_HARDWARE_MODEL_TEXT,
-		modelText,
+		type: UPDATE_MAKE,
+		make,
 	}
 }
 
-export function updateDescriptionText (descriptionText) {
+export function updateModel (model) {
 	return {
-		type: UPDATE_HARDWARE_DESCRIPTION_TEXT,
-		descriptionText,
+		type: UPDATE_MODEL,
+		model,
+	}
+}
+
+export function updateDescription (description) {
+	return {
+		type: UPDATE_DESCRIPTION,
+		description,
 	}
 }
 
 export function updatePhoto (photo) {
 	return {
-		type: UPDATE_HARDWARE_PHOTO,
+		type: UPDATE_PHOTO,
 		photo,
 	}
 }
@@ -58,9 +68,9 @@ export function updateIsComputer (isComputer) {
 	}
 }
 
-function updateHardwareFormError (error) {
+function updateError (error) {
 	return {
-		type: UPDATE_HARDWARE_FORM_ERROR,
+		type: UPDATE_ERROR,
 		error,
 	}
 }
@@ -69,6 +79,43 @@ function addHardware (hardware) {
 	return {
 		type: ADD_HARDWARE,
 		hardware,
+	}
+}
+
+function updateEditing () {
+	return {
+		type: UPDATE_EDITING,
+	}
+}
+
+function updatePhotoName (photoName) {
+	console.log(photoName)
+	return {
+		type: UPDATE_PHOTO_NAME,
+		photoName,
+	}
+}
+
+function activateCurrentHardware (dispatch, getState, hardwareId) {
+	return new Promise((resolve, reject) => {
+		const hardware = getState().hardwares[hardwareId]
+		dispatch(updateEditing())
+		dispatch(updateHardwareId(hardware.personId))
+		dispatch(updateIsComputer(hardware.isComputer))
+		dispatch(updateMake(hardware.make))
+		dispatch(updateModel(hardware.model))
+		dispatch(updateDescription(hardware.description))
+		hardware.photo !== undefined ? dispatch(updatePhotoName(hardware.photo.name)) : ''
+		resolve(true)
+	})
+}
+
+export function initiateHardwareForm (hardwareId) {
+	return function (dispatch, getState) {
+		activateCurrentHardware(dispatch, getState, hardwareId)
+		.then(() => {
+			dispatch(openHardwareForm())
+		})
 	}
 }
 
@@ -81,21 +128,23 @@ export function hardwareFanout (hardware) {
 			dispatch(closeHardwareForm())
 		})
 		.catch((error) => {
-			dispatch(updateHardwareFormError(error.toString()))
+			dispatch(updateError(error.toString()))
 		})
 	}
 }
 
 // REDUCERS
 const initialState = {
-	makeText: '',
-	modelText: '',
-	descriptionText: '',
+	hardwareId: '',
+	make: '',
+	model: '',
+	description: '',
 	photo: {},
-	photoNameText: '',
+	photoName: '',
 	isComputer: false,
 	isOpen: false,
 	error: '',
+	editing: false,
 }
 
 export default function hardwareForm (state = initialState, action) {
@@ -107,45 +156,60 @@ export default function hardwareForm (state = initialState, action) {
 		}
 	case CLOSE_HARDWARE_FORM:
 		return {
-			makeText: '',
-			modelText: '',
-			descriptionText: '',
+			make: '',
+			model: '',
+			description: '',
 			photo: {},
-			photoNameText: '',
+			photoName: '',
 			isComputer: false,
 			isOpen: false,
 			error: '',
 		}
-	case UPDATE_HARDWARE_MAKE_TEXT:
+	case UPDATE_HARDWARE_ID:
 		return {
 			...state,
-			makeText: action.makeText,
+			hardwareId: action.hardwareId,
 		}
-	case UPDATE_HARDWARE_MODEL_TEXT:
+	case UPDATE_MAKE:
 		return {
 			...state,
-			modelText: action.modelText,
+			make: action.make,
 		}
-	case UPDATE_HARDWARE_DESCRIPTION_TEXT:
+	case UPDATE_MODEL:
 		return {
 			...state,
-			descriptionText: action.descriptionText,
+			model: action.model,
 		}
-	case UPDATE_HARDWARE_PHOTO:
+	case UPDATE_DESCRIPTION:
+		return {
+			...state,
+			description: action.description,
+		}
+	case UPDATE_PHOTO:
 		return {
 			...state,
 			photo: action.photo,
-			photoNameText: action.photo.name,
+			photoName: action.photo.name,
+		}
+	case UPDATE_PHOTO_NAME:
+		return {
+			...state,
+			photoName: action.photoName,
 		}
 	case UPDATE_IS_COMPUTER:
 		return {
 			...state,
 			isComputer: action.isComputer,
 		}
-	case UPDATE_HARDWARE_FORM_ERROR:
+	case UPDATE_ERROR:
 		return {
 			...state,
 			error: action.error,
+		}
+	case UPDATE_EDITING:
+		return {
+			...state,
+			editing: true,
 		}
 	case ADD_HARDWARE:
 		return {

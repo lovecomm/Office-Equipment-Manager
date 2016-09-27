@@ -6,19 +6,20 @@ import { formatHardware } from 'helpers/utils'
 const	{ func, bool, string, object } = PropTypes
 
 HardwareForm.propTypes = {
-	makeText: string.isRequired,
-	modelText: string.isRequired,
-	descriptionText: string.isRequired,
+	make: string.isRequired,
+	model: string.isRequired,
+	description: string.isRequired,
 	photo: object.isRequired,
-	photoNameText: string.isRequired,
+	photoName: string.isRequired,
 	isComputer: bool.isRequired,
 	isOpen: bool.isRequired,
 	error: string.isRequired,
+	editing: bool.isRequired,
 	closeHardwareForm: func.isRequired,
 	isSubmitDisabled: bool.isRequired,
-	updateMakeText: func.isRequired,
-	updateModelText: func.isRequired,
-	updateDescriptionText: func.isRequired,
+	updateMake: func.isRequired,
+	updateModel: func.isRequired,
+	updateDescription: func.isRequired,
 	updatePhoto: func.isRequired,
 	hardwareFanout: func.isRequired,
 }
@@ -26,9 +27,9 @@ HardwareForm.propTypes = {
 export default function HardwareForm (props, context) {
 	function submitHardware () {
 		props.hardwareFanout(formatHardware(
-			props.makeText,
-			props.modelText,
-			props.descriptionText,
+			props.make,
+			props.model,
+			props.description,
 			props.photo,
 			props.isComputer,
 		))
@@ -38,20 +39,22 @@ export default function HardwareForm (props, context) {
 			className={drawer}
 			onOverlayClick={props.closeHardwareForm}>
 			<div className={headline}>
-				New Hardware
+				{props.editing === false
+					? 'New Hardware'
+					: `Editing ${props.make} ${props.model}`}
 			</div>
 			<div className={formWrapper}>
 				<Input
-					onChange={(value) => props.updateMakeText(value)}
+					onChange={(value) => props.updateMake(value)}
 					name='make'
 					label='Make'
-					value={props.makeText}
+					value={props.make}
 					required={true}/>
 				<br />
 				<Input
-					onChange={(value) => props.updateModelText(value)}
+					onChange={(value) => props.updateModel(value)}
 					label='Model'
-					value={props.modelText}
+					value={props.model}
 					required={true}/>
 				<br />
 				<Checkbox
@@ -60,25 +63,34 @@ export default function HardwareForm (props, context) {
           label='Is this a computer?'/>
 				<br />
 				<Input
-					onChange={(value) => props.updateDescriptionText(value)}
+					onChange={(value) => props.updateDescription(value)}
 					label='Hardware Description'
-					value={props.descriptionText}
+					value={props.description}
 					multiline={true}
 					rows={4}/>
 				<br />
 				<div className={button}>
 					<Button
 						raised={true}
-						label='Select Hardware Image'
+						label={(() => {
+							if (props.editing && props.photoName !== '') { // I'm testing for photoName here, because I'm loading the photoName into the form when the item is being edited, not the original photo object itself.
+								return 'Change Photo?'
+							} else {
+								return 'Add Photo?'
+							}
+						})()}
 						primary={true} />
 					<input type='file' onChange={(e) => props.updatePhoto(e.target.files[0])} className={imageInput}/>
 				</div>
 				<br />
-				{props.photoNameText !== ''
-					? <p className={selectedPhoto}>{props.photoNameText}</p>
+				{props.photoName !== ''
+					? <p className={selectedPhoto}>{props.photoName}</p>
 					: ''}
 				<br />
-				<Button label='Add Hardware' type='submit' raised={true}
+				<Button label={(() => props.editing
+					? 'Update'
+					: 'Add Hardware')()}
+					type='submit' raised={true}
 					accent={true}
 					primary={false}
 					onClick={submitHardware}

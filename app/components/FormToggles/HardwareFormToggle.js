@@ -2,11 +2,14 @@ import React, { PropTypes } from 'react'
 import { MenuItem } from 'react-toolbox/lib/menu'
 
 HardwareFormToggle.propTypes = {
-	openHardwareForm: PropTypes.func.isRequired,
+	handleOpenEditForm: PropTypes.func.isRequired,
+	editing: PropTypes.bool.isRequired,
+	hardware: PropTypes.any.isRequired,
 }
 
-export default function HardwareFormToggle ({openHardwareForm}) {
+export default function HardwareFormToggle ({handleOpenEditForm, hardware, editing}) {
 	return (
-		<MenuItem icon='laptop' onClick={openHardwareForm} caption='Add Hardware'/>
+		<MenuItem icon='laptop' onClick={handleOpenEditForm}
+			caption={(() => editing ? `Edit ${hardware.make} ${hardware.model}` : 'New Hardware')()}/>
 	)
 }

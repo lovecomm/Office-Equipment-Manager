@@ -3,7 +3,7 @@ import { Link } from 'react-router'
 import { IconMenu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu'
 import FontIcon from 'react-toolbox/lib/font_icon'
 import { AppBar } from 'react-toolbox/lib/app_bar'
-import { title, dropdownIcon, dropdownMenu, container } from './styles.scss'
+import { title, dropdownIcon, dropdownMenu, container, signout } from './styles.scss'
 import { HardwareFormToggleContainer, PersonFormToggleContainer, ItemFormToggleContainer } from 'containers'
 
  Navigation.propTypes = MenuItems.propTypes = {
@@ -24,7 +24,7 @@ function MenuItems ({isAuthed}) {
 			<Link to='/logout'><MenuItem icon='close' value='Sign Out' caption='Sign Out' /></Link>
 		</IconMenu>)
 	} else {
-		return <span></span>
+		return <Link className={signout} to='/auth'><MenuItem className={signout} value='Sign In' caption='Sign In' /></Link>
 	}
 }
 
