@@ -8,6 +8,7 @@ EditMenu.propTypes = {
 	serial: PropTypes.string.isRequired,
 	person: PropTypes.object.isRequired,
 	hardware: PropTypes.object.isRequired,
+	handleDeletion: PropTypes.func.isRequired,
 }
 
 export default function EditMenu (props) {
@@ -18,9 +19,9 @@ export default function EditMenu (props) {
 			<PersonFormToggleContainer person={props.person} editing={true}/>
 			<HardwareFormToggleContainer editing={true} hardware={props.hardware}/>
 			<MenuDivider />
-			<MenuItem icon='delete' caption={(() => `${props.serial}`)()} />
-			<MenuItem icon='delete' caption={(() => `${props.person.firstName} ${props.person.lastName}`)()} />
-			<MenuItem icon='delete' caption={(() => `${props.hardware.make} ${props.hardware.model}`)()} />
+			<MenuItem icon='delete' caption={(() => `${props.serial}`)()} onClick={() => props.handleDeletion('items', props.itemId)}/>
+			<MenuItem icon='delete' caption={(() => `${props.person.firstName} ${props.person.lastName}`)()} onClick={() => props.handleDeletion('people', props.person.personId)}/>
+			<MenuItem icon='delete' caption={(() => `${props.hardware.make} ${props.hardware.model}`)()} onClick={() => props.handleDeletion('hardwares', props.hardware.hardwareId)}/>
 		</IconMenu>
 	)
 }

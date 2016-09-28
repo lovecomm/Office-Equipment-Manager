@@ -3,6 +3,7 @@ import { ItemContainer } from 'containers'
 import { toolbar, dropdownIcon, list, filter, filterWrapper, filterName } from './styles.scss'
 import { IconMenu, MenuItem } from 'react-toolbox/lib/menu'
 import { FontIcon, Button, Autocomplete, Chip } from 'react-toolbox/lib'
+import { Snackbar } from 'react-toolbox'
 
 Feed.propTypes = {
 	itemIds: PropTypes.array.isRequired,
@@ -17,6 +18,11 @@ Feed.propTypes = {
 	changeSortOrder: PropTypes.func.isRequired,
 	updateAndHandleFilter: PropTypes.func.isRequired,
 	disableIsFiltering: PropTypes.func.isRequired,
+	handleConfirmDeleteTimeout: PropTypes.func.isRequired,
+	handleDeleteData: PropTypes.func.isRequired,
+	confirmDeleteActive: PropTypes.bool.isRequired,
+	toDeleteType: PropTypes.string.isRequired,
+	toDeleteId: PropTypes.string.isRequired,
 }
 
 export default function Feed (props) {
@@ -59,5 +65,23 @@ export default function Feed (props) {
 						key={id} />
 				))}
 			</div>
+			<Snackbar
+				action='delete'
+				active={props.confirmDeleteActive}
+				icon='delete'
+				timeout={10000}
+				onTimeout={props.handleConfirmDeleteTimeout}
+				onClick={props.handleDeleteData}
+				label={(() => {
+					switch (props.toDeleteType) {
+					case 'people':
+						return 'Are you sure you want to delete this person? If you do, all items assigned to this person will be assigned to INVENTORY. There is no taking back this action.'
+					case 'hardwares':
+						return 'Are you sure you want to delete this hardware? If you do, all items using this hardware will be deleted. There is no taking back this action.'
+					default:
+						return 'Are you sure you want to delete this item? There is no taking back this action.'
+					}
+				})()}
+				type='cancel' />
 		</div>
 }

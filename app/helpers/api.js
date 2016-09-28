@@ -269,3 +269,8 @@ export function listenToFeed (cb, errorCB) {
 	})
 }
 // END Getting Data from Firebase
+
+export function deleteData (dataType, dataId) {
+	console.log('in deleteData with id', dataType, dataId)
+}
+

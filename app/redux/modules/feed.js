@@ -1,5 +1,5 @@
 import { addListener } from 'redux/modules/listeners'
-import { listenToFeed } from 'helpers/api'
+import { listenToFeed, deleteData } from 'helpers/api'
 import { addItemsToFeed } from 'redux/modules/items'
 import { addPersonToFeed } from 'redux/modules/people'
 import { addHardwareToFeed } from 'redux/modules/hardwares'
@@ -13,8 +13,48 @@ const UPDATE_SORT_ORDER = 'UPDATE_SORT_ORDER'
 const	ADD_FILTER_OPTIONS = 'ADD_FILTER_OPTIONS'
 const UPDATE_FILTER_NAME_AND_TYPE = 'UPDATE_FILTER_NAME_AND_TYPE'
 const UPDATE_IS_FILTERING = 'UPDATE_IS_FILTERING'
+const UPDATE_CONFIRM_DELETE_ACTIVE = 'UPDATE_CONFIRM_DELETE_ACTIVE'
+const UPDATE_TO_DELETE_ID = 'UPDATE_TO_DELETE_ID'
+const UPDATE_TO_DELETE_TYPE = 'UPDATE_TO_DELETE_TYPE'
 
 // ACTIONS
+export function updateConfirmDeleteActive (confirmDeleteActive) {
+	return {
+		type: UPDATE_CONFIRM_DELETE_ACTIVE,
+		confirmDeleteActive,
+	}
+}
+
+function updateToDeleteId (toDeleteId) {
+	return {
+		type: UPDATE_TO_DELETE_ID,
+		toDeleteId,
+	}
+}
+
+function updateToDeleteType (toDeleteType) {
+	return {
+		type: UPDATE_TO_DELETE_TYPE,
+		toDeleteType,
+	}
+}
+
+export function initiateDeleteData (dataType, dataId) {
+	return function (dispatch, getState) {
+		dispatch(updateConfirmDeleteActive(true))
+		dispatch(updateToDeleteId(dataId))
+		dispatch(updateToDeleteType(dataType))
+	}
+}
+
+export function confirmDeleteData () {
+	return function (dispatch, getState) {
+		const dataType = getState().feed.toDeleteType
+		const dataId = getState().feed.toDeleteId
+		deleteData(dataType, dataId)
+	}
+}
+
 function settingFeedListener () {
 	return {
 		type: SETTING_FEED_LISTENER,
@@ -471,6 +511,9 @@ const initialState = {
 		filterType: '',
 		name: '',
 	},
+	confirmDeleteActive: false,
+	toDeleteType: '',
+	toDeleteId: '',
 }
 
 export default function feed (state = initialState, action) {
@@ -507,6 +550,21 @@ export default function feed (state = initialState, action) {
 		return {
 			...state,
 			itemIds: [action.itemId, ...state.itemIds],
+		}
+	case UPDATE_CONFIRM_DELETE_ACTIVE: 
+		return {
+			...state,
+			confirmDeleteActive: action.confirmDeleteActive,
+		}
+	case UPDATE_TO_DELETE_TYPE:
+		return {
+			...state,
+			toDeleteType: action.toDeleteType, 
+		}
+	case UPDATE_TO_DELETE_ID:
+		return {
+			...state,
+			toDeleteId: action.toDeleteId, 
 		}
 	case ADD_FILTER_OPTIONS:
 	case UPDATE_FILTER_NAME_AND_TYPE:

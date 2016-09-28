@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { EditMenu } from 'components'
 import { connect } from 'react-redux'
+import { initiateDeleteData } from 'redux/modules/feed'
 
 const EditMenuContainer = React.createClass({
 	propTypes: {
@@ -8,10 +9,14 @@ const EditMenuContainer = React.createClass({
 		serial: PropTypes.string.isRequired,
 		person: PropTypes.object.isRequired,
 		hardware: PropTypes.object.isRequired,
+		dispatch: PropTypes.func.isRequired,
+	},
+	handleDeletion (dataType, dataId) {
+		this.props.dispatch(initiateDeleteData(dataType, dataId))
 	},
 	render () {
 		return (
-			<EditMenu {...this.props}/>
+			<EditMenu {...this.props} handleDeletion={this.handleDeletion}/>
 		)
 	},
 })
