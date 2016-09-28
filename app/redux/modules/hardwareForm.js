@@ -89,7 +89,6 @@ function updateEditing () {
 }
 
 function updatePhotoName (photoName) {
-	console.log(photoName)
 	return {
 		type: UPDATE_PHOTO_NAME,
 		photoName,
@@ -100,7 +99,7 @@ function activateCurrentHardware (dispatch, getState, hardwareId) {
 	return new Promise((resolve, reject) => {
 		const hardware = getState().hardwares[hardwareId]
 		dispatch(updateEditing())
-		dispatch(updateHardwareId(hardware.personId))
+		dispatch(updateHardwareId(hardware.hardwareId))
 		dispatch(updateIsComputer(hardware.isComputer))
 		dispatch(updateMake(hardware.make))
 		dispatch(updateModel(hardware.model))
@@ -156,6 +155,7 @@ export default function hardwareForm (state = initialState, action) {
 		}
 	case CLOSE_HARDWARE_FORM:
 		return {
+			hardwareId: '',
 			make: '',
 			model: '',
 			description: '',
@@ -164,6 +164,7 @@ export default function hardwareForm (state = initialState, action) {
 			isComputer: false,
 			isOpen: false,
 			error: '',
+			editing: false,
 		}
 	case UPDATE_HARDWARE_ID:
 		return {

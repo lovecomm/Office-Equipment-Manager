@@ -8,7 +8,7 @@ function mapStateToProps ({hardwareForm}, props) {
 		if (hardwareForm.make.length <= 0 ||
 			hardwareForm.model.length <= 0 ||
 			// testing to see if no photo has been selected is empty
-			Object.keys(hardwareForm.photo).length === 0 && hardwareForm.photo.constructor === Object) {
+			hardwareForm.photoName === '') {
 			return true
 		} else {
 			return false

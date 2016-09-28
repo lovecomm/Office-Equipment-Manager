@@ -6,6 +6,7 @@ import { formatHardware } from 'helpers/utils'
 const	{ func, bool, string, object } = PropTypes
 
 HardwareForm.propTypes = {
+	hardwareId: string.isRequired,
 	make: string.isRequired,
 	model: string.isRequired,
 	description: string.isRequired,
@@ -26,13 +27,15 @@ HardwareForm.propTypes = {
 
 export default function HardwareForm (props, context) {
 	function submitHardware () {
-		props.hardwareFanout(formatHardware(
-			props.make,
-			props.model,
-			props.description,
-			props.photo,
-			props.isComputer,
-		))
+		props.hardwareFanout({
+			hardwareId: props.hardwareId,
+			editing: props.editing,
+			make:	props.make,
+			model: props.model,
+			description: props.description,
+			photo: props.photo,
+			isComputer: props.isComputer,
+		})
 	}
 	return (
 		<Drawer active={props.isOpen}

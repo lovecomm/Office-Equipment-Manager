@@ -10,13 +10,14 @@ export function firebaseHref (fullPath) {
 	})
 }
 
-function verifyHardware (hardware) {
+function verifyHardware (hardware, editing) {
 	return new Promise((resolve, reject) => {
 		getHardwares((hardwares) => {
 			for (const hardwareId in hardwares) {
 				// Test for Make & Model duplicate
-				if (`${hardwares[hardwareId].make} ${hardwares[hardwareId].model}`.toUpperCase()	===
-				`${hardware.make} ${hardware.model}`.toUpperCase()) {
+				if (!editing &&
+					`${hardwares[hardwareId].make} ${hardwares[hardwareId].model}`.toUpperCase()	===
+					`${hardware.make} ${hardware.model}`.toUpperCase()) {
 					reject(`Sorry, but the hardware, ${hardware.make} ${hardware.model} is already registered.`)
 				}
 			}
@@ -27,35 +28,60 @@ function verifyHardware (hardware) {
 }
 
 export function saveHardware (hardware, uid) {
-	const hardwareId = ref.child('feed/hardwares').push().key
-	const hardwarePhotoRef = imagesRef.child(`hardwares/${hardware.photo.name}`) // Create a reference to hardware image in firebase
-	return verifyHardware(hardware)
+	const hardwareId = hardware.editing ? hardware.hardwareId : ref.child('feed/hardwares').push().key
+	const hardwarePhotoRef = hardware.photo.name !== undefined ? imagesRef.child(`hardwares/${hardware.photo.name}`) : undefined // Create a reference to hardware image in firebase
+	const newHardwareBase = {
+		hardwareId: hardwareId,
+		make: hardware.make,
+		model: hardware.model,
+		description: hardware.description,
+		isComputer: hardware.isComputer,
+		dateLastUpdated: new Date().toString(),
+		createdBy: uid.uid,
+	}
+	return verifyHardware(hardware, hardware.editing)
 	.then(() => {
-		return hardwarePhotoRef.put(hardware.photo) // Store photo to firebase
-		.then((photoSnapshot) => {
-			return firebaseHref(hardwarePhotoRef.fullPath).then((url) => {
-				const newHardware = {
-					make: hardware.make,
-					model: hardware.model,
-					description: hardware.description,
-					photo: {
-						name: hardwarePhotoRef.name,
-						fullPath: hardwarePhotoRef.fullPath,
-						size: hardware.photo.size,
-						type: hardware.photo.type,
-						bucket: hardwarePhotoRef.bucket,
-						url: url,
-					},
-					isComputer: hardware.isComputer,
-					dateCreated: new Date().toString(),
-					dateLastUpdated: new Date().toString(),
-					createdBy: uid.uid,
-				}
-
-				return ref.child(`feed/hardwares/${hardwareId}`).set({...newHardware, hardwareId}) // saving hardwares to firebase
-					.then(() => ({...newHardware, hardwareId}))
+		if (hardwarePhotoRef) {
+			return hardwarePhotoRef.put(hardware.photo) // Store photo to firebase
+		} else { return undefined } // is updating existing hardware, and does not have an updated photo
+	})
+	.then((photoSnapshot) => {
+		return photoSnapshot
+		? firebaseHref(hardwarePhotoRef.fullPath) // is new hardware, or updating existing hardware with a new photo
+		: undefined // is updating existing hardware, and does not have an updated photo
+	})
+	.then((url) => {
+		if (url && !hardware.editing) { // it's a new hardware
+			return Object.assign(newHardwareBase, {
+				photo: {
+					name: hardwarePhotoRef.name,
+					fullPath: hardwarePhotoRef.fullPath,
+					size: hardware.photo.size,
+					type: hardware.photo.type,
+					bucket: hardwarePhotoRef.bucket,
+					url: url,
+				},
+				dateCreated: new Date().toString(),
 			})
-		})
+		} else { // updating existing hardware
+			let newHardware
+			getHardware(hardwareId, (originalHardware) => {
+				const photo = (url === undefined ? originalHardware.photo : {
+					name: hardwarePhotoRef.name,
+					fullPath: hardwarePhotoRef.fullPath,
+					size: hardware.photo.size,
+					type: hardware.photo.type,
+					bucket: hardwarePhotoRef.bucket,
+					url: url,
+				})
+				newHardware = Object.assign(originalHardware, newHardwareBase, photo)
+			}, (err) => console.error(err))
+			return newHardware
+		}
+	})
+	.then((newHardware) => {
+		return ref.child(`feed/hardwares/${hardwareId}`).set(newHardware) // saving hardwares to firebase
+		.then(() => (newHardware))
 	})
 }
 
