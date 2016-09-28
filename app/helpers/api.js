@@ -65,6 +65,7 @@ export function saveHardware (hardware, uid) {
 			})
 		} else { // updating existing hardware
 			let newHardware
+			const newSubContentStatus = newHardware.description !== ''
 			getHardware(hardwareId, (originalHardware) => {
 				const photo = (url === undefined ? originalHardware.photo : {
 					name: hardwarePhotoRef.name,
@@ -75,6 +76,7 @@ export function saveHardware (hardware, uid) {
 					url: url,
 				})
 				newHardware = Object.assign(originalHardware, newHardwareBase, photo)
+				updateItemHasSubContentDB(hardwareId, newSubContentStatus) // if there wasn't a hardware description before, but was updated to have one, we want to let all related items to know. We do this because each item has a bool value that indicates if it has subcontent to be displayed. If it does the item is clickable, and when clicked displays that subcontent
 			}, (err) => console.error(err))
 			return newHardware
 		}
@@ -85,12 +87,24 @@ export function saveHardware (hardware, uid) {
 	})
 }
 
+function updateItemHasSubContentDB (hardwareId, newSubContentStatus) {
+	getItems(({items, sortedItemIds}) => {
+		// loop through each item. Update the ones that match the hardwareId to haveSubContent = true
+		sortedItemIds.forEach((itemId) => {
+			if (items[itemId].hardwareId === hardwareId) {
+				return ref.child(`feed/items/${itemId}`).update({hasSubContent: newSubContentStatus}) // saving person to firebase
+				.then(() => ({hasSubContent: true}))
+			}
+		})
+	}, (err) => console.error(err))
+}
+
 function verifyPerson (person) {
 	return new Promise((resolve, reject) => {
 		getPeople((people) => {
 			for (const peopleId in people) {
 				// Test for full name duplicate
-				if (`${people[peopleId].firstName} ${people[peopleId].lastName}`.toUpperCase()	===
+				if (`${people[peopleId].firstName} ${people[peopleId``].lastName}`.toUpperCase()	===
 				`${person.firstName} ${person.lastName}`.toUpperCase()) {
 					reject(`Sorry, but the name, ${person.firstName} ${person.lastName} is already in use by another person.`)
 				}
