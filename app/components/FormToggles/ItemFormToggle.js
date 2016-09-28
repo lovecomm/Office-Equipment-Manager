@@ -9,7 +9,7 @@ ItemFormToggle.propTypes = {
 
 export default function ItemFormToggle ({handleOpenForm, editing, serial}) {
 	return (
-		<MenuItem icon='view_agenda' onClick={handleOpenForm}
-			caption={(() => editing ? `Edit ${serial}` : 'New Item')()}/>
+		<MenuItem icon={(() => editing ? 'mode_edit' : 'view_agenda')()} onClick={handleOpenForm}
+			caption={(() => editing ? `${serial}` : 'New Item')()}/>
 	)
 }

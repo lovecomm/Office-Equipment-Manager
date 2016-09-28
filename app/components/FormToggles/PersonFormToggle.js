@@ -9,7 +9,7 @@ PersonFormToggle.propTypes = {
 
 export default function PersonFormToggle ({handleOpenEditForm, person, editing}) {
 	return (
-		<MenuItem icon='people' onClick={handleOpenEditForm}
-			caption={(() => editing ? `Edit ${person.firstName} ${person.lastName}` : 'New Person')()}/>
+		<MenuItem icon={(() => editing ? 'mode_edit' : 'people')()} onClick={handleOpenEditForm}
+			caption={(() => editing ? `${person.firstName} ${person.lastName}` : 'New Person')()}/>
 	)
 }

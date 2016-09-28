@@ -18,9 +18,9 @@ export default function EditMenu (props) {
 			<PersonFormToggleContainer person={props.person} editing={true}/>
 			<HardwareFormToggleContainer editing={true} hardware={props.hardware}/>
 			<MenuDivider />
-			<MenuItem icon='delete' caption={(() => `Delete ${props.serial}`)()} />
-			<MenuItem icon='delete' caption={(() => `Delete ${props.person.firstName} ${props.person.lastName}`)()} />
-			<MenuItem icon='delete' caption={(() => `Delete ${props.hardware.make} ${props.hardware.model}`)()} />
+			<MenuItem icon='delete' caption={(() => `${props.serial}`)()} />
+			<MenuItem icon='delete' caption={(() => `${props.person.firstName} ${props.person.lastName}`)()} />
+			<MenuItem icon='delete' caption={(() => `${props.hardware.make} ${props.hardware.model}`)()} />
 		</IconMenu>
 	)
 }
