@@ -52,7 +52,7 @@ function reduxMoveItemAssignmentToInventory (dispatch, items, people, personId) 
 		if (people[id].firstName === 'INVENTORY') { // we have the personId for INVENTORY, now we just need to dispatch the update for each item to have it's personID to be assigned to inventory
 			for (const itemId in items) {
 				if (items[itemId].personId === personId) {
-					dispatch(updateItemsPersonId(itemId, id))
+					return dispatch(updateItemsPersonId(itemId, id))
 				}
 			}
 		}
@@ -70,12 +70,14 @@ export function confirmDeleteData () {
 		switch (dataType) {
 		case 'people':
 			reduxMoveItemAssignmentToInventory(dispatch, items, getState().people, dataId)
+			buildFilterOptions(dispatch, getState)
 			break
 		case 'hardwares':
 			const newHardwareItemIds = getState().feed.itemIds.filter((itemId) => {
 				return items[itemId].hardwareId !== dataId
 			})
 			dispatch(settingFeedListenerSuccess(newHardwareItemIds))
+			buildFilterOptions(dispatch, getState)
 			break
 		default: // items
 			const newItemIds = getState().feed.itemIds.filter((id) => {
@@ -484,22 +486,23 @@ export function buildFilterOptions (dispatch, getState) {
 	const sortedItems = getState().feed.itemIds
 	const people = getState().people
 	const hardwares = getState().hardware
-	console.log('in buildFilterOptions w/items', items)
 	let options = {}
-	sortedItems.forEach((itemId) => {
-		console.log('working sort, item with itemId', [items[itemId]])
-		options = {
-			...options,
-			[items[itemId]]: items[itemId].serial,
+	if (sortedItems.length === 0) { // when the app first loads, it won't have the sortedIds yet. However, when we do things like delete items, we want this list to be based on those sorted items that are getting updated after something is deleted.
+		for (const i in items) {
+			const item = items[i]
+			options = {
+				...options,
+				[item.itemId]: `${item.serial}`,
+			}
 		}
-	})
-	// for (const i in items) {
-	// 	const item = items[i]
-	// 	options = {
-	// 		...options,
-	// 		[item.itemId]: `${item.serial}`,
-	// 	}
-	// }
+	} else {
+		sortedItems.forEach((itemId) => {
+			options = {
+				...options,
+				[itemId]: items[itemId].serial,
+			}
+		})
+	}
 	for (const i in people) {
 		const person = people[i]
 		options = {

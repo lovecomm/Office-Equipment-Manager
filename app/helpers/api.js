@@ -281,15 +281,30 @@ export function deleteData (dataType, dataId) {
 	console.log('in deleteData with id', dataType, dataId)
 	switch (dataType) {
 	case 'people':
-		// ref.child(`feed/people/${dataId}`).remove() // remove person, but need to assign all associated items to INVENTORY first
-		break
+		return ref.child(`feed/people/${dataId}`).remove() // remove person, but need to assign all associated items to INVENTORY
+		.then(() => {
+			getItems(({items}) => {
+				getPeople((people) => {
+					for (const personId in people) {
+						if (people[personId].firstName === 'INVENTORY') {
+							for (const itemId in items) {
+								if (items[itemId].personId === dataId) {
+									return ref.child(`feed/items/${itemId}`).update({personId: personId}) // update the item to be INVENTORY (still considered a person) if the user assigned to it is deleted
+								}
+							}
+							return
+						}
+					}
+				})
+			}, (err) => console.error(err))
+		})
 	case 'hardwares':
 		return ref.child(`feed/hardwares/${dataId}`).remove()
 		.then(() => {
 			getItems(({items}) => {
 				for (const itemId in items) {
 					if (items[itemId].hardwareId === dataId) {
-						ref.child(`feed/items/${itemId}`).remove() // delete all items that use this hardware
+						return ref.child(`feed/items/${itemId}`).remove() // delete all items that use this hardware
 					}
 				}
 			}, (err) => console.error(err))
