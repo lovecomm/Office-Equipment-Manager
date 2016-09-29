@@ -102,9 +102,9 @@ function updateItemHasSubContentDB (hardwareId, newSubContentStatus) {
 function verifyPerson (person) {
 	return new Promise((resolve, reject) => {
 		getPeople((people) => {
-			for (const peopleId in people) {
+			for (const personId in people) {
 				// Test for full name duplicate
-				if (`${people[peopleId].firstName} ${people[peopleId``].lastName}`.toUpperCase()	===
+				if (`${people[personId].firstName} ${people[personId].lastName}`.toUpperCase()	===
 				`${person.firstName} ${person.lastName}`.toUpperCase()) {
 					reject(`Sorry, but the name, ${person.firstName} ${person.lastName} is already in use by another person.`)
 				}

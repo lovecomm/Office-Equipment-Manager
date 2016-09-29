@@ -146,7 +146,7 @@ export default function personForm (state = initialState, action) {
 	case ADD_PEOPLE:
 		return {
 			...state,
-			[action.people.peopleId]: action.people,
+			[action.people.personId]: action.people,
 		}
 	case UPDATE_ERROR:
 		return {
