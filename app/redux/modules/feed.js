@@ -47,11 +47,38 @@ export function initiateDeleteData (dataType, dataId) {
 	}
 }
 
+function filterOutItemsThatUseThisHardware (items, originalItemIds, hardwareId) {
+	return new Promise((resolve, reject) => {
+		const newItemIds = originalItemIds.filter((itemId) => {
+			return items[itemId].hardwareId !== hardwareId
+		})
+		resolve(newItemIds)
+	})
+}
+
 export function confirmDeleteData () {
 	return function (dispatch, getState) {
 		const dataType = getState().feed.toDeleteType
 		const dataId = getState().feed.toDeleteId
+		// Delete from Firebase Storage
 		deleteData(dataType, dataId)
+		// Delete from Redux state tree
+		switch (dataType) {
+		case 'people':
+			console.log('remove person from state tree')
+			break
+		case 'hardwares':
+			filterOutItemsThatUseThisHardware(getState().items, getState().feed.itemIds, dataId)
+			.then((newItemIds) => {
+				dispatch(settingFeedListenerSuccess(newItemIds))
+			})
+			break
+		default: // items
+			const newItemIds = getState().feed.itemIds.filter((id) => {
+				return id !== dataId
+			})
+			dispatch(settingFeedListenerSuccess(newItemIds))
+		}
 	}
 }
 

@@ -272,5 +272,15 @@ export function listenToFeed (cb, errorCB) {
 
 export function deleteData (dataType, dataId) {
 	console.log('in deleteData with id', dataType, dataId)
+	switch (dataType) {
+	case 'people':
+		// ref.child(`feed/people/${dataId}`).remove() // remove person, but need to assign all associated items to INVENTORY first
+		break
+	case 'hardwares':
+		// ref.child(`feed/hardwares/${dataId}`).remove() // remove hardware, but need to also remove all items that use this hardware
+		break
+	default: // items
+		ref.child(`feed/items/${dataId}`).remove()
+	}
 }
 
