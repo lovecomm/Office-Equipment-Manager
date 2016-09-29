@@ -52,7 +52,7 @@ function reduxMoveItemAssignmentToInventory (dispatch, items, people, personId) 
 		if (people[id].firstName === 'INVENTORY') { // we have the personId for INVENTORY, now we just need to dispatch the update for each item to have it's personID to be assigned to inventory
 			for (const itemId in items) {
 				if (items[itemId].personId === personId) {
-					return dispatch(updateItemsPersonId(itemId, id))
+					dispatch(updateItemsPersonId(itemId, id))
 				}
 			}
 		}
@@ -485,7 +485,7 @@ export function buildFilterOptions (dispatch, getState) {
 	const items = getState().items
 	const sortedItems = getState().feed.itemIds
 	const people = getState().people
-	const hardwares = getState().hardware
+	const hardwares = getState().hardwares
 	let options = {}
 	if (sortedItems.length === 0) { // when the app first loads, it won't have the sortedIds yet. However, when we do things like delete items, we want this list to be based on those sorted items that are getting updated after something is deleted.
 		for (const i in items) {

@@ -153,13 +153,13 @@ function verifyItem (item, isBeingEdited) {
 							storedItem.serial !== item.serial
 							? reject(`Sorry, but the serial number, ${item.serial} is already in use.`)
 							: resolve(true)
-						}, (err) => console.warn(err))
+						}, (err) => console.error(err))
 					}
 				}
 			}
 			// Mark as verified if email and fullname is not in use
 			resolve(true)
-		}, (error) => console.warn(error))
+		}, (error) => console.error(error))
 	})
 }
 
@@ -207,10 +207,10 @@ export function saveItem (item, uid) {
 					}))
 				} else {
 					if (isBeingEdited) {
-						resolve(ref.child(`feed/items/${itemId}`).update({...newItem}) // saving new item to firebase
+						return resolve(ref.child(`feed/items/${itemId}`).update({...newItem}) // saving new item to firebase
 							.then(() => ({...newItem})))
 					} else {
-						resolve(ref.child(`feed/items/${itemId}`).set({...newItem}) // saving new item to firebase
+						return resolve(ref.child(`feed/items/${itemId}`).set({...newItem}) // saving new item to firebase
 							.then(() => ({...newItem})))
 					}
 				}
@@ -278,7 +278,6 @@ export function listenToFeed (cb, errorCB) {
 // END Getting Data from Firebase
 
 export function deleteData (dataType, dataId) {
-	console.log('in deleteData with id', dataType, dataId)
 	switch (dataType) {
 	case 'people':
 		return ref.child(`feed/people/${dataId}`).remove() // remove person, but need to assign all associated items to INVENTORY
@@ -292,7 +291,6 @@ export function deleteData (dataType, dataId) {
 									return ref.child(`feed/items/${itemId}`).update({personId: personId}) // update the item to be INVENTORY (still considered a person) if the user assigned to it is deleted
 								}
 							}
-							return
 						}
 					}
 				})
@@ -304,7 +302,7 @@ export function deleteData (dataType, dataId) {
 			getItems(({items}) => {
 				for (const itemId in items) {
 					if (items[itemId].hardwareId === dataId) {
-						return ref.child(`feed/items/${itemId}`).remove() // delete all items that use this hardware
+						ref.child(`feed/items/${itemId}`).remove() // delete all items that use this hardware
 					}
 				}
 			}, (err) => console.error(err))
