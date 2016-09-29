@@ -242,6 +242,13 @@ function getPeople (cb, errorCB) {
 	}, errorCB)
 }
 
+export function getPerson (personId, cb, errorCB) {
+	ref.child(`feed/people/${personId}`).on('value', (snapshot) => {
+		const person = snapshot.val() || {}
+		cb(person)
+	}, errorCB)
+}
+
 function getHardwares (cb, errorCB) {
 	ref.child('feed/hardwares').on('value', (snapshot) => {
 		const hardware = snapshot.val() || {}
@@ -277,10 +284,18 @@ export function deleteData (dataType, dataId) {
 		// ref.child(`feed/people/${dataId}`).remove() // remove person, but need to assign all associated items to INVENTORY first
 		break
 	case 'hardwares':
-		// ref.child(`feed/hardwares/${dataId}`).remove() // remove hardware, but need to also remove all items that use this hardware
-		break
+		return ref.child(`feed/hardwares/${dataId}`).remove()
+		.then(() => {
+			getItems(({items}) => {
+				for (const itemId in items) {
+					if (items[itemId].hardwareId === dataId) {
+						ref.child(`feed/items/${itemId}`).remove() // delete all items that use this hardware
+					}
+				}
+			}, (err) => console.error(err))
+		})
 	default: // items
-		ref.child(`feed/items/${dataId}`).remove()
+		return ref.child(`feed/items/${dataId}`).remove()
 	}
 }
 

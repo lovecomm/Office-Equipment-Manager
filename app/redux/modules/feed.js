@@ -1,6 +1,6 @@
 import { addListener } from 'redux/modules/listeners'
-import { listenToFeed, deleteData } from 'helpers/api'
-import { addItemsToFeed } from 'redux/modules/items'
+import { listenToFeed, deleteData, getPerson } from 'helpers/api'
+import { addItemsToFeed, updateItemsPersonId } from 'redux/modules/items'
 import { addPersonToFeed } from 'redux/modules/people'
 import { addHardwareToFeed } from 'redux/modules/hardwares'
 
@@ -47,37 +47,42 @@ export function initiateDeleteData (dataType, dataId) {
 	}
 }
 
-function filterOutItemsThatUseThisHardware (items, originalItemIds, hardwareId) {
-	return new Promise((resolve, reject) => {
-		const newItemIds = originalItemIds.filter((itemId) => {
-			return items[itemId].hardwareId !== hardwareId
-		})
-		resolve(newItemIds)
-	})
+function reduxMoveItemAssignmentToInventory (dispatch, items, people, personId) {
+	for (const id in people) {
+		if (people[id].firstName === 'INVENTORY') { // we have the personId for INVENTORY, now we just need to dispatch the update for each item to have it's personID to be assigned to inventory
+			for (const itemId in items) {
+				if (items[itemId].personId === personId) {
+					dispatch(updateItemsPersonId(itemId, id))
+				}
+			}
+		}
+	}
 }
 
 export function confirmDeleteData () {
 	return function (dispatch, getState) {
 		const dataType = getState().feed.toDeleteType
 		const dataId = getState().feed.toDeleteId
+		const items = getState().items
 		// Delete from Firebase Storage
 		deleteData(dataType, dataId)
 		// Delete from Redux state tree
 		switch (dataType) {
 		case 'people':
-			console.log('remove person from state tree')
+			reduxMoveItemAssignmentToInventory(dispatch, items, getState().people, dataId)
 			break
 		case 'hardwares':
-			filterOutItemsThatUseThisHardware(getState().items, getState().feed.itemIds, dataId)
-			.then((newItemIds) => {
-				dispatch(settingFeedListenerSuccess(newItemIds))
+			const newHardwareItemIds = getState().feed.itemIds.filter((itemId) => {
+				return items[itemId].hardwareId !== dataId
 			})
+			dispatch(settingFeedListenerSuccess(newHardwareItemIds))
 			break
 		default: // items
 			const newItemIds = getState().feed.itemIds.filter((id) => {
 				return id !== dataId
 			})
 			dispatch(settingFeedListenerSuccess(newItemIds))
+			buildFilterOptions(dispatch, getState)
 		}
 	}
 }
@@ -144,7 +149,7 @@ export function setAndHandleFeedListener () {
 			dispatch(addItemsToFeed(items))
 			dispatch(addPersonToFeed(people))
 			dispatch(addHardwareToFeed(hardwares))
-			buildFilterOptions(dispatch, items, people, hardwares)
+			buildFilterOptions(dispatch, getState)
 			if (initialFetch === true) {
 				dispatch(settingFeedListenerSuccess(sortedItemIds))
 			}
@@ -474,15 +479,27 @@ function findFilterNameAndType (getState, nameId) {
 	})
 }
 
-function buildFilterOptions (dispatch, items, people, hardwares) {
+export function buildFilterOptions (dispatch, getState) {
+	const items = getState().items
+	const sortedItems = getState().feed.itemIds
+	const people = getState().people
+	const hardwares = getState().hardware
+	console.log('in buildFilterOptions w/items', items)
 	let options = {}
-	for (const i in items) {
-		const item = items[i]
+	sortedItems.forEach((itemId) => {
+		console.log('working sort, item with itemId', [items[itemId]])
 		options = {
 			...options,
-			[item.itemId]: `${item.serial}`,
+			[items[itemId]]: items[itemId].serial,
 		}
-	}
+	})
+	// for (const i in items) {
+	// 	const item = items[i]
+	// 	options = {
+	// 		...options,
+	// 		[item.itemId]: `${item.serial}`,
+	// 	}
+	// }
 	for (const i in people) {
 		const person = people[i]
 		options = {
