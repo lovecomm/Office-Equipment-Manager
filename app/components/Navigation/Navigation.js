@@ -24,7 +24,7 @@ function MenuItems ({isAuthed}) {
 			<Link to='/logout'><MenuItem icon='close' value='Sign Out' caption='Sign Out' /></Link>
 		</IconMenu>)
 	} else {
-		return <Link className={signout} to='/auth'><MenuItem className={signout} value='Sign In' caption='Sign In' /></Link>
+		return <span></span>
 	}
 }
 
