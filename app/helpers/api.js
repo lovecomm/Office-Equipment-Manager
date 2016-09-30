@@ -65,7 +65,7 @@ export function saveHardware (hardware, uid) {
 			})
 		} else { // updating existing hardware
 			let newHardware
-			const newSubContentStatus = newHardware.description !== ''
+			const newSubContentStatus = hardware.description !== ''
 			getHardware(hardwareId, (originalHardware) => {
 				const photo = (url === undefined ? originalHardware.photo : {
 					name: hardwarePhotoRef.name,
