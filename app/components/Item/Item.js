@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Card, CardMedia, CardTitle, CardText } from 'react-toolbox/lib/card'
-import { statusWarning, statusReplace, status, chips, fullWidthPhoto } from './styles.scss'
+import { statusWarning, statusReplace, status, chips, fullWidthPhoto, cardNotExpanded, cardExpanded, cardHasSubContent } from './styles.scss'
 import { EditMenuContainer } from 'containers'
 
 Item.propTypes = {
@@ -15,13 +15,13 @@ Item.propTypes = {
 	collapsed: PropTypes.bool.isRequired,
 	getYearsOld: PropTypes.string.isRequired,
 	envokeHandleCollapsed: PropTypes.func.isRequired,
-	cardClass: PropTypes.string.isRequired,
+	// getHref: PropTypes.func.isRequired,
 }
 
 export default function Item (props) {
 	return (
-		<div style={{position: 'relative'}}>
-			<Card style={{width: '250px'}} className={props.cardClass} onClick={props.envokeHandleCollapsed}>
+		<div style={{position: 'relative'}} className={(() => props.hasSubContent ? cardHasSubContent : '')()}>
+			<Card onClick={props.envokeHandleCollapsed} className={(() => props.collapsed ? cardNotExpanded : cardExpanded)()}>
 				<CardTitle
 					avatar={props.hardware.photo.url}
 					subtitle={props.serial}

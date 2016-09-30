@@ -75,9 +75,9 @@ export default function Feed (props) {
 				label={(() => {
 					switch (props.toDeleteType) {
 					case 'people':
-						return 'Are you sure you want to delete this person? If you do, all items assigned to this person will be assigned to INVENTORY. There is no taking back this action.'
+						return 'Are you sure you want to delete this person? If you do, ALL ITEMS assigned to this person will be assigned to INVENTORY. There is no taking back this action.'
 					case 'hardwares':
-						return 'Are you sure you want to delete this hardware? If you do, all items using this hardware will be deleted. There is no taking back this action.'
+						return 'Are you sure you want to delete this hardware? If you do, ALL ITEMS using this hardware will be deleted. There is no taking back this action.'
 					default:
 						return 'Are you sure you want to delete this item? There is no taking back this action.'
 					}

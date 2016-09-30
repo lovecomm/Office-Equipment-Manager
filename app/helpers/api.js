@@ -1,12 +1,10 @@
 import { ref, imagesRef, storageRef } from 'config/constants'
 
 // Get firebase imagesRef
-export function firebaseHref (fullPath) {
+export function getHref (fullPath) {
 	return storageRef.child(fullPath).getDownloadURL()
-	.then((url) => {
-		return url
-	})
-	.catch((err) => `Error in firebaseHref: ${err}`)
+	.then((url) => url)
+	.catch((err) => `Error in getHref: ${err}`)
 }
 
 function verifyHardware (hardware, editing) {
@@ -45,12 +43,7 @@ export function saveHardware (hardware, uid) {
 		} else { return undefined } // is updating existing hardware, and does not have an updated photo
 	})
 	.then((photoSnapshot) => {
-		return photoSnapshot
-		? firebaseHref(hardwarePhotoRef.fullPath) // is new hardware, or updating existing hardware with a new photo
-		: undefined // is updating existing hardware, and does not have an updated photo
-	})
-	.then((url) => {
-		if (url && !hardware.editing) { // it's a new hardware
+		if (photoSnapshot.downloadURL && !hardware.editing) { // it's a new hardware
 			return Object.assign(newHardwareBase, {
 				photo: {
 					name: hardwarePhotoRef.name,
@@ -58,7 +51,7 @@ export function saveHardware (hardware, uid) {
 					size: hardware.photo.size,
 					type: hardware.photo.type,
 					bucket: hardwarePhotoRef.bucket,
-					url: url,
+					url: photoSnapshot.downloadURL,
 				},
 				dateCreated: new Date().toString(),
 			})
@@ -189,7 +182,7 @@ function storeNewItemPhoto (photo) {
 	return new Promise((resolve, reject) => {
 		const itemPhotoRef = imagesRef.child(`items/${photo.name}`) // Get ref for person photo
 		return itemPhotoRef.put(photo) // saving person photo to firebase
-		.then(() => resolve(itemPhotoRef))
+		.then((photoSnapshot) => resolve({photoSnapshot, itemPhotoRef}))
 		.catch((err) => `Error in storeNewItemPhoto: ${err}`)
 	})
 }
@@ -203,22 +196,17 @@ export function saveItem (item, uid) {
 	})
 	.then((newItemBase) => {
 		if (item.photo.size) { // if this is true, then a new photo will have been attached to a new item, or an edited item
-			let itemPhotoRef
 			return storeNewItemPhoto(item.photo)
-			.then((photoRef) => {
-				itemPhotoRef = photoRef
-				return firebaseHref(itemPhotoRef.fullPath)
-			})
-			.then((url) => {
+			.then(({photoSnapshot, itemPhotoRef}) => {
 				const photo = {
 					name: itemPhotoRef.name,
 					fullPath: itemPhotoRef.fullPath,
 					size: item.photo.size,
 					type: item.photo.type,
 					bucket: itemPhotoRef.bucket,
-					url: url,
+					url: photoSnapshot.downloadURL,
 				}
-				return Object.assign(newItemBase, photo)
+				return Object.assign(newItemBase, {photo: photo})
 			})
 		} else { return Object.assign(newItemBase, {photo: {}}) }
 	})

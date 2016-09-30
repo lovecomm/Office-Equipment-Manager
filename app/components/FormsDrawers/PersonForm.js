@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Drawer, Input, Button } from 'react-toolbox/lib'
 import { button, headline, formWrapper, drawer, error } from './styles.scss'
-import { formatPerson } from 'helpers/utils'
 
 const	{ func, bool, string } = PropTypes
 
@@ -21,12 +20,12 @@ PersonForm.propTypes = {
 
 export default function PersonForm (props, context) {
 	function submitPeople () {
-		props.personFanout(formatPerson(
-			props.editing,
-			props.personId,
-			props.firstName,
-			props.lastName,
-		))
+		props.personFanout({
+			editing: props.editing,
+			personId: props.personId,
+			firstName: props.firstName,
+			lastName: props.lastName,
+		})
 	}
 	return (
 		<Drawer active={props.isOpen}

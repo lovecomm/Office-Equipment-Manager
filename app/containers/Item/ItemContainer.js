@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Item } from 'components'
 import { bindActionCreators } from 'redux'
 import * as itemActionCreators from 'redux/modules/items'
-import { cardExpandable, cardNoExpand } from './styles.scss'
+import { getHref } from 'helpers/api'
 
 const ItemContainer = React.createClass({
 	propTypes: {
@@ -29,17 +29,16 @@ const ItemContainer = React.createClass({
 		const newCollapse = !this.props.collapsed
 		this.props.handleCollapsed(this.props.itemId, newCollapse)
 	},
-	cardClass () {
-		if (this.props.hasSubContent) {
-			return cardExpandable
-		} else { return cardNoExpand }
-	},
+	// handleGetHref (fullPath) {
+	// 	let url = getHref(fullPath)
+	// 	console.log(url)
+	// 	return url
+	// },
 	render () {
 		return (
 			<Item
 				{...this.props}
 				getYearsOld={this.getYearsOld()}
-				cardClass={this.cardClass()}
 				envokeHandleCollapsed={this.envokeHandleCollapsed}/>
 		)
 	},

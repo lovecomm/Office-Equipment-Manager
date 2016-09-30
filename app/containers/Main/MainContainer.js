@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as userActionCreators from 'redux/modules/users'
-import { formatUserInfo } from 'helpers/utils'
 import { firebaseAuth } from 'config/constants'
 import { Loader, Navigation } from 'components'
 import { FormsDrawersContainer } from 'containers'
@@ -22,7 +21,7 @@ const MainContainer = React.createClass({
 		firebaseAuth().onAuthStateChanged((user) => {
 			if (user) { // user existing means that we're logged in
 				const userData = user.providerData[0]
-				const userInfo = formatUserInfo(userData.displayName, user.uid)
+				const userInfo = {name: userData.displayName, uid: user.uid}
 				this.props.authUser(user.uid)
 				this.props.fetchingUserSuccess(user.uid, userInfo, Date.now())
 			} else {

@@ -1,7 +1,8 @@
-*[class*='card'] {
+div[data-react-toolbox="card"] {
 	margin: 0 7px 7px;
 	position: relative;
-	// height: 0%; // prevents items from matching height of all other items on the same row
+	background-color: rgba(0,0,0,0.025);
+	width: 250px;
 
 	h4 {
 		font-weight: 600;
@@ -9,6 +10,19 @@
 		text-decoration: underline;
 		font-size: 0.85em;
 		margin-top: 15px;
+	}
+}
+
+.cardHasSubContent div[data-react-toolbox="card"] {
+	background-color: white;
+	cursor: pointer;
+
+	&.cardNotExpanded {
+
+	}
+
+	.cardExpanded {
+
 	}
 }
 

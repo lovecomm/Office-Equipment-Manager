@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Drawer, Input, Button, DatePicker, Autocomplete } from 'react-toolbox/lib'
 import { button, headline, formWrapper, drawer, imageInput, selectedPhoto, error } from './styles.scss'
-import { formatItem } from 'helpers/utils'
 
 const	{ func, bool, object, string, any } = PropTypes
 
