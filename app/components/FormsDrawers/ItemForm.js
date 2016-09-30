@@ -57,15 +57,19 @@ export default function ItemForm (props, context) {
 		return hardwareList
 	}
 	function submitItems () {
-		props.itemFanout(formatItem(
-			props.itemId,
-			props.purchasedDate,
-			props.serial,
-			props.personId,
-			props.hardwareId,
-			props.note,
-			props.photo,
-		))
+		props.itemFanout({
+			itemId: props.itemId,
+			purchasedDate: props.purchasedDate,
+			serial: props.serial,
+			personId: props.personId,
+			person: props.person,
+			hardwareId: props.hardwareId,
+			hardware: props.hardware,
+			note: props.note,
+			photo: props.photo,
+			photoName: props.photoName,
+			editing: props.editing,
+		})
 	}
 	return (
 		<Drawer active={props.isOpen}

@@ -110,11 +110,10 @@ function settingFeedListenerSuccess (itemIds) {
 	}
 }
 
-export function addNewItemToFeed (itemId, item) {
+export function addNewItemToFeed (itemId) {
 	return {
 		type: ADD_NEW_ITEM_TO_FEED,
 		itemId,
-		item,
 	}
 }
 

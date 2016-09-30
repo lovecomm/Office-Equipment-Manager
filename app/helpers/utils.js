@@ -26,13 +26,13 @@ export function formatPerson (editing, personId, firstName, lastName) {
 }
 
 export function formatItem (itemId, purchasedDate, serial, personId, hardwareId, note, photo) {
-	return {
-		itemId,
-		purchasedDate,
-		serial,
-		personId,
-		hardwareId,
-		note,
-		photo,
-	}
+	// return {
+	// 	itemId,
+	// 	purchasedDate,
+	// 	serial,
+	// 	personId,
+	// 	hardwareId,
+	// 	note,
+	// 	photo,
+	// }
 }

@@ -1,5 +1,6 @@
 import { saveItem } from 'helpers/api'
 import { addNewItemToFeed } from './feed'
+import { updateItemInFeed } from './items'
 
 const OPEN_ITEM_FORM = 'OPEN_ITEM_FORM'
 const CLOSE_ITEM_FORM = 'CLOSE_ITEM_FORM'
@@ -21,13 +22,17 @@ const ADD_ITEM = 'ADD_ITEM'
 function activateCurrentItem (dispatch, getState, itemId) {
 	return new Promise((resolve, reject) => {
 		const item = getState().items[itemId]
+		const person = getState().people[item.personId]
+		const hardware = getState().hardwares[item.hardwareId]
 		dispatch(updateEditing())
 		dispatch(updateItemId(item.itemId))
 		dispatch(updateSerial(item.serial))
 		dispatch(updatePurchasedDate(new Date(item.purchasedDate))) // purchasedDate is stored as string, coverting it back to date here.
 		dispatch(updateNote(item.note))
-		dispatch(updatePerson(item.personId))
-		dispatch(updateHardware(item.hardwareId))
+		dispatch(updatePersonId(item.personId))
+		dispatch(updateHardwareId(item.hardwareId))
+		dispatch(updatePerson(`${person.firstName} ${person.lastName}`))
+		dispatch(updateHardware(`${hardware.make} ${hardware.model}`))
 		item.photo !== undefined ? dispatch(updatePhotoName(item.photo.name)) : ''
 		resolve(true)
 	})
@@ -39,7 +44,7 @@ export function initiateItemForm (itemId) {
 		.then(() => {
 			dispatch(openItemForm())
 		})
-		.catch((err) => console.warn(err))
+		.catch((err) => console.warn(`Error in initiateItemForm: ${err}`))
 	}
 }
 
@@ -165,15 +170,18 @@ function addItem (item) {
 
 export function itemFanout (item) {
 	return function (dispatch, getState) {
+		const editing = item.editing
 		const uid = getState().users.authedId
 		saveItem(item, {uid: uid}) // add item to firebase
 		.then((itemWithId) => {
 			dispatch(addItem(itemWithId)) // add to redux store
-			dispatch(addNewItemToFeed(itemWithId.itemId, itemWithId))
+			editing
+			?	dispatch(updateItemInFeed(itemWithId.itemId, itemWithId))
+			: dispatch(addNewItemToFeed(itemWithId.itemId))
 			dispatch(closeItemForm())
 		})
-		.catch((error) => {
-			dispatch(updateError(error.toString()))
+		.catch((err) => {
+			dispatch(updateError(`Error saving item: ${err}`))
 		})
 	}
 }

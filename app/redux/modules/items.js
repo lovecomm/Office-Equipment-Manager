@@ -2,11 +2,20 @@ const ADD_ITEMS_TO_FEED = 'ADD_ITEMS_TO_FEED'
 const UPDATE_COLLAPSED = 'UPDATE_COLLAPSED'
 const COLLAPSE_ITEM = 'COLLAPSE_ITEM'
 const UPDATE_ITEM_PERSONID = 'UPDATE_ITEM_PERSONID'
+const UPDATE_ITEM_IN_FEED = 'UPDATE_ITEM_IN_FEED'
 
 export function addItemsToFeed (items) {
 	return {
 		type: ADD_ITEMS_TO_FEED,
 		items,
+	}
+}
+
+export function updateItemInFeed (itemId, item) {
+	return {
+		type: UPDATE_ITEM_IN_FEED,
+		itemId,
+		item,
 	}
 }
 
@@ -63,7 +72,6 @@ function item (state = initialItemState, action) {
 			collapsed: action.collapsed,
 		}
 	case UPDATE_ITEM_PERSONID:
-		console.log('in case UPDATE_ITEM_PERSONID w/personId', action.personId)
 		return {
 			...state,
 			personId: action.personId,
@@ -82,10 +90,14 @@ export default function items (state = initialState, action) {
 			...state,
 			...action.items,
 		}
+	case UPDATE_ITEM_IN_FEED:
+		return {
+			...state,
+			[action.itemId]: action.item,
+		}
 	case COLLAPSE_ITEM:
 	case UPDATE_ITEM_PERSONID:
 	case UPDATE_COLLAPSED:
-		console.log('in case UPDATE_ITEM_PERSONID w/itemId', action.itemId)
 		return {
 			...state,
 			[action.itemId]: item(state[action.itemId], action),

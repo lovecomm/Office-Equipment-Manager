@@ -5,9 +5,8 @@ export function firebaseHref (fullPath) {
 	return storageRef.child(fullPath).getDownloadURL()
 	.then((url) => {
 		return url
-	}).catch(function (error) {
-		console.warn(error)
 	})
+	.catch((err) => `Error in firebaseHref: ${err}`)
 }
 
 function verifyHardware (hardware, editing) {
@@ -23,7 +22,7 @@ function verifyHardware (hardware, editing) {
 			}
 			// Mark as verified if email and fullname is not in use
 			resolve(true)
-		}, (error) => console.warn(error))
+		}, (err) => console.error(`Error in verifyHardware: ${err}`))
 	})
 }
 
@@ -77,7 +76,7 @@ export function saveHardware (hardware, uid) {
 				})
 				newHardware = Object.assign(originalHardware, newHardwareBase, photo)
 				updateItemHasSubContentDB(hardwareId, newSubContentStatus) // if there wasn't a hardware description before, but was updated to have one, we want to let all related items to know. We do this because each item has a bool value that indicates if it has subcontent to be displayed. If it does the item is clickable, and when clicked displays that subcontent
-			}, (err) => console.error(err))
+			}, (err) => console.error(`Error in getHardware call within saveHardware: ${err}`))
 			return newHardware
 		}
 	})
@@ -85,6 +84,7 @@ export function saveHardware (hardware, uid) {
 		return ref.child(`feed/hardwares/${hardwareId}`).set(newHardware) // saving hardwares to firebase
 		.then(() => (newHardware))
 	})
+	.catch((err) => `Error in saveHardware: ${err}`)
 }
 
 function updateItemHasSubContentDB (hardwareId, newSubContentStatus) {
@@ -94,9 +94,10 @@ function updateItemHasSubContentDB (hardwareId, newSubContentStatus) {
 			if (items[itemId].hardwareId === hardwareId) {
 				return ref.child(`feed/items/${itemId}`).update({hasSubContent: newSubContentStatus}) // saving person to firebase
 				.then(() => ({hasSubContent: true}))
+				.catch((err) => `Error in ref.child call within updateItemHasSubContentDB: ${err}`)
 			}
 		})
-	}, (err) => console.error(err))
+	}, (err) => `Error in getItems call within updateItemHasSubContentDB: ${err}`)
 }
 
 function verifyPerson (person) {
@@ -111,12 +112,13 @@ function verifyPerson (person) {
 			}
 			// Mark as verified if email and fullname is not in use
 			resolve(true)
-		}, (error) => console.warn(error))
+		}, (err) => console.error(`Error in getPeople call within verifyPerson: ${err}`))
 	})
 }
 
 export function savePerson (person, uid) {
 	const personId = person.editing ? person.personId : ref.child('feed/people').push().key
+	let newPerson
 	return verifyPerson(person)
 	.then(() => {
 		const personBase = {
@@ -126,18 +128,18 @@ export function savePerson (person, uid) {
 			createdBy: uid.uid,
 			dateLastUpdated: new Date().toString(),
 		}
-		if (!person.editing) {
-			const newPerson = {
-				...personBase,
-				dateCreated: new Date().toString(),
-			}
-			return ref.child(`feed/people/${personId}`).set({...newPerson}) // saving person to firebase
-				.then(() => ({...newPerson}))
+		if (person.editing) {
+			newPerson = personBase
+			return ref.child(`feed/people/${personId}`).update(personBase) // saving edited person to firebase
 		} else {
-			return ref.child(`feed/people/${personId}`).update({...personBase}) // saving person to firebase
-				.then(() => ({...personBase}))
+			newPerson = Object.assign(personBase, {
+				dateCreated: new Date().toString(),
+			})
+			return ref.child(`feed/people/${personId}`).set(newPerson) // saving new person to firebase
 		}
 	})
+	.then(() => (newPerson))
+	.catch((err) => `Error in savePerson: ${err}`)
 }
 
 function verifyItem (item, isBeingEdited) {
@@ -153,70 +155,89 @@ function verifyItem (item, isBeingEdited) {
 							storedItem.serial !== item.serial
 							? reject(`Sorry, but the serial number, ${item.serial} is already in use.`)
 							: resolve(true)
-						}, (err) => console.error(err))
+						}, (err) => reject(`Error in getItem call, within getItems call, within verifyItem: ${err}`))
 					}
 				}
 			}
 			// Mark as verified if email and fullname is not in use
 			resolve(true)
-		}, (error) => console.error(error))
+		}, (err) => console.error(`Error in getItems call within verifyItem: ${err}`))
+	})
+}
+
+function getNewItemBase (item, itemId, uid) {
+	return new Promise((resolve, reject) => {
+		getHardware(item.hardwareId, (hardware) => {
+			const newItemBase = {
+				itemId: itemId,
+				serial: item.serial,
+				purchasedDate: item.purchasedDate.toString(),
+				personId: item.personId,
+				hardwareId: item.hardwareId,
+				note: item.note,
+				collapsed: true,
+				hasSubContent: (item.note !== '' || item.photo.size !== undefined || hardware.description !== ''),
+				createdBy: uid.uid,
+				dateLastUpdated: new Date().toString(),
+			}
+			resolve(newItemBase)
+		}, (err) => reject(err))
+	})
+}
+
+function storeNewItemPhoto (photo) {
+	return new Promise((resolve, reject) => {
+		const itemPhotoRef = imagesRef.child(`items/${photo.name}`) // Get ref for person photo
+		return itemPhotoRef.put(photo) // saving person photo to firebase
+		.then(() => resolve(itemPhotoRef))
+		.catch((err) => `Error in storeNewItemPhoto: ${err}`)
 	})
 }
 
 export function saveItem (item, uid) {
 	const isBeingEdited = item.itemId !== ''
+	console.log('isBeingEditing', isBeingEdited)
 	const itemId = isBeingEdited ? item.itemId : ref.child('feed/items').push().key
+	let newItem
 	return verifyItem(item, isBeingEdited)
 	.then(() => {
-		return new Promise((resolve, reject) => {
-			getHardware(item.hardwareId, (hardware) => {
-				let newItem = {
-					itemId: itemId,
-					serial: item.serial,
-					purchasedDate: item.purchasedDate.toString(),
-					personId: item.personId,
-					hardwareId: item.hardwareId,
-					note: item.note,
-					collapsed: true,
-					hasSubContent: (item.note !== '' || item.photo.size !== undefined || hardware.description !== ''),
-					createdBy: uid.uid,
-					dateCreated: new Date().toString(),
-					dateLastUpdated: new Date().toString(),
-				}
-				if (item.photo.size) { // if size exists, photo exists
-					const itemPhotoRef = imagesRef.child(`items/${item.photo.name}`) // Get ref for person photo
-					resolve(itemPhotoRef.put(item.photo) // saving person photo to firebase
-					.then((photoSnapshot) => {
-						return firebaseHref(itemPhotoRef.fullPath).then((url) => {
-							const photo = {
-								name: itemPhotoRef.name,
-								fullPath: itemPhotoRef.fullPath,
-								size: item.photo.size,
-								type: item.photo.type,
-								bucket: itemPhotoRef.bucket,
-								url: url,
-							}
-							if (isBeingEdited) {
-								return ref.child(`feed/items/${itemId}`).update({...newItem, photo}) // saving new item to firebase
-									.then(() => ({...newItem, photo}))
-							} else {
-								return ref.child(`feed/items/${itemId}`).set({...newItem, photo}) // saving new item to firebase
-									.then(() => ({...newItem, photo}))
-							}
-						})
-					}))
-				} else {
-					if (isBeingEdited) {
-						return resolve(ref.child(`feed/items/${itemId}`).update({...newItem}) // saving new item to firebase
-							.then(() => ({...newItem})))
-					} else {
-						return resolve(ref.child(`feed/items/${itemId}`).set({...newItem}) // saving new item to firebase
-							.then(() => ({...newItem})))
-					}
-				}
-			}, (err) => console.warn(err))
-		})
+		return getNewItemBase(item, itemId, uid)
 	})
+	.then((newItemBase) => {
+		if (item.photo.size) { // if this is true, then a new photo will have been attached to a new item, or an edited item
+			let itemPhotoRef
+			return storeNewItemPhoto(item.photo)
+			.then((photoRef) => {
+				itemPhotoRef = photoRef
+				return firebaseHref(itemPhotoRef.fullPath)
+			})
+			.then((url) => {
+				const photo = {
+					name: itemPhotoRef.name,
+					fullPath: itemPhotoRef.fullPath,
+					size: item.photo.size,
+					type: item.photo.type,
+					bucket: itemPhotoRef.bucket,
+					url: url,
+				}
+				return Object.assign(newItemBase, photo)
+			})
+		} else { return Object.assign(newItemBase, {photo: {}}) }
+	})
+	.then((newItemBaseWithPhoto) => {
+		newItem = newItemBaseWithPhoto
+		return isBeingEdited
+		? (() => {
+			getItem(itemId, (originalItem) => {
+				return ref.child(`feed/items/${itemId}`).update(Object.assign(originalItem, newItem)) // updating edited item
+			}, (err) => console.error(`Error in updating new item, api.js, within .then((newItemBaseWithPhoto)): ${err}`))
+		})() // saving updated item to firebase
+		: ref.child(`feed/items/${itemId}`).set(newItem, {
+			dateCreated: new Date().toString(),
+		}) // saving new item to firebase
+	})
+	.then(() => (newItem))
+	.catch((err) => `Error in saveItem: ${err}`)
 }
 
 // START Getting Data from Firebase
@@ -293,9 +314,10 @@ export function deleteData (dataType, dataId) {
 							}
 						}
 					}
-				})
-			}, (err) => console.error(err))
+				}, (err) => console.error(`Error in getPeople call within deleteData: ${err}`))
+			}, (err) => console.error(`Error in getItems call within deleteData: ${err}`))
 		})
+		.catch((err) => `Error in deleteData, case 'people': ${err}`)
 	case 'hardwares':
 		return ref.child(`feed/hardwares/${dataId}`).remove()
 		.then(() => {
@@ -305,10 +327,12 @@ export function deleteData (dataType, dataId) {
 						ref.child(`feed/items/${itemId}`).remove() // delete all items that use this hardware
 					}
 				}
-			}, (err) => console.error(err))
+			}, (err) => console.error(`Error in getItems call within deleteData, case 'hardwares': ${err}`))
 		})
+		.catch((err) => `Error in deleteData, case 'hardwares': ${err}`)
 	default: // items
 		return ref.child(`feed/items/${dataId}`).remove()
+		.catch((err) => `Error in deleteData, case 'default' - items: ${err}`)
 	}
 }
 
