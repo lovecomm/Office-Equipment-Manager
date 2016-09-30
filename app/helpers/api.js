@@ -195,11 +195,9 @@ function storeNewItemPhoto (photo) {
 }
 
 export function saveItem (item, uid) {
-	const isBeingEdited = item.itemId !== ''
-	console.log('isBeingEditing', isBeingEdited)
-	const itemId = isBeingEdited ? item.itemId : ref.child('feed/items').push().key
+	const itemId = item.editing ? item.itemId : ref.child('feed/items').push().key
 	let newItem
-	return verifyItem(item, isBeingEdited)
+	return verifyItem(item, item.editing)
 	.then(() => {
 		return getNewItemBase(item, itemId, uid)
 	})
@@ -226,15 +224,15 @@ export function saveItem (item, uid) {
 	})
 	.then((newItemBaseWithPhoto) => {
 		newItem = newItemBaseWithPhoto
-		return isBeingEdited
+		return item.editing
 		? (() => {
 			getItem(itemId, (originalItem) => {
 				return ref.child(`feed/items/${itemId}`).update(Object.assign(originalItem, newItem)) // updating edited item
 			}, (err) => console.error(`Error in updating new item, api.js, within .then((newItemBaseWithPhoto)): ${err}`))
 		})() // saving updated item to firebase
-		: ref.child(`feed/items/${itemId}`).set(newItem, {
+		: ref.child(`feed/items/${itemId}`).set(Object.assign(newItem, {
 			dateCreated: new Date().toString(),
-		}) // saving new item to firebase
+		})) // saving new item to firebase
 	})
 	.then(() => (newItem))
 	.catch((err) => `Error in saveItem: ${err}`)
