@@ -1,10 +1,10 @@
-import { ref, imagesRef, storageRef } from 'config/constants'
+import { ref, imagesRef } from 'config/constants'
 
 // Get firebase imagesRef
-export function getHref (fullPath) {
-	return storageRef.child(fullPath).getDownloadURL()
+export function getUrl (imageFolder, photoName) {
+	return imagesRef.child(`${imageFolder}/${photoName}`).getDownloadURL()
 	.then((url) => url)
-	.catch((err) => `Error in getHref: ${err}`)
+	.catch((err) => `Error in getUrl: ${err}`)
 }
 
 function verifyHardware (hardware, editing) {
@@ -51,7 +51,7 @@ export function saveHardware (hardware, uid) {
 					size: hardware.photo.size,
 					type: hardware.photo.type,
 					bucket: hardwarePhotoRef.bucket,
-					url: photoSnapshot.downloadURL,
+					url: '', // URLs expire, so we get it each time the app loads, then store it in the redux tree
 				},
 				dateCreated: new Date().toString(),
 			})
@@ -59,13 +59,13 @@ export function saveHardware (hardware, uid) {
 			let newHardware
 			const newSubContentStatus = hardware.description !== ''
 			getHardware(hardwareId, (originalHardware) => {
-				const photo = (url === undefined ? originalHardware.photo : {
+				const photo = (hardware.photo.name === undefined ? originalHardware.photo : {
 					name: hardwarePhotoRef.name,
 					fullPath: hardwarePhotoRef.fullPath,
 					size: hardware.photo.size,
 					type: hardware.photo.type,
 					bucket: hardwarePhotoRef.bucket,
-					url: url,
+					url: '', // URLs expire, so we get it each time the app loads, then store it in the redux tree
 				})
 				newHardware = Object.assign(originalHardware, newHardwareBase, photo)
 				updateItemHasSubContentDB(hardwareId, newSubContentStatus) // if there wasn't a hardware description before, but was updated to have one, we want to let all related items to know. We do this because each item has a bool value that indicates if it has subcontent to be displayed. If it does the item is clickable, and when clicked displays that subcontent

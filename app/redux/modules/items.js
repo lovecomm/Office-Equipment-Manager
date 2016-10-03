@@ -33,7 +33,6 @@ export function handleCollapsed (itemId, collapsed) {
 }
 
 export function updateItemsPersonId (itemId, personId) {
-	console.log('in updateItemsPersonId', itemId, personId)
 	return {
 		type: UPDATE_ITEM_PERSONID,
 		itemId,

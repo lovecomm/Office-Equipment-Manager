@@ -15,7 +15,6 @@ Item.propTypes = {
 	collapsed: PropTypes.bool.isRequired,
 	getYearsOld: PropTypes.string.isRequired,
 	envokeHandleCollapsed: PropTypes.func.isRequired,
-	// getHref: PropTypes.func.isRequired,
 }
 
 export default function Item (props) {

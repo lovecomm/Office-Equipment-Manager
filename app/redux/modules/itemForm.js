@@ -174,7 +174,6 @@ export function itemFanout (item) {
 		const uid = getState().users.authedId
 		saveItem(item, {uid: uid}) // add item to firebase
 		.then((itemWithId) => {
-			console.log('itemWithId', itemWithId)
 			dispatch(addItem(itemWithId)) // add to redux store
 			editing
 			?	dispatch(updateItemInFeed(itemWithId.itemId, itemWithId))

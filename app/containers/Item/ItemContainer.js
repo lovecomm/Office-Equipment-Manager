@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { Item } from 'components'
 import { bindActionCreators } from 'redux'
 import * as itemActionCreators from 'redux/modules/items'
-import { getHref } from 'helpers/api'
 
 const ItemContainer = React.createClass({
 	propTypes: {
@@ -29,11 +28,6 @@ const ItemContainer = React.createClass({
 		const newCollapse = !this.props.collapsed
 		this.props.handleCollapsed(this.props.itemId, newCollapse)
 	},
-	// handleGetHref (fullPath) {
-	// 	let url = getHref(fullPath)
-	// 	console.log(url)
-	// 	return url
-	// },
 	render () {
 		return (
 			<Item

@@ -1,6 +1,7 @@
 import { addListener } from 'redux/modules/listeners'
 import { listenToFeed, deleteData, getPerson } from 'helpers/api'
 import { addItemsToFeed, updateItemsPersonId } from 'redux/modules/items'
+import { getUrlFromFirebase } from 'redux/modules/hardwares'
 import { addPersonToFeed } from 'redux/modules/people'
 import { addHardwareToFeed } from 'redux/modules/hardwares'
 
@@ -150,6 +151,7 @@ export function setAndHandleFeedListener () {
 			dispatch(addItemsToFeed(items))
 			dispatch(addPersonToFeed(people))
 			dispatch(addHardwareToFeed(hardwares))
+			dispatch(getUrlFromFirebase(hardwares))
 			buildFilterOptions(dispatch, getState)
 			if (initialFetch === true) {
 				dispatch(settingFeedListenerSuccess(sortedItemIds))
