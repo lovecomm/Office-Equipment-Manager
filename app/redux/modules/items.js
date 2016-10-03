@@ -4,7 +4,16 @@ const COLLAPSE_ITEM = 'COLLAPSE_ITEM'
 const UPDATE_ITEM_PERSONID = 'UPDATE_ITEM_PERSONID'
 const UPDATE_ITEM_IN_FEED = 'UPDATE_ITEM_IN_FEED'
 
-export function addItemsToFeed (items) {
+export function prepItemsForFeed (items) {
+	return function (dispatch, getState) {
+		return new Promise((resolve, reject) => {
+			dispatch(addItemsToFeed(items))
+			resolve()
+		})
+	}
+}
+
+function addItemsToFeed (items) {
 	return {
 		type: ADD_ITEMS_TO_FEED,
 		items,
@@ -56,7 +65,19 @@ function updateCollapsed (itemId, collapsed) {
 }
 
 // REDUCERS
-const initialItemState = {}
+const initialItemState = {
+	collapsed: true,
+	createdBy: '',
+	dateCreated: '',
+	dateLastUpdated: '',
+	hardwareId: '',
+	hasSubContent: '',
+	itemId: '',
+	note: '',
+	personId: '',
+	purchaseDate: '',
+	serial: '',
+}
 
 function item (state = initialItemState, action) {
 	switch (action.type) {

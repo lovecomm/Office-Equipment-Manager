@@ -208,21 +208,25 @@ export function saveItem (item, uid) {
 				}
 				return Object.assign(newItemBase, {photo: photo})
 			})
-		} else { return Object.assign(newItemBase, {photo: {}}) }
+		} else {
+			return Object.assign(newItemBase, {photo: {}})
+		}
 	})
 	.then((newItemBaseWithPhoto) => {
 		newItem = newItemBaseWithPhoto
-		return item.editing
-		? (() => {
+		if (item.editing) {
 			getItem(itemId, (originalItem) => {
 				return ref.child(`feed/items/${itemId}`).update(Object.assign(originalItem, newItem)) // updating edited item
 			}, (err) => console.error(`Error in updating new item, api.js, within .then((newItemBaseWithPhoto)): ${err}`))
-		})() // saving updated item to firebase
-		: ref.child(`feed/items/${itemId}`).set(Object.assign(newItem, {
-			dateCreated: new Date().toString(),
-		})) // saving new item to firebase
+		} else {
+			return ref.child(`feed/items/${itemId}`).set(Object.assign(newItem, {
+				dateCreated: new Date().toString(),
+			})) // saving new item to firebase
+		}
 	})
-	.then(() => (newItem))
+	.then(() => {
+		return newItem
+	})
 	.catch((err) => `Error in saveItem: ${err}`)
 }
 
@@ -236,7 +240,7 @@ function getItems (cb, errorCB) {
 }
 
 function getItem (itemId, cb, errorCB) {
-	ref.child(`feed/items/${itemId}`).on('value', (snapshot) => {
+	ref.child(`feed/items/${itemId}`).once('value', (snapshot) => {
 		const item = snapshot.val() || {}
 		cb(item)
 	}, errorCB)
@@ -250,7 +254,7 @@ function getPeople (cb, errorCB) {
 }
 
 export function getPerson (personId, cb, errorCB) {
-	ref.child(`feed/people/${personId}`).on('value', (snapshot) => {
+	ref.child(`feed/people/${personId}`).once('value', (snapshot) => {
 		const person = snapshot.val() || {}
 		cb(person)
 	}, errorCB)
@@ -264,7 +268,7 @@ function getHardwares (cb, errorCB) {
 }
 
 function getHardware (hardwareId, cb, errorCB) {
-	ref.child(`feed/hardwares/${hardwareId}`).on('value', (snapshot) => {
+	ref.child(`feed/hardwares/${hardwareId}`).once('value', (snapshot) => {
 		const hardware = snapshot.val() || {}
 		cb(hardware)
 	}, errorCB)

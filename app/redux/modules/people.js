@@ -1,7 +1,16 @@
 const ADD_PEOPLE_TO_FEED = 'ADD_PEOPLE_TO_FEED'
 
 // ACTIONS
-export function addPersonToFeed (people) {
+export function prepPeopleForFeed (people) {
+	return function (dispatch, getState) {
+		return new Promise((resolve, reject) => {
+			dispatch(addPersonToFeed(people))
+			resolve()
+		})
+	}
+}
+
+function addPersonToFeed (people) {
 	return {
 		type: ADD_PEOPLE_TO_FEED,
 		people,

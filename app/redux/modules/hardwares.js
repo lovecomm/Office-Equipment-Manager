@@ -1,10 +1,20 @@
 import { getUrl } from 'helpers/api'
 
 const ADD_HARDWARE_TO_FEED = 'ADD_HARDWARE_TO_FEED'
-const UPDATE_ITEM_HARDWARE_PHOTO = 'UPDATE_ITEM_HARDWARE_PHOTO'
+const UPDATE_HARDWARE_PHOTO_URL = 'UPDATE_HARDWARE_PHOTO_URL'
 
 // ACTIONS
-export function addHardwareToFeed (hardware) {
+export function prepHardwaresForFeed (hardwares) {
+	return function (dispatch, getState) {
+		return new Promise((resolve, reject) => {
+			dispatch(getUrlFromFirebase(hardwares))
+			.then(() => dispatch(addHardwareToFeed(hardwares)))
+			resolve()
+		})
+	}
+}
+
+function addHardwareToFeed (hardware) {
 	return {
 		type: ADD_HARDWARE_TO_FEED,
 		hardware,
@@ -13,18 +23,21 @@ export function addHardwareToFeed (hardware) {
 
 export function getUrlFromFirebase (hardwares) {
 	return function (dispatch, getState) {
-		Object.keys(hardwares).forEach((hardwareId) => {
-			getUrl('hardwares', hardwares[hardwareId].photo.name)
-			.then((downloadUrl) => {
-				dispatch(updateItemHardwarePhoto(hardwareId, downloadUrl))
+		return new Promise((resolve, reject) => {
+			Object.keys(hardwares).forEach((hardwareId) => {
+				getUrl('hardwares', hardwares[hardwareId].photo.name)
+				.then((downloadUrl) => {
+					dispatch(updateHardwarePhotoUrl(hardwareId, downloadUrl))
+				})
 			})
+			resolve()
 		})
 	}
 }
 
-function updateItemHardwarePhoto (hardwareId, photoUrl) {
+function updateHardwarePhotoUrl (hardwareId, photoUrl) {
 	return {
-		type: UPDATE_ITEM_HARDWARE_PHOTO,
+		type: UPDATE_HARDWARE_PHOTO_URL,
 		hardwareId,
 		photoUrl,
 	}
@@ -42,7 +55,7 @@ const initialPhotoState = {
 
 function photo (state = initialPhotoState, action) {
 	switch (action.type) {
-	case UPDATE_ITEM_HARDWARE_PHOTO:
+	case UPDATE_HARDWARE_PHOTO_URL:
 		return {
 			...state,
 			url: action.photoUrl
@@ -56,7 +69,7 @@ const initialHardwareState = {}
 
 function hardware (state = initialHardwareState, action) {
 	switch (action.type) {
-	case UPDATE_ITEM_HARDWARE_PHOTO:
+	case UPDATE_HARDWARE_PHOTO_URL:
 		return {
 			...state,
 			photo: photo(state.photo, action)
@@ -75,7 +88,7 @@ export default function hardwares (state = initialState, action) {
 			...state,
 			...action.hardware,
 		}
-	case UPDATE_ITEM_HARDWARE_PHOTO:
+	case UPDATE_HARDWARE_PHOTO_URL:
 		return {
 			...state,
 			[action.hardwareId]: hardware(state[action.hardwareId], action),

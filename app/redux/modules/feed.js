@@ -1,9 +1,8 @@
 import { addListener } from 'redux/modules/listeners'
-import { listenToFeed, deleteData, getPerson } from 'helpers/api'
-import { addItemsToFeed, updateItemsPersonId } from 'redux/modules/items'
-import { getUrlFromFirebase } from 'redux/modules/hardwares'
-import { addPersonToFeed } from 'redux/modules/people'
-import { addHardwareToFeed } from 'redux/modules/hardwares'
+import { listenToFeed, deleteData } from 'helpers/api'
+import { prepItemsForFeed, updateItemsPersonId } from 'redux/modules/items'
+import { prepPeopleForFeed } from 'redux/modules/people'
+import { prepHardwaresForFeed } from 'redux/modules/hardwares'
 
 const SETTING_FEED_LISTENER = 'SETTING_FEED_LISTENER'
 const SETTING_FEED_LISTENER_ERROR = 'SETTING_FEED_LISTENER_ERROR'
@@ -148,15 +147,16 @@ export function setAndHandleFeedListener () {
 			people,
 			hardwares,
 		}) => {
-			dispatch(addItemsToFeed(items))
-			dispatch(addPersonToFeed(people))
-			dispatch(addHardwareToFeed(hardwares))
-			dispatch(getUrlFromFirebase(hardwares))
-			buildFilterOptions(dispatch, getState)
-			if (initialFetch === true) {
-				dispatch(settingFeedListenerSuccess(sortedItemIds))
-			}
-			initialFetch = false
+			dispatch(prepHardwaresForFeed(hardwares))
+			.then(() => dispatch(prepPeopleForFeed(people)))
+			.then(() => dispatch(prepItemsForFeed(items)))
+			.then(() => {
+				buildFilterOptions(dispatch, getState)
+				if (initialFetch === true) {
+					dispatch(settingFeedListenerSuccess(sortedItemIds))
+				}
+				initialFetch = false
+			})
 		}, (error) => dispatch(settingFeedListenerError(error)))
 	}
 }

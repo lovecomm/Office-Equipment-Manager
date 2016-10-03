@@ -16,7 +16,6 @@ const UPDATE_ITEM_FORM_ERROR = 'UPDATE_ITEM_FORM_ERROR'
 const UPDATE_ITEM_FORM_ITEM_ID = 'UPDATE_ITEM_FORM_ITEM_ID'
 const UPDATE_ITEM_FORM_PHOTO_NAME = 'UPDATE_ITEM_FORM_PHOTO_NAME'
 const UPDATE_ITEM_FORM_EDITING = 'UPDATE_ITEM_FORM_EDITING'
-const ITEM_FORM_ADD_ITEM = 'ITEM_FORM_ADD_ITEM'
 
 // ACTIONS
 function activateCurrentItem (dispatch, getState, itemId) {
@@ -33,7 +32,7 @@ function activateCurrentItem (dispatch, getState, itemId) {
 		dispatch(updateItemFormHardwareId(item.hardwareId))
 		dispatch(updateItemFormPerson(`${person.firstName} ${person.lastName}`))
 		dispatch(updateItemFormHardware(`${hardware.make} ${hardware.model}`))
-		item.photo !== undefined ? dispatch(updateItemFormPhotoName(item.photo.name)) : dispatch(updateItemFormPhotoName(''))
+		if (item.photo !== {} && item.photo !== undefined && item.photo.name !== undefined) dispatch(updateItemFormPhotoName(item.photo.name))
 		resolve(true)
 	})
 }
@@ -102,7 +101,6 @@ export function updateItemFormPhoto (photo) {
 }
 
 function updateItemFormPhotoName (photoName) {
-	console.log('in updateItemFormPhotoName', photoName)
 	return {
 		type: UPDATE_ITEM_FORM_PHOTO_NAME,
 		photoName,
@@ -162,20 +160,12 @@ function updateItemFormError (error) {
 	}
 }
 
-function ItemFormAddItem (item) {
-	return {
-		type: ITEM_FORM_ADD_ITEM,
-		item,
-	}
-}
-
 export function itemFormFanout (item) {
 	return function (dispatch, getState) {
 		const editing = item.editing
 		const uid = getState().users.authedId
 		saveItem(item, {uid: uid}) // add item to firebase
 		.then((itemWithId) => {
-			dispatch(ItemFormAddItem(itemWithId)) // add to redux store
 			editing
 			?	dispatch(updateItemInFeed(itemWithId.itemId, itemWithId))
 			: dispatch(addNewItemToFeed(itemWithId.itemId))
@@ -212,20 +202,10 @@ export default function itemForm (state = initialState, action) {
 			isOpen: true,
 		}
 	case CLOSE_ITEM_FORM:
+		console.log('collapsed Item Form')
 		return {
-			itemId: '',
-			isOpen: false,
-			purchasedDate: '',
-			serial: '',
-			person: '',
-			personId: '',
-			hardware: '',
-			hardwareId: '',
-			note: '',
-			photo: {},
-			photoName: '',
-			error: '',
-			editing: false,
+			...state,
+			...initialState,
 		}
 	case UPDATE_ITEM_FORM_SERIAL:
 		return {
@@ -288,10 +268,10 @@ export default function itemForm (state = initialState, action) {
 			...state,
 			editing: true,
 		}
-	case ITEM_FORM_ADD_ITEM:
+	case UPDATE_ITEM_FORM_PHOTO_NAME:
 		return {
 			...state,
-			[action.item.itemId]: action.item,
+			photoName: action.photoName,
 		}
 	default:
 		return state
