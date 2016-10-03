@@ -11,6 +11,11 @@ div[data-react-toolbox="card"] {
 		font-size: 0.85em;
 		margin-top: 15px;
 	}
+
+	div[data-react-toolbox="avatar"] {
+		width: 45px;
+		height: 37px;
+	}
 }
 
 .cardHasSubContent div[data-react-toolbox="card"] {

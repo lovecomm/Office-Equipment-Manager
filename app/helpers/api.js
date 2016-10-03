@@ -43,7 +43,7 @@ export function saveHardware (hardware, uid) {
 		} else { return undefined } // is updating existing hardware, and does not have an updated photo
 	})
 	.then((photoSnapshot) => {
-		if (photoSnapshot.downloadURL && !hardware.editing) { // it's a new hardware
+		if (photoSnapshot && !hardware.editing) { // it's a new hardware
 			return Object.assign(newHardwareBase, {
 				photo: {
 					name: hardwarePhotoRef.name,
@@ -67,7 +67,7 @@ export function saveHardware (hardware, uid) {
 					bucket: hardwarePhotoRef.bucket,
 					url: '', // URLs expire, so we get it each time the app loads, then store it in the redux tree
 				})
-				newHardware = Object.assign(originalHardware, newHardwareBase, photo)
+				newHardware = Object.assign(originalHardware, newHardwareBase, {photo: photo})
 				updateItemHasSubContentDB(hardwareId, newSubContentStatus) // if there wasn't a hardware description before, but was updated to have one, we want to let all related items to know. We do this because each item has a bool value that indicates if it has subcontent to be displayed. If it does the item is clickable, and when clicked displays that subcontent
 			}, (err) => console.error(`Error in getHardware call within saveHardware: ${err}`))
 			return newHardware

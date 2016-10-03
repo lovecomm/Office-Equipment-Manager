@@ -104,7 +104,7 @@ function activateCurrentHardware (dispatch, getState, hardwareId) {
 		dispatch(updateMake(hardware.make))
 		dispatch(updateModel(hardware.model))
 		dispatch(updateDescription(hardware.description))
-		hardware.photo !== undefined ? dispatch(updatePhotoName(hardware.photo.name)) : ''
+		hardware.photo !== undefined ? dispatch(updatePhotoName(hardware.photo.name)) : dispatch(updatePhotoName(''))
 		resolve(true)
 	})
 }

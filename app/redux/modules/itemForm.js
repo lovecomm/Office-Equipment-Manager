@@ -33,7 +33,7 @@ function activateCurrentItem (dispatch, getState, itemId) {
 		dispatch(updateHardwareId(item.hardwareId))
 		dispatch(updatePerson(`${person.firstName} ${person.lastName}`))
 		dispatch(updateHardware(`${hardware.make} ${hardware.model}`))
-		item.photo !== undefined ? dispatch(updatePhotoName(item.photo.name)) : ''
+		item.photo !== undefined ? dispatch(updatePhotoName(item.photo.name)) : dispatch(updatePhotoName(''))
 		resolve(true)
 	})
 }
@@ -102,6 +102,7 @@ export function updatePhoto (photo) {
 }
 
 function updatePhotoName (photoName) {
+	console.log('in updatePhotoName', photoName)
 	return {
 		type: UPDATE_PHOTO_NAME,
 		photoName,
