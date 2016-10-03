@@ -4,19 +4,19 @@ import { updateItemInFeed } from './items'
 
 const OPEN_ITEM_FORM = 'OPEN_ITEM_FORM'
 const CLOSE_ITEM_FORM = 'CLOSE_ITEM_FORM'
-const UPDATE_SERIAL = 'UPDATE_SERIAL'
-const UPDATE_PURCHASED_DATE = 'UPDATE_PURCHASED_DATE'
-const UPDATE_NOTE = 'UPDATE_NOTE'
-const UPDATE_PHOTO = 'UPDATE_PHOTO'
-const UPDATE_PERSON = 'UPDATE_PERSON'
-const UPDATE_PERSON_ID = 'UPDATE_PERSON_ID'
-const UPDATE_HARDWARE = 'UPDATE_HARDWARE'
-const UPDATE_HARDWARE_ID = 'UPDATE_HARDWARE_ID'
-const UPDATE_ERROR = 'UPDATE_ERROR'
-const UPDATE_ITEM_ID = 'UPDATE_ITEM_ID'
-const UPDATE_PHOTO_NAME = 'UPDATE_PHOTO_NAME'
-const UPDATE_EDITING = 'UPDATE_EDITING'
-const ADD_ITEM = 'ADD_ITEM'
+const UPDATE_ITEM_FORM_SERIAL = 'UPDATE_ITEM_FORM_SERIAL'
+const UPDATE_ITEM_FORM_PURCHASED_DATE = 'UPDATE_ITEM_FORM_PURCHASED_DATE'
+const UPDATE_ITEM_FORM_NOTE = 'UPDATE_ITEM_FORM_NOTE'
+const UPDATE_ITEM_FORM_PHOTO = 'UPDATE_ITEM_FORM_PHOTO'
+const UPDATE_ITEM_FORM_PERSON = 'UPDATE_ITEM_FORM_PERSON'
+const UPDATE_ITEM_FORM_PERSON_ID = 'UPDATE_ITEM_FORM_PERSON_ID'
+const UPDATE_ITEM_FORM_HARDWARE = 'UPDATE_ITEM_FORM_HARDWARE'
+const UPDATE_ITEM_FORM_HARDWARE_ID = 'UPDATE_ITEM_FORM_HARDWARE_ID'
+const UPDATE_ITEM_FORM_ERROR = 'UPDATE_ITEM_FORM_ERROR'
+const UPDATE_ITEM_FORM_ITEM_ID = 'UPDATE_ITEM_FORM_ITEM_ID'
+const UPDATE_ITEM_FORM_PHOTO_NAME = 'UPDATE_ITEM_FORM_PHOTO_NAME'
+const UPDATE_ITEM_FORM_EDITING = 'UPDATE_ITEM_FORM_EDITING'
+const ITEM_FORM_ADD_ITEM = 'ITEM_FORM_ADD_ITEM'
 
 // ACTIONS
 function activateCurrentItem (dispatch, getState, itemId) {
@@ -24,16 +24,16 @@ function activateCurrentItem (dispatch, getState, itemId) {
 		const item = getState().items[itemId]
 		const person = getState().people[item.personId]
 		const hardware = getState().hardwares[item.hardwareId]
-		dispatch(updateEditing())
-		dispatch(updateItemId(item.itemId))
-		dispatch(updateSerial(item.serial))
-		dispatch(updatePurchasedDate(new Date(item.purchasedDate))) // purchasedDate is stored as string, coverting it back to date here.
-		dispatch(updateNote(item.note))
-		dispatch(updatePersonId(item.personId))
-		dispatch(updateHardwareId(item.hardwareId))
-		dispatch(updatePerson(`${person.firstName} ${person.lastName}`))
-		dispatch(updateHardware(`${hardware.make} ${hardware.model}`))
-		item.photo !== undefined ? dispatch(updatePhotoName(item.photo.name)) : dispatch(updatePhotoName(''))
+		dispatch(updateItemFormEditing())
+		dispatch(updateItemFormItemId(item.itemId))
+		dispatch(updateItemFormSerial(item.serial))
+		dispatch(updateItemFormPurchasedDate(new Date(item.purchasedDate))) // purchasedDate is stored as string, coverting it back to date here.
+		dispatch(updateItemFormNote(item.note))
+		dispatch(updateItemFormPersonId(item.personId))
+		dispatch(updateItemFormHardwareId(item.hardwareId))
+		dispatch(updateItemFormPerson(`${person.firstName} ${person.lastName}`))
+		dispatch(updateItemFormHardware(`${hardware.make} ${hardware.model}`))
+		item.photo !== undefined ? dispatch(updateItemFormPhotoName(item.photo.name)) : dispatch(updateItemFormPhotoName(''))
 		resolve(true)
 	})
 }
@@ -60,129 +60,129 @@ export function closeItemForm () {
 	}
 }
 
-function updateEditing () {
+function updateItemFormEditing () {
 	return {
-		type: UPDATE_EDITING,
+		type: UPDATE_ITEM_FORM_EDITING,
 	}
 }
 
-function updateItemId (itemId) {
+function updateItemFormItemId (itemId) {
 	return {
-		type: UPDATE_ITEM_ID,
+		type: UPDATE_ITEM_FORM_ITEM_ID,
 		itemId,
 	}
 }
 
-export function updateSerial (serial) {
+export function updateItemFormSerial (serial) {
 	return {
-		type: UPDATE_SERIAL,
+		type: UPDATE_ITEM_FORM_SERIAL,
 		serial,
 	}
 }
 
-export function updatePurchasedDate (purchasedDate) {
+export function updateItemFormPurchasedDate (purchasedDate) {
 	return {
-		type: UPDATE_PURCHASED_DATE,
+		type: UPDATE_ITEM_FORM_PURCHASED_DATE,
 		purchasedDate,
 	}
 }
 
-export function updateNote (note) {
+export function updateItemFormNote (note) {
 	return {
-		type: UPDATE_NOTE,
+		type: UPDATE_ITEM_FORM_NOTE,
 		note,
 	}
 }
 
-export function updatePhoto (photo) {
+export function updateItemFormPhoto (photo) {
 	return {
-		type: UPDATE_PHOTO,
+		type: UPDATE_ITEM_FORM_PHOTO,
 		photo,
 	}
 }
 
-function updatePhotoName (photoName) {
-	console.log('in updatePhotoName', photoName)
+function updateItemFormPhotoName (photoName) {
+	console.log('in updateItemFormPhotoName', photoName)
 	return {
-		type: UPDATE_PHOTO_NAME,
+		type: UPDATE_ITEM_FORM_PHOTO_NAME,
 		photoName,
 	}
 }
 
-function updatePerson (person) {
+function updateItemFormPerson (person) {
 	return {
-		type: UPDATE_PERSON,
+		type: UPDATE_ITEM_FORM_PERSON,
 		person,
 	}
 }
 
-function updatePersonId (personId) {
+function updateItemFormPersonId (personId) {
 	return {
-		type: UPDATE_PERSON_ID,
+		type: UPDATE_ITEM_FORM_PERSON_ID,
 		personId,
 	}
 }
 
-export function updatePersonInfo (personId) {
+export function updateItemFormPersonInfo (personId) {
 	return function (dispatch, getState) {
 		const person = getState().people[personId]
 		const personName = `${person.firstName} ${person.lastName}`
-		dispatch(updatePerson(personName))
-		dispatch(updatePersonId(personId))
+		dispatch(updateItemFormPerson(personName))
+		dispatch(updateItemFormPersonId(personId))
 	}
 }
 
-function updateHardware (hardware) {
+function updateItemFormHardware (hardware) {
 	return {
-		type: UPDATE_HARDWARE,
+		type: UPDATE_ITEM_FORM_HARDWARE,
 		hardware,
 	}
 }
 
-export function updateHardwareId (hardwareId) {
+export function updateItemFormHardwareId (hardwareId) {
 	return {
-		type: UPDATE_HARDWARE_ID,
+		type: UPDATE_ITEM_FORM_HARDWARE_ID,
 		hardwareId,
 	}
 }
 
-export function updateHardwareInfo (hardwareId) {
+export function updateItemFormHardwareInfo (hardwareId) {
 	return function (dispatch, getState) {
 		const hardware = getState().hardwares[hardwareId]
 		const hardwareName = `${hardware.make} ${hardware.model}`
-		dispatch(updateHardware(hardwareName))
-		dispatch(updateHardwareId(hardwareId))
+		dispatch(updateItemFormHardware(hardwareName))
+		dispatch(updateItemFormHardwareId(hardwareId))
 	}
 }
 
-function updateError (error) {
+function updateItemFormError (error) {
 	return {
-		type: UPDATE_ERROR,
+		type: UPDATE_ITEM_FORM_ERROR,
 		error,
 	}
 }
 
-function addItem (item) {
+function ItemFormAddItem (item) {
 	return {
-		type: ADD_ITEM,
+		type: ITEM_FORM_ADD_ITEM,
 		item,
 	}
 }
 
-export function itemFanout (item) {
+export function itemFormFanout (item) {
 	return function (dispatch, getState) {
 		const editing = item.editing
 		const uid = getState().users.authedId
 		saveItem(item, {uid: uid}) // add item to firebase
 		.then((itemWithId) => {
-			dispatch(addItem(itemWithId)) // add to redux store
+			dispatch(ItemFormAddItem(itemWithId)) // add to redux store
 			editing
 			?	dispatch(updateItemInFeed(itemWithId.itemId, itemWithId))
 			: dispatch(addNewItemToFeed(itemWithId.itemId))
 			dispatch(closeItemForm())
 		})
 		.catch((err) => {
-			dispatch(updateError(`Error saving item: ${err}`))
+			dispatch(updateItemFormError(`Error saving item: ${err}`))
 		})
 	}
 }
@@ -227,68 +227,68 @@ export default function itemForm (state = initialState, action) {
 			error: '',
 			editing: false,
 		}
-	case UPDATE_SERIAL:
+	case UPDATE_ITEM_FORM_SERIAL:
 		return {
 			...state,
 			serial: action.serial,
 		}
-	case UPDATE_PURCHASED_DATE:
+	case UPDATE_ITEM_FORM_PURCHASED_DATE:
 		return {
 			...state,
 			purchasedDate: action.purchasedDate,
 		}
-	case UPDATE_PHOTO:
+	case UPDATE_ITEM_FORM_PHOTO:
 		return {
 			...state,
 			photo: action.photo,
 			photoName: action.photo.name,
 		}
-	case UPDATE_PHOTO_NAME:
+	case UPDATE_ITEM_FORM_PHOTO_NAME:
 		return {
 			...state,
 			photoName: action.photoName,
 		}
-	case UPDATE_NOTE:
+	case UPDATE_ITEM_FORM_NOTE:
 		return {
 			...state,
 			note: action.note,
 		}
-	case UPDATE_PERSON:
+	case UPDATE_ITEM_FORM_PERSON:
 		return {
 			...state,
 			person: action.person,
 		}
-	case UPDATE_PERSON_ID:
+	case UPDATE_ITEM_FORM_PERSON_ID:
 		return {
 			...state,
 			personId: action.personId,
 		}
-	case UPDATE_HARDWARE:
+	case UPDATE_ITEM_FORM_HARDWARE:
 		return {
 			...state,
 			hardware: action.hardware,
 		}
-	case UPDATE_HARDWARE_ID:
+	case UPDATE_ITEM_FORM_HARDWARE_ID:
 		return {
 			...state,
 			hardwareId: action.hardwareId,
 		}
-	case UPDATE_ITEM_ID:
+	case UPDATE_ITEM_FORM_ITEM_ID:
 		return {
 			...state,
 			itemId: action.itemId,
 		}
-	case UPDATE_ERROR:
+	case UPDATE_ITEM_FORM_ERROR:
 		return {
 			...state,
 			error: action.error,
 		}
-	case UPDATE_EDITING:
+	case UPDATE_ITEM_FORM_EDITING:
 		return {
 			...state,
 			editing: true,
 		}
-	case ADD_ITEM:
+	case ITEM_FORM_ADD_ITEM:
 		return {
 			...state,
 			[action.item.itemId]: action.item,

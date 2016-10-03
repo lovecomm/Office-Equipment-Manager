@@ -21,13 +21,13 @@ ItemForm.propTypes = {
 	error: string.isRequired,
 	// START Bound to dispatch
 	closeItemForm: func.isRequired,
-	updateSerial: func.isRequired,
-	updatePurchasedDate: func.isRequired,
-	updateNote: func.isRequired,
-	updatePhoto: func.isRequired,
-	updatePersonInfo: func.isRequired,
-	updateHardwareInfo: func.isRequired,
-	itemFanout: func.isRequired,
+	updateItemFormSerial: func.isRequired,
+	updateItemFormPurchasedDate: func.isRequired,
+	updateItemFormNote: func.isRequired,
+	updateItemFormPhoto: func.isRequired,
+	updateItemFormPersonInfo: func.isRequired,
+	updateItemFormHardwareInfo: func.isRequired,
+	itemFormFanout: func.isRequired,
 	// END Bound to dispatch
 	isSubmitDisabled: bool.isRequired,
 }
@@ -56,7 +56,7 @@ export default function ItemForm (props, context) {
 		return hardwareList
 	}
 	function submitItems () {
-		props.itemFanout({
+		props.itemFormFanout({
 			itemId: props.itemId,
 			purchasedDate: props.purchasedDate,
 			serial: props.serial,
@@ -81,7 +81,7 @@ export default function ItemForm (props, context) {
 			</div>
 			<div className={formWrapper}>
 				<Input
-					onChange={(value) => props.updateSerial(value)}
+					onChange={(value) => props.updateItemFormSerial(value)}
 					label='Serial #'
 					value={props.serial}
 					required={true}/>
@@ -92,7 +92,7 @@ export default function ItemForm (props, context) {
 					direction='down'
 					selectedPosition='above'
 					label='Assign item to:'
-					onChange={(value) => props.updatePersonInfo(value)}
+					onChange={(value) => props.updateItemFormPersonInfo(value)}
 					source={formatPeopleList()}
 					value={props.person} />
 					<Autocomplete
@@ -101,7 +101,7 @@ export default function ItemForm (props, context) {
 						direction='down'
 						selectedPosition='above'
 						label='This is what kind of hardware?'
-						onChange={(value) => props.updateHardwareInfo(value)}
+						onChange={(value) => props.updateItemFormHardwareInfo(value)}
 						source={formatHardwareList()}
 						value={props.hardware} />
 				<br />
@@ -109,11 +109,11 @@ export default function ItemForm (props, context) {
 					label='When was the item purchased?'
 					autoOk={true}
 					value={props.purchasedDate}
-					onChange={(value) => props.updatePurchasedDate(value)}
+					onChange={(value) => props.updateItemFormPurchasedDate(value)}
 					required={true}/>
 				<br />
 				<Input
-					onChange={(value) => props.updateNote(value)}
+					onChange={(value) => props.updateItemFormNote(value)}
 					label='Add note to this item?'
 					value={props.note}
 					multiline={true}
@@ -130,7 +130,7 @@ export default function ItemForm (props, context) {
 							}
 						})()}
 						primary={true} />
-					<input type='file' onChange={(e) => props.updatePhoto(e.target.files[0])} className={imageInput}/>
+					<input type='file' onChange={(e) => props.updateItemFormPhoto(e.target.files[0])} className={imageInput}/>
 				</div>
 				<br />
 				{props.photoName !== ''

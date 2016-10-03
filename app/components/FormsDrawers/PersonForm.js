@@ -12,15 +12,15 @@ PersonForm.propTypes = {
 	editing: bool.isRequired,
 	closePersonForm: func.isRequired,
 	isSubmitDisabled: bool.isRequired,
-	updateFirstName: func.isRequired,
-	updateLastName: func.isRequired,
-	personFanout: func.isRequired,
+	updatePersonFormFirstName: func.isRequired,
+	updatePersonFormLastName: func.isRequired,
+	personFormFanout: func.isRequired,
 	error: string.isRequired,
 }
 
 export default function PersonForm (props, context) {
 	function submitPeople () {
-		props.personFanout({
+		props.personFormFanout({
 			editing: props.editing,
 			personId: props.personId,
 			firstName: props.firstName,
@@ -38,14 +38,14 @@ export default function PersonForm (props, context) {
 			</div>
 			<div className={formWrapper}>
 				<Input
-					onChange={(value) => props.updateFirstName(value)}
+					onChange={(value) => props.updatePersonFormFirstName(value)}
 					label='First Name'
 					value={props.firstName}
 					hint='First Name'
 					required={true}/>
 				<br />
 				<Input
-					onChange={(value) => props.updateLastName(value)}
+					onChange={(value) => props.updatePersonFormLastName(value)}
 					label='Last Name'
 					value={props.lastName}
 					hint='Last Name'

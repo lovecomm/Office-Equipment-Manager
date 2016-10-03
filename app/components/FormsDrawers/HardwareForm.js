@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Drawer, Input, Button, Checkbox } from 'react-toolbox/lib'
 import { drawer, button, headline, formWrapper, selectedPhoto, imageInput, error } from './styles.scss'
-
 const	{ func, bool, string, object } = PropTypes
 
 HardwareForm.propTypes = {
@@ -17,16 +16,17 @@ HardwareForm.propTypes = {
 	editing: bool.isRequired,
 	closeHardwareForm: func.isRequired,
 	isSubmitDisabled: bool.isRequired,
-	updateMake: func.isRequired,
-	updateModel: func.isRequired,
-	updateDescription: func.isRequired,
-	updatePhoto: func.isRequired,
-	hardwareFanout: func.isRequired,
+	updateHardwareFormMake: func.isRequired,
+	updateHardwareFormModel: func.isRequired,
+	updateHardwareFormDescription: func.isRequired,
+	updateHardwareFormPhoto: func.isRequired,
+	updateHardwareFormIsComputer: func.isRequired,
+	hardwareFormFanout: func.isRequired,
 }
 
 export default function HardwareForm (props, context) {
 	function submitHardware () {
-		props.hardwareFanout({
+		props.hardwareFormFanout({
 			hardwareId: props.hardwareId,
 			editing: props.editing,
 			make:	props.make,
@@ -47,25 +47,25 @@ export default function HardwareForm (props, context) {
 			</div>
 			<div className={formWrapper}>
 				<Input
-					onChange={(value) => props.updateMake(value)}
+					onChange={(value) => props.updateHardwareFormMake(value)}
 					name='make'
 					label='Make'
 					value={props.make}
 					required={true}/>
 				<br />
 				<Input
-					onChange={(value) => props.updateModel(value)}
+					onChange={(value) => props.updateHardwareFormModel(value)}
 					label='Model'
 					value={props.model}
 					required={true}/>
 				<br />
 				<Checkbox
           checked={props.isComputer}
-					onChange={(value) => props.updateIsComputer(value)}
+					onChange={(value) => props.updateHardwareFormIsComputer(value)}
           label='Is this a computer?'/>
 				<br />
 				<Input
-					onChange={(value) => props.updateDescription(value)}
+					onChange={(value) => props.updateHardwareFormDescription(value)}
 					label='Hardware Description'
 					value={props.description}
 					multiline={true}
@@ -82,7 +82,7 @@ export default function HardwareForm (props, context) {
 							}
 						})()}
 						primary={true} />
-					<input type='file' onChange={(e) => props.updatePhoto(e.target.files[0])} className={imageInput}/>
+					<input type='file' onChange={(e) => props.updateHardwareFormPhoto(e.target.files[0])} className={imageInput}/>
 				</div>
 				<br />
 				{props.photoName !== ''

@@ -1,13 +1,13 @@
 import { savePerson } from 'helpers/api'
 
-const ADD_PEOPLE = 'ADD_PEOPLE'
+const PERSON_FORM_ADD_PEOPLE = 'PERSON_FORM_ADD_PEOPLE'
 const OPEN_PERSON_FORM = 'OPEN_PERSON_FORM'
 const CLOSE_PERSON_FORM = 'CLOSE_PERSON_FORM'
-const UPDATE_FIRST_NAME = 'UPDATE_FIRST_NAME'
-const UPDATE_LAST_NAME = 'UPDATE_LAST_NAME'
-const UPDATE_PERSON_ID = 'UPDATE_PERSON_ID'
-const UPDATE_ERROR = 'UPDATE_ERROR'
-const UPDATE_EDITING = 'UPDATE_EDITING'
+const UPDATE_PERSON_FORM_FIRST_NAME = 'UPDATE_PERSON_FORM_FIRST_NAME'
+const UPDATE_PERSON_FORM_LAST_NAME = 'UPDATE_PERSON_FORM_LAST_NAME'
+const UPDATE_PERSON_FORM_PERSON_ID = 'UPDATE_PERSON_FORM_PERSON_ID'
+const UPDATE_PERSON_FORM_ERROR = 'UPDATE_PERSON_FORM_ERROR'
+const UPDATE_PERSON_FORM_EDITING = 'UPDATE_PERSON_FORM_EDITING'
 
 // ACTIONS
 export function openPersonForm () {
@@ -22,43 +22,43 @@ export function closePersonForm () {
 	}
 }
 
-function updatePersonId (personId) {
+function updatePersonFormPersonId (personId) {
 	return {
-		type: UPDATE_PERSON_ID,
+		type: UPDATE_PERSON_FORM_PERSON_ID,
 		personId,
 	}
 }
 
-export function updateFirstName (firstName) {
+export function updatePersonFormFirstName (firstName) {
 	return {
-		type: UPDATE_FIRST_NAME,
+		type: UPDATE_PERSON_FORM_FIRST_NAME,
 		firstName,
 	}
 }
 
-export function updateLastName (lastName) {
+export function updatePersonFormLastName (lastName) {
 	return {
-		type: UPDATE_LAST_NAME,
+		type: UPDATE_PERSON_FORM_LAST_NAME,
 		lastName,
 	}
 }
 
-function updateError (error) {
+function updatePersonFormError (error) {
 	return {
-		type: UPDATE_ERROR,
+		type: UPDATE_PERSON_FORM_ERROR,
 		error,
 	}
 }
 
-function updateEditing () {
+function updatePersonFormEditing () {
 	return {
-		type: UPDATE_EDITING,
+		type: UPDATE_PERSON_FORM_EDITING,
 	}
 }
 
-function addPerson (people) {
+function PersonFormAddPerson (people) {
 	return {
-		type: ADD_PEOPLE,
+		type: PERSON_FORM_ADD_PEOPLE,
 		people,
 	}
 }
@@ -66,10 +66,10 @@ function addPerson (people) {
 function activateCurrentPerson (dispatch, getState, personId) {
 	return new Promise((resolve, reject) => {
 		const person = getState().people[personId]
-		dispatch(updateEditing())
-		dispatch(updatePersonId(person.personId))
-		dispatch(updateFirstName(person.firstName))
-		dispatch(updateLastName(person.lastName))
+		dispatch(updatePersonFormEditing())
+		dispatch(updatePersonFormPersonId(person.personId))
+		dispatch(updatePersonFormFirstName(person.firstName))
+		dispatch(updatePersonFormLastName(person.lastName))
 		resolve(true)
 	})
 }
@@ -83,16 +83,16 @@ export function initiatePersonForm (personId) {
 	}
 }
 
-export function personFanout (person) {
+export function personFormFanout (person) {
 	return function (dispatch, getState) {
 		const uid = getState().users.authedId
 		savePerson(person, { uid: uid })
 		.then((personWithId) => {
-			dispatch(addPerson(personWithId))
+			dispatch(PersonFormAddPerson(personWithId))
 			dispatch(closePersonForm())
 		})
 		.catch((error) => {
-			dispatch(updateError(error.toString()))
+			dispatch(updatePersonFormError(error.toString()))
 		})
 	}
 }
@@ -123,32 +123,32 @@ export default function personForm (state = initialState, action) {
 			error: '',
 			editing: false,
 		}
-	case UPDATE_PERSON_ID:
+	case UPDATE_PERSON_FORM_PERSON_ID:
 		return {
 			...state,
 			personId: action.personId,
 		}
-	case UPDATE_FIRST_NAME:
+	case UPDATE_PERSON_FORM_FIRST_NAME:
 		return {
 			...state,
 			firstName: action.firstName,
 		}
-	case UPDATE_LAST_NAME:
+	case UPDATE_PERSON_FORM_LAST_NAME:
 		return {
 			...state,
 			lastName: action.lastName,
 		}
-	case UPDATE_EDITING:
+	case UPDATE_PERSON_FORM_EDITING:
 		return {
 			...state,
 			editing: true,
 		}
-	case ADD_PEOPLE:
+	case PERSON_FORM_ADD_PEOPLE:
 		return {
 			...state,
 			[action.people.personId]: action.people,
 		}
-	case UPDATE_ERROR:
+	case UPDATE_PERSON_FORM_ERROR:
 		return {
 			...state,
 			error: action.error,

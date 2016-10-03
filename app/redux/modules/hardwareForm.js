@@ -1,17 +1,17 @@
 import { saveHardware } from 'helpers/api'
 
-const ADD_HARDWARE = 'ADD_HARDWARE'
+const HARDWARE_FORM_ADD_HARDWARE = 'HARDWARE_FORM_ADD_HARDWARE'
 const OPEN_HARDWARE_FORM = 'OPEN_HARDWARE_FORM'
 const CLOSE_HARDWARE_FORM = 'CLOSE_HARDWARE_FORM'
-const UPDATE_MAKE = 'UPDATE_MAKE'
-const UPDATE_MODEL = 'UPDATE_MODEL'
-const UPDATE_DESCRIPTION = 'UPDATE_DESCRIPTION'
-const UPDATE_PHOTO = 'UPDATE_PHOTO'
-const UPDATE_PHOTO_NAME = 'UPDATE_PHOTO_NAME'
-const UPDATE_IS_COMPUTER = 'UPDATE_IS_COMPUTER'
-const UPDATE_ERROR = 'UPDATE_ERROR'
-const UPDATE_EDITING = 'UPDATE_EDITING'
-const UPDATE_HARDWARE_ID = 'UPDATE_HARDWARE_ID'
+const UPDATE_HARDWARE_FORM_MAKE = 'UPDATE_HARDWARE_FORM_MAKE'
+const UPDATE_HARDWARE_FORM_MODEL = 'UPDATE_HARDWARE_FORM_MODEL'
+const UPDATE_HARDWARE_FORM_DESCRIPTION = 'UPDATE_HARDWARE_FORM_DESCRIPTION'
+const UPDATE_HARDWARE_FORM_PHOTO = 'UPDATE_HARDWARE_FORM_PHOTO'
+const UPDATE_HARDWARE_FORM_PHOTO_NAME = 'UPDATE_HARDWARE_FORM_PHOTO_NAME'
+const UPDATE_HARDWARE_FORM_IS_COMPUTER = 'UPDATE_HARDWARE_FORM_IS_COMPUTER'
+const UPDATE_HARDWARE_FORM_ERROR = 'UPDATE_HARDWARE_FORM_ERROR'
+const UPDATE_HARDWARE_FORM_EDITING = 'UPDATE_HARDWARE_FORM_EDITING'
+const UPDATE_HARDWARE_FORM_HARDWARE_ID = 'UPDATE_HARDWARE_FORM_HARDWARE_ID'
 
 // ACTIONS
 export function openHardwareForm () {
@@ -26,71 +26,71 @@ export function closeHardwareForm () {
 	}
 }
 
-function updateHardwareId (hardwareId) {
+function updateHardwareFormHardwareId (hardwareId) {
 	return {
-		type: UPDATE_HARDWARE_ID,
+		type: UPDATE_HARDWARE_FORM_HARDWARE_ID,
 		hardwareId,
 	}
 }
 
-export function updateMake (make) {
+export function updateHardwareFormMake (make) {
 	return {
-		type: UPDATE_MAKE,
+		type: UPDATE_HARDWARE_FORM_MAKE,
 		make,
 	}
 }
 
-export function updateModel (model) {
+export function updateHardwareFormModel (model) {
 	return {
-		type: UPDATE_MODEL,
+		type: UPDATE_HARDWARE_FORM_MODEL,
 		model,
 	}
 }
 
-export function updateDescription (description) {
+export function updateHardwareFormDescription (description) {
 	return {
-		type: UPDATE_DESCRIPTION,
+		type: UPDATE_HARDWARE_FORM_DESCRIPTION,
 		description,
 	}
 }
 
-export function updatePhoto (photo) {
+export function updateHardwareFormPhoto (photo) {
 	return {
-		type: UPDATE_PHOTO,
+		type: UPDATE_HARDWARE_FORM_PHOTO,
 		photo,
 	}
 }
 
-export function updateIsComputer (isComputer) {
+export function updateHardwareFormIsComputer (isComputer) {
 	return {
-		type: UPDATE_IS_COMPUTER,
+		type: UPDATE_HARDWARE_FORM_IS_COMPUTER,
 		isComputer,
 	}
 }
 
-function updateError (error) {
+function updateHardwareFormError (error) {
 	return {
-		type: UPDATE_ERROR,
+		type: UPDATE_HARDWARE_FORM_ERROR,
 		error,
 	}
 }
 
-function addHardware (hardware) {
+function hardwareFormAddHardware (hardware) {
 	return {
-		type: ADD_HARDWARE,
+		type: HARDWARE_FORM_ADD_HARDWARE,
 		hardware,
 	}
 }
 
-function updateEditing () {
+function hardwareFormupdateHardwareFormEditing () {
 	return {
-		type: UPDATE_EDITING,
+		type: UPDATE_HARDWARE_FORM_EDITING,
 	}
 }
 
-function updatePhotoName (photoName) {
+function updateHardwareFormPhotoName (photoName) {
 	return {
-		type: UPDATE_PHOTO_NAME,
+		type: UPDATE_HARDWARE_FORM_PHOTO_NAME,
 		photoName,
 	}
 }
@@ -98,13 +98,13 @@ function updatePhotoName (photoName) {
 function activateCurrentHardware (dispatch, getState, hardwareId) {
 	return new Promise((resolve, reject) => {
 		const hardware = getState().hardwares[hardwareId]
-		dispatch(updateEditing())
-		dispatch(updateHardwareId(hardware.hardwareId))
-		dispatch(updateIsComputer(hardware.isComputer))
-		dispatch(updateMake(hardware.make))
-		dispatch(updateModel(hardware.model))
-		dispatch(updateDescription(hardware.description))
-		hardware.photo !== undefined ? dispatch(updatePhotoName(hardware.photo.name)) : dispatch(updatePhotoName(''))
+		dispatch(hardwareFormupdateHardwareFormEditing())
+		dispatch(updateHardwareFormHardwareId(hardware.hardwareId))
+		dispatch(updateHardwareFormIsComputer(hardware.isComputer))
+		dispatch(updateHardwareFormMake(hardware.make))
+		dispatch(updateHardwareFormModel(hardware.model))
+		dispatch(updateHardwareFormDescription(hardware.description))
+		hardware.photo !== undefined ? dispatch(updateHardwareFormPhotoName(hardware.photo.name)) : dispatch(updateHardwareFormPhotoName(''))
 		resolve(true)
 	})
 }
@@ -118,16 +118,16 @@ export function initiateHardwareForm (hardwareId) {
 	}
 }
 
-export function hardwareFanout (hardware) {
+export function hardwareFormFanout (hardware) {
 	return function (dispatch, getState) {
 		const uid = getState().users.authedId
 		saveHardware(hardware, { uid: uid })
 		.then((hardwareWithId) => {
-			dispatch(addHardware(hardwareWithId))
+			dispatch(hardwareFormAddHardware(hardwareWithId))
 			dispatch(closeHardwareForm())
 		})
 		.catch((error) => {
-			dispatch(updateError(error.toString()))
+			dispatch(updateHardwareFormError(error.toString()))
 		})
 	}
 }
@@ -166,53 +166,53 @@ export default function hardwareForm (state = initialState, action) {
 			error: '',
 			editing: false,
 		}
-	case UPDATE_HARDWARE_ID:
+	case UPDATE_HARDWARE_FORM_HARDWARE_ID:
 		return {
 			...state,
 			hardwareId: action.hardwareId,
 		}
-	case UPDATE_MAKE:
+	case UPDATE_HARDWARE_FORM_MAKE:
 		return {
 			...state,
 			make: action.make,
 		}
-	case UPDATE_MODEL:
+	case UPDATE_HARDWARE_FORM_MODEL:
 		return {
 			...state,
 			model: action.model,
 		}
-	case UPDATE_DESCRIPTION:
+	case UPDATE_HARDWARE_FORM_DESCRIPTION:
 		return {
 			...state,
 			description: action.description,
 		}
-	case UPDATE_PHOTO:
+	case UPDATE_HARDWARE_FORM_PHOTO:
 		return {
 			...state,
 			photo: action.photo,
 			photoName: action.photo.name,
 		}
-	case UPDATE_PHOTO_NAME:
+	case UPDATE_HARDWARE_FORM_PHOTO_NAME:
 		return {
 			...state,
 			photoName: action.photoName,
 		}
-	case UPDATE_IS_COMPUTER:
+	case UPDATE_HARDWARE_FORM_IS_COMPUTER:
 		return {
 			...state,
 			isComputer: action.isComputer,
 		}
-	case UPDATE_ERROR:
+	case UPDATE_HARDWARE_FORM_ERROR:
 		return {
 			...state,
 			error: action.error,
 		}
-	case UPDATE_EDITING:
+	case UPDATE_HARDWARE_FORM_EDITING:
 		return {
 			...state,
 			editing: true,
 		}
-	case ADD_HARDWARE:
+	case HARDWARE_FORM_ADD_HARDWARE:
 		return {
 			...state,
 			[action.hardware.hardwareId]: action.hardware,
