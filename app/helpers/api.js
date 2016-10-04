@@ -1,4 +1,5 @@
 import { ref, imagesRef } from 'config/constants'
+import { determineItemHasSubContent } from 'helpers/utils'
 
 // Get firebase imagesRef
 export function getUrl (imageFolder, photoName) {
@@ -57,7 +58,6 @@ export function saveHardware (hardware, uid) {
 			})
 		} else { // updating existing hardware
 			let newHardware
-			const newSubContentStatus = hardware.description !== ''
 			getHardware(hardwareId, (originalHardware) => {
 				const photo = (hardware.photo.name === undefined ? originalHardware.photo : {
 					name: hardwarePhotoRef.name,
@@ -68,7 +68,7 @@ export function saveHardware (hardware, uid) {
 					url: '', // URLs expire, so we get it each time the app loads, then store it in the redux tree
 				})
 				newHardware = Object.assign(originalHardware, newHardwareBase, {photo: photo})
-				updateItemHasSubContentDB(hardwareId, newSubContentStatus) // if there wasn't a hardware description before, but was updated to have one, we want to let all related items to know. We do this because each item has a bool value that indicates if it has subcontent to be displayed. If it does the item is clickable, and when clicked displays that subcontent
+				updateItemHasSubContentDB(hardwareId, hardware.description) // if there wasn't a hardware description before, but was updated to have one, we want to let all related items to know. We do this because each item has a bool value that indicates if it has subcontent to be displayed. If it does the item is clickable, and when clicked displays that subcontent
 			}, (err) => console.error(`Error in getHardware call within saveHardware: ${err}`))
 			return newHardware
 		}
@@ -80,13 +80,15 @@ export function saveHardware (hardware, uid) {
 	.catch((err) => `Error in saveHardware: ${err}`)
 }
 
-function updateItemHasSubContentDB (hardwareId, newSubContentStatus) {
+function updateItemHasSubContentDB (hardwareId, hardwareDescription) {
+	let newSubContentStatus
 	getItems(({items, sortedItemIds}) => {
 		// loop through each item. Update the ones that match the hardwareId to haveSubContent = true
 		sortedItemIds.forEach((itemId) => {
 			if (items[itemId].hardwareId === hardwareId) {
-				return ref.child(`feed/items/${itemId}`).update({hasSubContent: newSubContentStatus}) // saving person to firebase
-				.then(() => ({hasSubContent: true}))
+				newSubContentStatus = determineItemHasSubContent(items[itemId], hardwareDescription)
+				return ref.child(`feed/items/${itemId}`).update({hasSubContent: newSubContentStatus})
+				.then(() => newSubContentStatus) // update hasSubContent status in firebase
 				.catch((err) => `Error in ref.child call within updateItemHasSubContentDB: ${err}`)
 			}
 		})
@@ -169,7 +171,7 @@ function getNewItemBase (item, itemId, uid) {
 				hardwareId: item.hardwareId,
 				note: item.note,
 				collapsed: true,
-				hasSubContent: (item.note !== '' || item.photo.size !== undefined || hardware.description !== ''),
+				hasSubContent: determineItemHasSubContent(item, hardware.description),
 				createdBy: uid.uid,
 				dateLastUpdated: new Date().toString(),
 			}
@@ -232,7 +234,7 @@ export function saveItem (item, uid) {
 
 // START Getting Data from Firebase
 function getItems (cb, errorCB) {
-	ref.child('feed/items').on('value', (snapshot) => {
+	ref.child('feed/items').once('value', (snapshot) => {
 		const items = snapshot.val() || {}
 		const sortedItemIds = Object.keys(items).sort((a, b) => items[b].dateCreated - items[a].dateCreated)
 		cb({items, sortedItemIds})
@@ -247,7 +249,7 @@ function getItem (itemId, cb, errorCB) {
 }
 
 function getPeople (cb, errorCB) {
-	ref.child('feed/people').on('value', (snapshot) => {
+	ref.child('feed/people').once('value', (snapshot) => {
 		const people = snapshot.val() || {}
 		cb(people)
 	}, errorCB)

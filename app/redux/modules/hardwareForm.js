@@ -1,4 +1,6 @@
 import { saveHardware } from 'helpers/api'
+import { determineItemHasSubContent } from 'helpers/utils'
+import { updateItemHasSubContent } from 'redux/modules/items'
 
 const HARDWARE_FORM_ADD_HARDWARE = 'HARDWARE_FORM_ADD_HARDWARE'
 const OPEN_HARDWARE_FORM = 'OPEN_HARDWARE_FORM'
@@ -121,10 +123,27 @@ export function initiateHardwareForm (hardwareId) {
 export function hardwareFormFanout (hardware) {
 	return function (dispatch, getState) {
 		const uid = getState().users.authedId
+		const oldDescription = getState().hardwares[hardware.hardwareId].description
+		const newDescription = hardware.description
 		saveHardware(hardware, { uid: uid })
 		.then((hardwareWithId) => {
 			dispatch(hardwareFormAddHardware(hardwareWithId))
 			dispatch(closeHardwareForm())
+			if (hardware.editing) {
+				const items = getState().items
+				// If there was no hardware description, but one was added OR there was a hardware description, but then we removed it... we need to update each item's hasSubContent property that uses this hardware
+				if (
+					(oldDescription === '' && newDescription !== '') ||
+					(oldDescription !== '' & newDescription === '')
+					) {
+					Object.keys(items).forEach((itemId) => {
+						if (items[itemId].hardwareId === hardwareWithId.hardwareId) {
+							const newHasSubContent = determineItemHasSubContent(items[itemId], hardwareWithId.description)
+							dispatch(updateItemHasSubContent(itemId, newHasSubContent))
+						}
+					})
+				}
+			}
 		})
 		.catch((error) => {
 			dispatch(updateHardwareFormError(error.toString()))

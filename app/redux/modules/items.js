@@ -3,6 +3,7 @@ const UPDATE_COLLAPSED = 'UPDATE_COLLAPSED'
 const COLLAPSE_ITEM = 'COLLAPSE_ITEM'
 const UPDATE_ITEM_PERSONID = 'UPDATE_ITEM_PERSONID'
 const UPDATE_ITEM_IN_FEED = 'UPDATE_ITEM_IN_FEED'
+const UPDATE_ITEM_HAS_SUB_CONTENT = 'UPDATE_ITEM_HASSUBCONTENT'
 
 export function prepItemsForFeed (items) {
 	return function (dispatch, getState) {
@@ -10,6 +11,14 @@ export function prepItemsForFeed (items) {
 			dispatch(addItemsToFeed(items))
 			resolve()
 		})
+	}
+}
+
+export function updateItemHasSubContent (itemId, hasSubContent) {
+	return {
+		type: UPDATE_ITEM_HAS_SUB_CONTENT,
+		itemId,
+		hasSubContent,
 	}
 }
 
@@ -96,6 +105,11 @@ function item (state = initialItemState, action) {
 			...state,
 			personId: action.personId,
 		}
+	case UPDATE_ITEM_HAS_SUB_CONTENT:
+		return {
+			...state,
+			hasSubContent: action.hasSubContent,
+		}
 	default :
 		return state
 	}
@@ -115,6 +129,7 @@ export default function items (state = initialState, action) {
 			...state,
 			[action.itemId]: action.item,
 		}
+	case UPDATE_ITEM_HAS_SUB_CONTENT:
 	case COLLAPSE_ITEM:
 	case UPDATE_ITEM_PERSONID:
 	case UPDATE_COLLAPSED:
