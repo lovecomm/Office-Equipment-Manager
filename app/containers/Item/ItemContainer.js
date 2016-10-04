@@ -25,8 +25,10 @@ const ItemContainer = React.createClass({
 		return Math.floor(diffYears).toString()
 	},
 	envokeHandleCollapsed () {
-		const newCollapse = !this.props.collapsed
-		this.props.handleCollapsed(this.props.itemId, newCollapse)
+		if (this.props.hasSubContent) {
+			const newCollapse = !this.props.collapsed
+			this.props.handleCollapsed(this.props.itemId, newCollapse)
+		}
 	},
 	render () {
 		return (
