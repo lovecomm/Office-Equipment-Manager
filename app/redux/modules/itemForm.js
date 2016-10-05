@@ -1,6 +1,6 @@
 import { saveItem } from 'helpers/api'
 import { addNewItemToFeed } from './feed'
-import { updateItemInFeed } from './items'
+// import { updateItemInFeed } from './items'
 
 const OPEN_ITEM_FORM = 'OPEN_ITEM_FORM'
 const CLOSE_ITEM_FORM = 'CLOSE_ITEM_FORM'
@@ -166,9 +166,10 @@ export function itemFormFanout (item) {
 		const uid = getState().users.authedId
 		saveItem(item, {uid: uid}) // add item to firebase
 		.then((itemWithId) => {
-			editing
-			?	dispatch(updateItemInFeed(itemWithId.itemId, itemWithId))
-			: dispatch(addNewItemToFeed(itemWithId.itemId))
+			if (!editing) dispatch(addNewItemToFeed(itemWithId.itemId))
+			// editing
+			// ?	dispatch(updateItemInFeed(itemWithId.itemId, itemWithId))
+			// : dispatch(addNewItemToFeed(itemWithId.itemId))
 			dispatch(closeItemForm())
 		})
 		.catch((err) => {

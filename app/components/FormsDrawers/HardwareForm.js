@@ -21,20 +21,23 @@ HardwareForm.propTypes = {
 	updateHardwareFormDescription: func.isRequired,
 	updateHardwareFormPhoto: func.isRequired,
 	updateHardwareFormIsComputer: func.isRequired,
-	hardwareFormFanout: func.isRequired,
+	newHardwareFanout: func.isRequired,
+	updateHardwareFanout: func.isRequired,
 }
 
 export default function HardwareForm (props, context) {
 	function submitHardware () {
-		props.hardwareFormFanout({
+		const hardware = {
 			hardwareId: props.hardwareId,
-			editing: props.editing,
 			make:	props.make,
 			model: props.model,
 			description: props.description,
 			photo: props.photo,
 			isComputer: props.isComputer,
-		})
+		}
+		props.editing === false
+		? props.newHardwareFanout(hardware)
+		: props.updateHardwareFanout(hardware)
 	}
 	return (
 		<Drawer active={props.isOpen}

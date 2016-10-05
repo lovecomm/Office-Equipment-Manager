@@ -1,84 +1,218 @@
 import { ref, imagesRef } from 'config/constants'
 import { determineItemHasSubContent } from 'helpers/utils'
 
-// Get firebase imagesRef
+
+
+// START General Firebase API Calls
+// Get firebase imagesRef for hardwares and items
+export function listenToFeed (cb, errorCB) {
+	getItemsBound(({items, sortedItemIds}) => {
+		getPeopleBound((people) => {
+			getHardwaresBound((hardwares) => cb({
+				items,
+				sortedItemIds,
+				people,
+				hardwares,
+			}))
+		})
+	})
+}
+
 export function getUrl (imageFolder, photoName) {
 	return imagesRef.child(`${imageFolder}/${photoName}`).getDownloadURL()
 	.then((url) => url)
 	.catch((err) => `Error in getUrl: ${err}`)
 }
 
-function verifyHardware (hardware, editing) {
-	return new Promise((resolve, reject) => {
-		getHardwares((hardwares) => {
-			for (const hardwareId in hardwares) {
-				// Test for Make & Model duplicate
-				if (!editing &&
-					`${hardwares[hardwareId].make} ${hardwares[hardwareId].model}`.toUpperCase()	===
-					`${hardware.make} ${hardware.model}`.toUpperCase()) {
-					reject(`Sorry, but the hardware, ${hardware.make} ${hardware.model} is already registered.`)
+export function deleteData (dataType, dataId) {
+	switch (dataType) {
+	case 'people':
+		return ref.child(`feed/people/${dataId}`).remove() // remove person, but need to assign all associated items to INVENTORY
+		.then(() => {
+			getItems(({items}) => {
+				getPeople((people) => {
+					for (const personId in people) {
+						if (people[personId].firstName === 'INVENTORY') {
+							for (const itemId in items) {
+								if (items[itemId].personId === dataId) {
+									return ref.child(`feed/items/${itemId}`).update({personId: personId}) // update the item to be INVENTORY (still considered a person) if the user assigned to it is deleted
+								}
+							}
+						}
+					}
+				}, (err) => console.error(`Error in getPeople call within deleteData: ${err}`))
+			}, (err) => console.error(`Error in getItems call within deleteData: ${err}`))
+		})
+		.catch((err) => `Error in deleteData, case 'people': ${err}`)
+	case 'hardwares':
+		return ref.child(`feed/hardwares/${dataId}`).remove()
+		.then(() => {
+			getItems(({items}) => {
+				for (const itemId in items) {
+					if (items[itemId].hardwareId === dataId) {
+						ref.child(`feed/items/${itemId}`).remove() // delete all items that use this hardware
+					}
 				}
-			}
-			// Mark as verified if email and fullname is not in use
-			resolve(true)
-		}, (err) => console.error(`Error in verifyHardware: ${err}`))
-	})
-}
-
-export function saveHardware (hardware, uid) {
-	const hardwareId = hardware.editing ? hardware.hardwareId : ref.child('feed/hardwares').push().key
-	const hardwarePhotoRef = hardware.photo.name !== undefined ? imagesRef.child(`hardwares/${hardware.photo.name}`) : undefined // Create a reference to hardware image in firebase
-	const newHardwareBase = {
-		hardwareId: hardwareId,
-		make: hardware.make,
-		model: hardware.model,
-		description: hardware.description,
-		isComputer: hardware.isComputer,
-		dateLastUpdated: new Date().toString(),
-		createdBy: uid.uid,
+			}, (err) => console.error(`Error in getItems call within deleteData, case 'hardwares': ${err}`))
+		})
+		.catch((err) => `Error in deleteData, case 'hardwares': ${err}`)
+	default: // items
+		return ref.child(`feed/items/${dataId}`).remove()
+		.catch((err) => `Error in deleteData, case 'default' - items: ${err}`)
 	}
-	return verifyHardware(hardware, hardware.editing)
-	.then(() => {
-		if (hardwarePhotoRef) {
+}
+// END General Firebase API Calls
+
+
+
+// START Hardwares related Firebase API Calls
+export function saveNewHardware (hardwares, hardware, uid) {
+	return new Promise((resolve, reject) => {
+		const hardwareId = ref.child('feed/hardwares').push().key
+		const hardwarePhotoRef = imagesRef.child(`hardwares/${hardware.photo.name}`)
+		verifyNewHardware(hardwares, hardware)
+		.then((isVerified) => {
 			return hardwarePhotoRef.put(hardware.photo) // Store photo to firebase
-		} else { return undefined } // is updating existing hardware, and does not have an updated photo
-	})
-	.then((photoSnapshot) => {
-		if (photoSnapshot && !hardware.editing) { // it's a new hardware
-			return Object.assign(newHardwareBase, {
+		})
+		.then((photoSnapshot) => {
+			const newHardware = {
+				hardwareId: hardwareId,
+				dateCreated: new Date().toString(),
+				dateLastUpdated: new Date().toString(),
+				make: hardware.make,
+				model: hardware.model,
+				description: hardware.description,
+				isComputer: hardware.isComputer,
+				createdBy: uid,
 				photo: {
 					name: hardwarePhotoRef.name,
 					fullPath: hardwarePhotoRef.fullPath,
 					size: hardware.photo.size,
 					type: hardware.photo.type,
 					bucket: hardwarePhotoRef.bucket,
-					url: '', // URLs expire, so we get it each time the app loads, then store it in the redux tree
+					url: '', // Firebase URLs expire, so we get it each time the app loads, then store it in the redux tree
 				},
-				dateCreated: new Date().toString(),
-			})
-		} else { // updating existing hardware
-			let newHardware
-			getHardware(hardwareId, (originalHardware) => {
-				const photo = (hardware.photo.name === undefined ? originalHardware.photo : {
+			}
+			ref.child(`feed/hardwares/${hardwareId}`).set(newHardware) // saving hardwares to firebase
+			resolve(newHardware)
+		})
+		.catch((err) => reject(err))
+	})
+}
+
+function verifyNewHardware (hardwares, hardware) {
+	return new Promise((resolve, reject) => {
+		Object.keys(hardwares).forEach((hardwareId) => {
+			const newMakeAndModel = `${hardware.make} ${hardware.model}`.toLowerCase()
+			const currenMakeAndModel = `${hardwares[hardwareId].make} ${hardwares[hardwareId].model}`.toLowerCase()
+			if (newMakeAndModel === currenMakeAndModel) reject(`Sorry, but the hardware, ${newMakeAndModel} is already registered.`)
+		})
+		resolve(true)
+	})
+}
+
+export function saveUpdatedHardware (hardwares, hardware, uid) {
+	return new Promise((resolve, reject) => {
+		const hardwarePhotoRef = hardware.photo.name !== undefined ? imagesRef.child(`hardwares/${hardware.photo.name}`) : undefined // the photo is a required property on hardware. However, if there isn't a new photo being submitted with the updated hardware, then photo.name will be undefined.
+		let storedHardware
+		const updatedHardwareBase = {
+			hardwareId: hardware.hardwareId,
+			make: hardware.make,
+			model: hardware.model,
+			description: hardware.description,
+			isComputer: hardware.isComputer,
+			dateLastUpdated: new Date().toString(),
+			createdBy: uid,
+		}
+		return getHardwarePromise(hardware.hardwareId)
+		.then((storedHardwareInFB) => {
+			storedHardware = storedHardwareInFB.val()
+			return updatedHardwareMatchesExistingHardware(hardwares, hardware)
+		})
+		.then((matchedMakeAndModel) => {
+			return matchedMakeAndModel !== undefined ? matchedMakeAndModel : undefined
+		})
+		.then((matchedMakeAndModel) => {
+			if (matchedMakeAndModel !== undefined) {
+				const storedMakeAndModel = `${storedHardware.make} ${storedHardware.model}`.toLowerCase()
+				if (storedMakeAndModel !== matchedMakeAndModel) {
+					reject(`Sorry, but the hardware, ${matchedMakeAndModel} is already registered.`)
+					throw new Error(`Sorry, but the hardware, ${matchedMakeAndModel} is already registered.`)
+				} else { return true }
+			} else { return true }
+		})
+		.then((isVerified) => {
+			if (hardwarePhotoRef) {
+				return hardwarePhotoRef.put(hardware.photo) // Store photo to firebase
+			} else { return undefined } // is updating existing hardware, and does not have an updated photo
+		})
+		.then((photoSnapshot) => {
+			if (hardwarePhotoRef !== undefined || photoSnapshot !== undefined) { // new photo has been stored
+				return Object.assign(storedHardware, updatedHardwareBase, { photo: {
 					name: hardwarePhotoRef.name,
 					fullPath: hardwarePhotoRef.fullPath,
 					size: hardware.photo.size,
 					type: hardware.photo.type,
 					bucket: hardwarePhotoRef.bucket,
-					url: '', // URLs expire, so we get it each time the app loads, then store it in the redux tree
-				})
-				newHardware = Object.assign(originalHardware, newHardwareBase, {photo: photo})
-				updateItemHasSubContentDB(hardwareId, hardware.description) // if there wasn't a hardware description before, but was updated to have one, we want to let all related items to know. We do this because each item has a bool value that indicates if it has subcontent to be displayed. If it does the item is clickable, and when clicked displays that subcontent
-			}, (err) => console.error(`Error in getHardware call within saveHardware: ${err}`))
-			return newHardware
-		}
+					url: '',
+				}})
+			} else {
+				return Object.assign(storedHardware, updatedHardwareBase)
+			}
+		})
+		.then((updatedHardware) => {
+			return ref.child(`feed/hardwares/${updatedHardware.hardwareId}`).update(updatedHardware) // updating hardware in firebase
+			.then(() => resolve(updatedHardware))
+		})
+		.catch((err) => err)
 	})
-	.then((newHardware) => {
-		return ref.child(`feed/hardwares/${hardwareId}`).set(newHardware) // saving hardwares to firebase
-		.then(() => (newHardware))
-	})
-	.catch((err) => `Error in saveHardware: ${err}`)
 }
+
+function updatedHardwareMatchesExistingHardware (hardwares, hardware) {
+	return new Promise((resolve, reject) => {
+		Object.keys(hardwares).some((hardwareId) => {
+			const newMakeAndModel = `${hardware.make} ${hardware.model}`.toLowerCase()
+			const currenMakeAndModel = `${hardwares[hardwareId].make} ${hardwares[hardwareId].model}`.toLowerCase()
+			if (newMakeAndModel === currenMakeAndModel) {
+				resolve(currenMakeAndModel)
+			}
+		})
+		resolve(undefined)
+	})
+}
+
+function getHardwares (cb, errorCB) {
+	ref.child('feed/hardwares').once('value', (snapshot) => {
+		const hardware = snapshot.val() || {}
+		cb(hardware)
+	}, errorCB)
+}
+
+function getHardwaresBound (cb, errorCB) { // this version is for the feed, its data is bound to firebase
+	ref.child('feed/hardwares').once('value', (snapshot) => {
+		const hardware = snapshot.val() || {}
+		cb(hardware)
+	}, errorCB)
+}
+
+function getHardware (hardwareId, cb, errorCB) { // NOTE: this should eventually be replaced with getHardwarePromise
+	ref.child(`feed/hardwares/${hardwareId}`).once('value', (snapshot) => {
+		const hardware = snapshot.val() || {}
+		cb(hardware)
+	}, errorCB)
+}
+
+function getHardwarePromise (hardwareId) {
+	return ref.child(`feed/hardwares/${hardwareId}`).once('value', (snapshot) => Promise.resolve(snapshot))
+	.catch((err) => err)
+}
+// END Hardwares related Firebase API Calls
+
+
+
+// START People related Firebase API Calls
+// END People related Firebase API Calls
+
 
 function updateItemHasSubContentDB (hardwareId, hardwareDescription) {
 	let newSubContentStatus
@@ -162,7 +296,9 @@ function verifyItem (item, isBeingEdited) {
 
 function getNewItemBase (item, itemId, uid) {
 	return new Promise((resolve, reject) => {
+		console.log('getnNewItemBase, item', item)
 		getHardware(item.hardwareId, (hardware) => {
+			console.log('getnNewItemBase within getHardware, item', item)
 			const newItemBase = {
 				itemId: itemId,
 				serial: item.serial,
@@ -232,9 +368,20 @@ export function saveItem (item, uid) {
 	.catch((err) => `Error in saveItem: ${err}`)
 }
 
+
+
+
 // START Getting Data from Firebase
 function getItems (cb, errorCB) {
 	ref.child('feed/items').once('value', (snapshot) => {
+		const items = snapshot.val() || {}
+		const sortedItemIds = Object.keys(items).sort((a, b) => items[b].dateCreated - items[a].dateCreated)
+		cb({items, sortedItemIds})
+	}, errorCB)
+}
+
+function getItemsBound (cb, errorCB) { // this version is for the feed, its data is bounded to firebase
+	ref.child('feed/items').on('value', (snapshot) => {
 		const items = snapshot.val() || {}
 		const sortedItemIds = Object.keys(items).sort((a, b) => items[b].dateCreated - items[a].dateCreated)
 		cb({items, sortedItemIds})
@@ -255,76 +402,16 @@ function getPeople (cb, errorCB) {
 	}, errorCB)
 }
 
+function getPeopleBound (cb, errorCB) { // this version is for the feed, its data is bounded to firebase
+	ref.child('feed/people').on('value', (snapshot) => {
+		const people = snapshot.val() || {}
+		cb(people)
+	}, errorCB)
+}
+
 export function getPerson (personId, cb, errorCB) {
 	ref.child(`feed/people/${personId}`).once('value', (snapshot) => {
 		const person = snapshot.val() || {}
 		cb(person)
 	}, errorCB)
 }
-
-function getHardwares (cb, errorCB) {
-	ref.child('feed/hardwares').on('value', (snapshot) => {
-		const hardware = snapshot.val() || {}
-		cb(hardware)
-	}, errorCB)
-}
-
-function getHardware (hardwareId, cb, errorCB) {
-	ref.child(`feed/hardwares/${hardwareId}`).once('value', (snapshot) => {
-		const hardware = snapshot.val() || {}
-		cb(hardware)
-	}, errorCB)
-}
-
-export function listenToFeed (cb, errorCB) {
-	getItems(({items, sortedItemIds}) => {
-		getPeople((people) => {
-			getHardwares((hardwares) => cb({
-				items,
-				sortedItemIds,
-				people,
-				hardwares,
-			}))
-		})
-	})
-}
-// END Getting Data from Firebase
-
-export function deleteData (dataType, dataId) {
-	switch (dataType) {
-	case 'people':
-		return ref.child(`feed/people/${dataId}`).remove() // remove person, but need to assign all associated items to INVENTORY
-		.then(() => {
-			getItems(({items}) => {
-				getPeople((people) => {
-					for (const personId in people) {
-						if (people[personId].firstName === 'INVENTORY') {
-							for (const itemId in items) {
-								if (items[itemId].personId === dataId) {
-									return ref.child(`feed/items/${itemId}`).update({personId: personId}) // update the item to be INVENTORY (still considered a person) if the user assigned to it is deleted
-								}
-							}
-						}
-					}
-				}, (err) => console.error(`Error in getPeople call within deleteData: ${err}`))
-			}, (err) => console.error(`Error in getItems call within deleteData: ${err}`))
-		})
-		.catch((err) => `Error in deleteData, case 'people': ${err}`)
-	case 'hardwares':
-		return ref.child(`feed/hardwares/${dataId}`).remove()
-		.then(() => {
-			getItems(({items}) => {
-				for (const itemId in items) {
-					if (items[itemId].hardwareId === dataId) {
-						ref.child(`feed/items/${itemId}`).remove() // delete all items that use this hardware
-					}
-				}
-			}, (err) => console.error(`Error in getItems call within deleteData, case 'hardwares': ${err}`))
-		})
-		.catch((err) => `Error in deleteData, case 'hardwares': ${err}`)
-	default: // items
-		return ref.child(`feed/items/${dataId}`).remove()
-		.catch((err) => `Error in deleteData, case 'default' - items: ${err}`)
-	}
-}
-

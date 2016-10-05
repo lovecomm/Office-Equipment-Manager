@@ -1,6 +1,4 @@
 export function determineItemHasSubContent (item, hardwareDescription) {
-  console.log('in determineItemHasSubContent, hardwareDescription', hardwareDescription)
-  console.log('in determineItemHasSubContent, item', item)
   if (item.photo === undefined) {
     if (item.note !== '' || hardwareDescription !== '') {
       return true
