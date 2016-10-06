@@ -126,9 +126,7 @@ export function saveUpdatedHardware (hardwares, hardware, uid) {
 			storedHardware = storedHardwareInFB.val()
 			return updatedHardwareMatchesExistingHardware(hardwares, hardware)
 		})
-		.then((matchedMakeAndModel) => {
-			return matchedMakeAndModel !== undefined ? matchedMakeAndModel : undefined
-		})
+		.then((matchedMakeAndModel) => matchedMakeAndModel !== undefined ? matchedMakeAndModel : undefined)
 		.then((matchedMakeAndModel) => {
 			if (matchedMakeAndModel !== undefined) {
 				const storedMakeAndModel = `${storedHardware.make} ${storedHardware.model}`.toLowerCase()
@@ -170,9 +168,7 @@ function updatedHardwareMatchesExistingHardware (hardwares, hardware) {
 		Object.keys(hardwares).some((hardwareId) => {
 			const newMakeAndModel = `${hardware.make} ${hardware.model}`.toLowerCase()
 			const currenMakeAndModel = `${hardwares[hardwareId].make} ${hardwares[hardwareId].model}`.toLowerCase()
-			if (newMakeAndModel === currenMakeAndModel) {
-				resolve(currenMakeAndModel)
-			}
+			if (newMakeAndModel === currenMakeAndModel) resolve(currenMakeAndModel)
 		})
 		resolve(undefined)
 	})
@@ -201,65 +197,84 @@ function getHardwarePromise (hardwareId) {
 
 
 // START People related Firebase API Calls
-// END People related Firebase API Calls
-
-
-function updateItemHasSubContentDB (hardwareId, hardwareDescription) {
-	let newSubContentStatus
-	getItems(({items, sortedItemIds}) => {
-		// loop through each item. Update the ones that match the hardwareId to haveSubContent = true
-		sortedItemIds.forEach((itemId) => {
-			if (items[itemId].hardwareId === hardwareId) {
-				newSubContentStatus = determineItemHasSubContent(items[itemId], hardwareDescription)
-				return ref.child(`feed/items/${itemId}`).update({hasSubContent: newSubContentStatus})
-				.then(() => newSubContentStatus) // update hasSubContent status in firebase
-				.catch((err) => `Error in ref.child call within updateItemHasSubContentDB: ${err}`)
-			}
-		})
-	}, (err) => `Error in getItems call within updateItemHasSubContentDB: ${err}`)
-}
-
-function verifyPerson (person) {
+export function saveNewPerson (people, person, uid) {
 	return new Promise((resolve, reject) => {
-		getPeople((people) => {
-			for (const personId in people) {
-				// Test for full name duplicate
-				if (`${people[personId].firstName} ${people[personId].lastName}`.toUpperCase()	===
-				`${person.firstName} ${person.lastName}`.toUpperCase()) {
-					reject(`Sorry, but the name, ${person.firstName} ${person.lastName} is already in use by another person.`)
-				}
+		const personId = ref.child('feed/people').push().key
+		return verifyNewPerson(people, person)
+		.then((isVerified) => {
+			const newPerson = {
+				personId,
+				dateCreated: new Date().toString(),
+				createdBy: uid,
+				dateLastUpdated: new Date().toString(),
+				firstName: person.firstName,
+				lastName: person.lastName,
 			}
-			// Mark as verified if email and fullname is not in use
-			resolve(true)
-		}, (err) => console.error(`Error in getPeople call within verifyPerson: ${err}`))
+			ref.child(`feed/people/${personId}`).set(newPerson) // saving new person to firebase
+			resolve(newPerson)
+		})
+		.catch((err) => `Error in savePerson: ${err}`)
 	})
 }
 
-export function savePerson (person, uid) {
-	const personId = person.editing ? person.personId : ref.child('feed/people').push().key
-	let newPerson
-	return verifyPerson(person)
-	.then(() => {
-		const personBase = {
-			personId,
-			firstName: person.firstName,
-			lastName: person.lastName,
-			createdBy: uid.uid,
-			dateLastUpdated: new Date().toString(),
-		}
-		if (person.editing) {
-			newPerson = personBase
-			return ref.child(`feed/people/${personId}`).update(personBase) // saving edited person to firebase
-		} else {
-			newPerson = Object.assign(personBase, {
-				dateCreated: new Date().toString(),
-			})
-			return ref.child(`feed/people/${personId}`).set(newPerson) // saving new person to firebase
-		}
+function verifyNewPerson (people, person) {
+	return new Promise((resolve, reject) => {
+		Object.keys(people).forEach((personId) => {
+			const newName = `${person.firstName} ${person.lastName}`.toLowerCase()
+			const currentName = `${people[personId].firstName} ${people[personId].lastName}`.toLowerCase()
+			if (newName === currentName) reject(`Sorry, but the person, ${currentName} is already registered.`)
+		})
+		resolve(true)
 	})
-	.then(() => (newPerson))
-	.catch((err) => `Error in savePerson: ${err}`)
 }
+
+export function saveUpdatedPerson (people, person, uid) {
+	return new Promise((resolve, reject) => {
+		let storedPerson
+		return getPersonPromise(person.personId)
+		.then((storedPersonInFB) => {
+			storedPerson = storedPersonInFB.val()
+			return updatedPersonMatchesExistingPerson(people, person)
+		})
+		.then((matchedName) => {
+			const storedName = `${storedPerson.firstName} ${storedPerson.lastName}`
+			if (matchedName !== undefined && storedName.toLowerCase() !== matchedName.toLowerCase()) { // if there is a matchedName, then the new name for the person we're editing is already in use. As such, we have to check if it's matching against the stored version of itself, or a different name. The former is okay, the latter we want to prevent.
+				const errorMessage = `Sorry, but the person, ${matchedName} is already registered.`
+				console.warn('errorMessage', errorMessage)
+				reject(errorMessage)
+				throw new Error(errorMessage)
+			} else { console.warn('true'); return true }
+		})
+		.then((isVerified) => {
+			const updatedPerson = {
+				personId: person.personId,
+				dateCreated: new Date().toString(),
+				createdBy: uid,
+				dateLastUpdated: new Date().toString(),
+				firstName: person.firstName,
+				lastName: person.lastName,
+			}
+			ref.child(`feed/people/${person.personId}`).set(updatedPerson) // saving new person to firebase
+			resolve(updatedPerson)
+		})
+		.catch((err) => err)
+	})
+}
+
+function updatedPersonMatchesExistingPerson (people, person) {
+	return new Promise((resolve, reject) => {
+		Object.keys(people).some((personId) => {
+			const newName = `${person.firstName} ${person.lastName}`
+			const currentName = `${people[personId].firstName} ${people[personId].lastName}`
+			if (newName.toLowerCase() === currentName.toLowerCase()) resolve(currentName)
+		})
+		resolve(undefined)
+	})
+}
+
+
+
+
 
 function verifyItem (item, isBeingEdited) {
 	return new Promise((resolve, reject) => {
@@ -283,6 +298,51 @@ function verifyItem (item, isBeingEdited) {
 		}, (err) => console.error(`Error in getItems call within verifyItem: ${err}`))
 	})
 }
+
+function getPeople (cb, errorCB) {
+	ref.child('feed/people').once('value', (snapshot) => {
+		const people = snapshot.val() || {}
+		cb(people)
+	}, errorCB)
+}
+
+function getPeopleBound (cb, errorCB) { // this version is for the feed, its data is bounded to firebase
+	ref.child('feed/people').on('value', (snapshot) => {
+		const people = snapshot.val() || {}
+		cb(people)
+	}, errorCB)
+}
+
+export function getPerson (personId, cb, errorCB) {
+	ref.child(`feed/people/${personId}`).once('value', (snapshot) => {
+		const person = snapshot.val() || {}
+		cb(person)
+	}, errorCB)
+}
+
+function getPersonPromise (personId) {
+	return ref.child(`feed/people/${personId}`).once('value', (snapshot) => Promise.resolve(snapshot))
+	.catch((err) => err)
+}
+// END People related Firebase API Calls
+
+
+function updateItemHasSubContentDB (hardwareId, hardwareDescription) {
+	let newSubContentStatus
+	getItems(({items, sortedItemIds}) => {
+		// loop through each item. Update the ones that match the hardwareId to haveSubContent = true
+		sortedItemIds.forEach((itemId) => {
+			if (items[itemId].hardwareId === hardwareId) {
+				newSubContentStatus = determineItemHasSubContent(items[itemId], hardwareDescription)
+				return ref.child(`feed/items/${itemId}`).update({hasSubContent: newSubContentStatus})
+				.then(() => newSubContentStatus) // update hasSubContent status in firebase
+				.catch((err) => `Error in ref.child call within updateItemHasSubContentDB: ${err}`)
+			}
+		})
+	}, (err) => `Error in getItems call within updateItemHasSubContentDB: ${err}`)
+}
+
+
 
 function getNewItemBase (item, itemId, uid) {
 	return new Promise((resolve, reject) => {
@@ -382,26 +442,5 @@ function getItem (itemId, cb, errorCB) {
 	ref.child(`feed/items/${itemId}`).once('value', (snapshot) => {
 		const item = snapshot.val() || {}
 		cb(item)
-	}, errorCB)
-}
-
-function getPeople (cb, errorCB) {
-	ref.child('feed/people').once('value', (snapshot) => {
-		const people = snapshot.val() || {}
-		cb(people)
-	}, errorCB)
-}
-
-function getPeopleBound (cb, errorCB) { // this version is for the feed, its data is bounded to firebase
-	ref.child('feed/people').on('value', (snapshot) => {
-		const people = snapshot.val() || {}
-		cb(people)
-	}, errorCB)
-}
-
-export function getPerson (personId, cb, errorCB) {
-	ref.child(`feed/people/${personId}`).once('value', (snapshot) => {
-		const person = snapshot.val() || {}
-		cb(person)
 	}, errorCB)
 }

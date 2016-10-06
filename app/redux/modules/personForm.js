@@ -1,4 +1,4 @@
-import { savePerson } from 'helpers/api'
+import { saveNewPerson, saveUpdatedPerson } from 'helpers/api'
 
 const PERSON_FORM_ADD_PEOPLE = 'PERSON_FORM_ADD_PEOPLE'
 const OPEN_PERSON_FORM = 'OPEN_PERSON_FORM'
@@ -83,10 +83,9 @@ export function initiatePersonForm (personId) {
 	}
 }
 
-export function personFormFanout (person) {
+export function newPersonFanout (person) {
 	return function (dispatch, getState) {
-		const uid = getState().users.authedId
-		savePerson(person, { uid: uid })
+		saveNewPerson(getState().people, person, getState().users.authedId)
 		.then((personWithId) => {
 			dispatch(PersonFormAddPerson(personWithId))
 			dispatch(closePersonForm())
@@ -94,6 +93,14 @@ export function personFormFanout (person) {
 		.catch((error) => {
 			dispatch(updatePersonFormError(error.toString()))
 		})
+	}
+}
+
+export function updatePersonFanout (person) {
+	return function (dispatch, getState) {
+		saveUpdatedPerson(getState().people, person, getState().users.authedId)
+		.then(() => dispatch(closePersonForm()))
+		.catch((error) => dispatch(updatePersonFormError(error.toString())))
 	}
 }
 

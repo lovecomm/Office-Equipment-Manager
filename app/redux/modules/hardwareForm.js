@@ -136,10 +136,7 @@ export function newHardwareFanout (hardware) {
 export function updateHardwareFanout (hardware) {
 	return function (dispatch, getState) {
 		saveUpdatedHardware(getState().hardwares, hardware, getState().users.authedId)
-		.then(() => {
-			console.log('updateHardwareFanout end')
-			dispatch(closeHardwareForm())
-		})
+		.then(() => dispatch(closeHardwareForm()))
 		.catch((error) => dispatch(updateHardwareFormError(error.toString())))
 	}
 }

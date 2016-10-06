@@ -14,18 +14,21 @@ PersonForm.propTypes = {
 	isSubmitDisabled: bool.isRequired,
 	updatePersonFormFirstName: func.isRequired,
 	updatePersonFormLastName: func.isRequired,
-	personFormFanout: func.isRequired,
+	newPersonFanout: func.isRequired,
+	updatePersonFanout: func.isRequired,
 	error: string.isRequired,
 }
 
 export default function PersonForm (props, context) {
 	function submitPeople () {
-		props.personFormFanout({
-			editing: props.editing,
+		const person = {
 			personId: props.personId,
 			firstName: props.firstName,
 			lastName: props.lastName,
-		})
+		}
+		props.editing === false
+		? props.newPersonFanout(person)
+		: props.updatePersonFanout(person)
 	}
 	return (
 		<Drawer active={props.isOpen}
