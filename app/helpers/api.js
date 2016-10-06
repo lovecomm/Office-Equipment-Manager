@@ -1,10 +1,7 @@
 import { ref, imagesRef } from 'config/constants'
 import { determineItemHasSubContent } from 'helpers/utils'
 
-
-
 // START General Firebase API Calls
-// Get firebase imagesRef for hardwares and items
 export function listenToFeed (cb, errorCB) {
 	getItemsBound(({items, sortedItemIds}) => {
 		getPeopleBound((people) => {
@@ -181,21 +178,14 @@ function updatedHardwareMatchesExistingHardware (hardwares, hardware) {
 	})
 }
 
-function getHardwares (cb, errorCB) {
-	ref.child('feed/hardwares').once('value', (snapshot) => {
-		const hardware = snapshot.val() || {}
-		cb(hardware)
-	}, errorCB)
-}
-
 function getHardwaresBound (cb, errorCB) { // this version is for the feed, its data is bound to firebase
-	ref.child('feed/hardwares').once('value', (snapshot) => {
+	ref.child('feed/hardwares').on('value', (snapshot) => {
 		const hardware = snapshot.val() || {}
 		cb(hardware)
 	}, errorCB)
 }
 
-function getHardware (hardwareId, cb, errorCB) { // NOTE: this should eventually be replaced with getHardwarePromise
+function getHardware (hardwareId, cb, errorCB) { // NOTE: this should eventually be replaced with getHardwarePromise`
 	ref.child(`feed/hardwares/${hardwareId}`).once('value', (snapshot) => {
 		const hardware = snapshot.val() || {}
 		cb(hardware)
