@@ -126,14 +126,12 @@ export function saveUpdatedHardware (hardwares, hardware, uid) {
 			storedHardware = storedHardwareInFB.val()
 			return updatedHardwareMatchesExistingHardware(hardwares, hardware)
 		})
-		.then((matchedMakeAndModel) => matchedMakeAndModel !== undefined ? matchedMakeAndModel : undefined)
 		.then((matchedMakeAndModel) => {
-			if (matchedMakeAndModel !== undefined) {
-				const storedMakeAndModel = `${storedHardware.make} ${storedHardware.model}`.toLowerCase()
-				if (storedMakeAndModel !== matchedMakeAndModel) {
-					reject(`Sorry, but the hardware, ${matchedMakeAndModel} is already registered.`)
-					throw new Error(`Sorry, but the hardware, ${matchedMakeAndModel} is already registered.`)
-				} else { return true }
+			const storedMakeAndModel = `${storedHardware.make} ${storedHardware.model}`
+			if (matchedMakeAndModel !== undefined &&
+				storedMakeAndModel.toLowerCase() !== matchedMakeAndModel.toLowerCase()) { // if there is a matchedMakeAndModel, then the new makeAndModel for the hardware we're editing is already in use. As such, we have to check if it's matching against the stored version of itself, or a different makeAndModel. The former is okay, the latter we want to prevent.
+				reject(`Sorry, but the hardware, ${matchedMakeAndModel} is already registered.`)
+				throw new Error(`Sorry, but the hardware, ${matchedMakeAndModel} is already registered.`)
 			} else { return true }
 		})
 		.then((isVerified) => {
@@ -166,9 +164,9 @@ export function saveUpdatedHardware (hardwares, hardware, uid) {
 function updatedHardwareMatchesExistingHardware (hardwares, hardware) {
 	return new Promise((resolve, reject) => {
 		Object.keys(hardwares).some((hardwareId) => {
-			const newMakeAndModel = `${hardware.make} ${hardware.model}`.toLowerCase()
-			const currenMakeAndModel = `${hardwares[hardwareId].make} ${hardwares[hardwareId].model}`.toLowerCase()
-			if (newMakeAndModel === currenMakeAndModel) resolve(currenMakeAndModel)
+			const newMakeAndModel = `${hardware.make} ${hardware.model}`
+			const currenMakeAndModel = `${hardwares[hardwareId].make} ${hardwares[hardwareId].model}`
+			if (newMakeAndModel.toLowerCase() === currenMakeAndModel.toLowerCase()) resolve(currenMakeAndModel)
 		})
 		resolve(undefined)
 	})
