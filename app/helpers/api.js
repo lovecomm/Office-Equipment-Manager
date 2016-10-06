@@ -154,8 +154,8 @@ export function saveUpdatedHardware (hardwares, hardware, uid) {
 			}
 		})
 		.then((updatedHardware) => {
-			return ref.child(`feed/hardwares/${updatedHardware.hardwareId}`).update(updatedHardware) // updating hardware in firebase
-			.then(() => resolve(updatedHardware))
+			ref.child(`feed/hardwares/${updatedHardware.hardwareId}`).update(updatedHardware) // updating hardware in firebase
+			resolve(updatedHardware)
 		})
 		.catch((err) => err)
 	})
