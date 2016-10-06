@@ -27,7 +27,8 @@ ItemForm.propTypes = {
 	updateItemFormPhoto: func.isRequired,
 	updateItemFormPersonInfo: func.isRequired,
 	updateItemFormHardwareInfo: func.isRequired,
-	itemFormFanout: func.isRequired,
+	newItemFanout: func.isRequired,
+	updateItemFanout: func.isRequired,
 	// END Bound to dispatch
 	isSubmitDisabled: bool.isRequired,
 }
@@ -56,7 +57,7 @@ export default function ItemForm (props, context) {
 		return hardwareList
 	}
 	function submitItems () {
-		props.itemFormFanout({
+		const item = {
 			itemId: props.itemId,
 			purchasedDate: props.purchasedDate,
 			serial: props.serial,
@@ -67,8 +68,10 @@ export default function ItemForm (props, context) {
 			note: props.note,
 			photo: props.photo,
 			photoName: props.photoName,
-			editing: props.editing,
-		})
+		}
+		props.editing === false
+		? props.newItemFanout(item)
+		: props.updateItemFanout(item)
 	}
 	return (
 		<Drawer active={props.isOpen}

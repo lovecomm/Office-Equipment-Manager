@@ -1,4 +1,4 @@
-import { saveItem } from 'helpers/api'
+import { saveNewItem, saveUpdatedItem } from 'helpers/api'
 import { addNewItemToFeed } from './feed'
 // import { updateItemInFeed } from './items'
 
@@ -160,21 +160,24 @@ function updateItemFormError (error) {
 	}
 }
 
-export function itemFormFanout (item) {
+export function newItemFanout (item) {
 	return function (dispatch, getState) {
-		const editing = item.editing
-		const uid = getState().users.authedId
-		saveItem(item, {uid: uid}) // add item to firebase
+		const associatedHardware = getState().hardwares[item.hardwareId]
+		saveNewItem(getState().items, item, getState().users.authedId, associatedHardware)
 		.then((itemWithId) => {
-			if (!editing) dispatch(addNewItemToFeed(itemWithId.itemId))
-			// editing
-			// ?	dispatch(updateItemInFeed(itemWithId.itemId, itemWithId))
-			// : dispatch(addNewItemToFeed(itemWithId.itemId))
+			dispatch(addNewItemToFeed(itemWithId.itemId))
 			dispatch(closeItemForm())
 		})
-		.catch((err) => {
-			dispatch(updateItemFormError(`Error saving item: ${err}`))
-		})
+		.catch((err) => dispatch(updateItemFormError(err.toString())))
+	}
+}
+
+export function updateItemFanout (item) {
+	return function (dispatch, getState) {
+		const associatedHardware = getState().hardwares[item.hardwareId]
+		saveUpdatedItem(getState().items, item, getState().users.authedId, associatedHardware)
+		.then((itemWithId) => dispatch(closeItemForm()))
+		.catch((err) => dispatch(updateItemFormError(err.toString())))
 	}
 }
 

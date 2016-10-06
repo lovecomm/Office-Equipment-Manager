@@ -238,10 +238,9 @@ export function saveUpdatedPerson (people, person, uid) {
 			const storedName = `${storedPerson.firstName} ${storedPerson.lastName}`
 			if (matchedName !== undefined && storedName.toLowerCase() !== matchedName.toLowerCase()) { // if there is a matchedName, then the new name for the person we're editing is already in use. As such, we have to check if it's matching against the stored version of itself, or a different name. The former is okay, the latter we want to prevent.
 				const errorMessage = `Sorry, but the person, ${matchedName} is already registered.`
-				console.warn('errorMessage', errorMessage)
 				reject(errorMessage)
 				throw new Error(errorMessage)
-			} else { console.warn('true'); return true }
+			} else { return true }
 		})
 		.then((isVerified) => {
 			const updatedPerson = {
@@ -267,33 +266,6 @@ function updatedPersonMatchesExistingPerson (people, person) {
 			if (newName.toLowerCase() === currentName.toLowerCase()) resolve(currentName)
 		})
 		resolve(undefined)
-	})
-}
-
-
-
-
-
-function verifyItem (item, isBeingEdited) {
-	return new Promise((resolve, reject) => {
-		getItems(({items, sortedItemIds}) => {
-			for (const itemId in items) {
-				// Test for Make & Model duplicate
-				if (`${items[itemId].serial}`.toUpperCase()	=== `${item.serial}`.toUpperCase()) {
-					if (!isBeingEdited) {
-						reject(`Sorry, but the serial number, ${item.serial} is already in use.`)
-					} else { // we want the user to be able to edit an item, without changing the serial number of that item.
-						getItem(item.itemId, (storedItem) => {
-							storedItem.serial !== item.serial
-							? reject(`Sorry, but the serial number, ${item.serial} is already in use.`)
-							: resolve(true)
-						}, (err) => reject(`Error in getItem call, within getItems call, within verifyItem: ${err}`))
-					}
-				}
-			}
-			// Mark as verified if email and fullname is not in use
-			resolve(true)
-		}, (err) => console.error(`Error in getItems call within verifyItem: ${err}`))
 	})
 }
 
@@ -325,6 +297,123 @@ function getPersonPromise (personId) {
 // END People related Firebase API Calls
 
 
+
+// START Items related Firebase API Calls
+export function saveNewItem (items, item, uid, hardware) {
+	return new Promise((resolve, reject) => {
+		const itemId = ref.child('feed/items').push().key
+		const itemPhotoRef = item.photo.name ? imagesRef.child(`hardwares/${item.photo.name}`) : undefined
+		verifyNewItem(items, item)
+		.then((isVerified) => {
+			return itemPhotoRef !== undefined
+			? itemPhotoRef.put(item.photo) // Store photo to firebase
+			: undefined
+		})
+		.then((photoSnapshot) => {
+			const newItemBase = {
+				itemId: itemId,
+				serial: item.serial,
+				dateCreated: new Date().toString(),
+				createdBy: uid,
+				dateLastUpdated: new Date().toString(),
+				purchasedDate: item.purchasedDate.toString(),
+				personId: item.personId,
+				hardwareId: item.hardwareId,
+				note: item.note,
+				collapsed: true,
+				hasSubContent: determineItemHasSubContent(item, hardware.description),
+			}
+			if (photoSnapshot === undefined) {
+				return Object.assign(newItemBase, {photo: {}})
+			} else {
+				return Object.assign(newItemBase, {photo: {
+					name: itemPhotoRef.name,
+					fullPath: itemPhotoRef.fullPath,
+					size: hardware.photo.size,
+					type: hardware.photo.type,
+					bucket: itemPhotoRef.bucket,
+					url: '', // Firebase URLs expire, so we get it each time the app loads, then store it in the redux tree
+				}})
+			}
+		})
+		.then((newItem) => {
+			console.warn('newItem', newItem)
+			ref.child(`feed/items/${itemId}`).set(newItem)
+			resolve(newItem)
+		})
+	})
+}
+
+function verifyNewItem (items, item) {
+	return new Promise((resolve, reject) => {
+		console.warn('in verifyNewItem')
+		Object.keys(items).forEach((itemId) => {
+			const newSerial = item.serial.toString()
+			const currentSerial = items[itemId].serial.toString()
+			console.log('newSerial, currentSerial', newSerial, currentSerial)
+			if (newSerial.toLowerCase() === currentSerial.toLowerCase()) {
+				console.warn('item.serial', item.serial, 'items[itemId].serial', items[itemId].serial); reject(`Sorry, but the serial number, ${item.serial} is already in use.`)
+			}
+		})
+		resolve(true)
+	})
+}
+
+export function saveUpdatedItem (items, item, uid, hardwares) {
+	return new Promise((resolve, reject) => {
+
+	})
+}
+
+function getItems (cb, errorCB) {
+	ref.child('feed/items').once('value', (snapshot) => {
+		const items = snapshot.val() || {}
+		const sortedItemIds = Object.keys(items).sort((a, b) => items[b].dateCreated - items[a].dateCreated)
+		cb({items, sortedItemIds})
+	}, errorCB)
+}
+
+function getItemsBound (cb, errorCB) { // this version is for the feed, its data is bounded to firebase
+	ref.child('feed/items').on('value', (snapshot) => {
+		const items = snapshot.val() || {}
+		const sortedItemIds = Object.keys(items).sort((a, b) => items[b].dateCreated - items[a].dateCreated)
+		cb({items, sortedItemIds})
+	}, errorCB)
+}
+
+function getItem (itemId, cb, errorCB) {
+	ref.child(`feed/items/${itemId}`).once('value', (snapshot) => {
+		const item = snapshot.val() || {}
+		cb(item)
+	}, errorCB)
+}
+// END Items related Firebase API Calls
+
+
+
+
+
+function verifyItem (item, isBeingEdited) {
+	return new Promise((resolve, reject) => {
+		getItems(({items, sortedItemIds}) => {
+			for (const itemId in items) {
+				if (`${items[itemId].serial}`.toUpperCase()	=== `${item.serial}`.toUpperCase()) {
+					if (!isBeingEdited) {
+						reject(`Sorry, but the serial number, ${item.serial} is already in use.`)
+					} else { // we want the user to be able to edit an item, without changing the serial number of that item.
+						getItem(item.itemId, (storedItem) => {
+							storedItem.serial !== item.serial
+							? reject(`Sorry, but the serial number, ${item.serial} is already in use.`)
+							: resolve(true)
+						}, (err) => reject(`Error in getItem call, within getItems call, within verifyItem: ${err}`))
+					}
+				}
+			}
+			resolve(true)
+		}, (err) => console.error(`Error in getItems call within verifyItem: ${err}`))
+	})
+}
+
 function updateItemHasSubContentDB (hardwareId, hardwareDescription) {
 	let newSubContentStatus
 	getItems(({items, sortedItemIds}) => {
@@ -344,9 +433,7 @@ function updateItemHasSubContentDB (hardwareId, hardwareDescription) {
 
 function getNewItemBase (item, itemId, uid) {
 	return new Promise((resolve, reject) => {
-		console.log('getnNewItemBase, item', item)
 		getHardware(item.hardwareId, (hardware) => {
-			console.log('getnNewItemBase within getHardware, item', item)
 			const newItemBase = {
 				itemId: itemId,
 				serial: item.serial,
@@ -416,29 +503,3 @@ export function saveItem (item, uid) {
 	.catch((err) => `Error in saveItem: ${err}`)
 }
 
-
-
-
-// START Getting Data from Firebase
-function getItems (cb, errorCB) {
-	ref.child('feed/items').once('value', (snapshot) => {
-		const items = snapshot.val() || {}
-		const sortedItemIds = Object.keys(items).sort((a, b) => items[b].dateCreated - items[a].dateCreated)
-		cb({items, sortedItemIds})
-	}, errorCB)
-}
-
-function getItemsBound (cb, errorCB) { // this version is for the feed, its data is bounded to firebase
-	ref.child('feed/items').on('value', (snapshot) => {
-		const items = snapshot.val() || {}
-		const sortedItemIds = Object.keys(items).sort((a, b) => items[b].dateCreated - items[a].dateCreated)
-		cb({items, sortedItemIds})
-	}, errorCB)
-}
-
-function getItem (itemId, cb, errorCB) {
-	ref.child(`feed/items/${itemId}`).once('value', (snapshot) => {
-		const item = snapshot.val() || {}
-		cb(item)
-	}, errorCB)
-}
