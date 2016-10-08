@@ -110,11 +110,11 @@ function verifyNewHardware (hardwares, hardware) {
 	})
 }
 
-export function saveUpdatedHardware (hardwares, hardware, uid) {
+export function saveUpdatedHardware (hardwares, hardware, uid, items) {
 	return new Promise((resolve, reject) => {
 		let updatedHardware
-		const hardwarePhotoRef = hardware.photo.name !== undefined ? imagesRef.child(`hardwares/${hardware.photo.name}`) : undefined // the photo is a required property on hardware. However, if there isn't a new photo being submitted with the updated hardware, then photo.name will be undefined.
 		let storedHardware
+		const hardwarePhotoRef = hardware.photo.name !== undefined ? imagesRef.child(`hardwares/${hardware.photo.name}`) : undefined // the photo is a required property on hardware. However, if there isn't a new photo being submitted with the updated hardware, then photo.name will be undefined.
 		const updatedHardwareBase = {
 			hardwareId: hardware.hardwareId,
 			make: hardware.make,
@@ -127,14 +127,14 @@ export function saveUpdatedHardware (hardwares, hardware, uid) {
 		return getHardwarePromise(hardware.hardwareId)
 		.then((storedHardwareInFB) => {
 			storedHardware = storedHardwareInFB.val()
-			return updatedHardwareMatchesExistingHardware(hardwares, hardware)
+			return testIfMakeAndModelExist(hardwares, hardware)
 		})
-		.then((matchedMakeAndModel) => {
+		.then((existingMakeAndModel) => {
 			const storedMakeAndModel = `${storedHardware.make} ${storedHardware.model}`
-			if (matchedMakeAndModel !== undefined &&
-				storedMakeAndModel.toLowerCase() !== matchedMakeAndModel.toLowerCase()) { // if there is a matchedMakeAndModel, then the new makeAndModel for the hardware we're editing is already in use. As such, we have to check if it's matching against the stored version of itself, or a different makeAndModel. The former is okay, the latter we want to prevent.
-				reject(`Sorry, but the hardware, ${matchedMakeAndModel} is already registered.`)
-				throw new Error(`Sorry, but the hardware, ${matchedMakeAndModel} is already registered.`)
+			if (existingMakeAndModel !== undefined &&
+				storedMakeAndModel.toLowerCase() !== existingMakeAndModel.toLowerCase()) { // if there is a existingMakeAndModel, then the new makeAndModel for the hardware we're editing is already in use. As such, we have to check if it's matching against the stored version of itself, or a different makeAndModel. The former is okay, the latter we want to prevent.
+				reject(`Sorry, but the hardware, ${existingMakeAndModel} is already registered.`)
+				throw new Error(`Sorry, but the hardware, ${existingMakeAndModel} is already registered.`)
 			} else { return true }
 		})
 		.then((isVerified) => {
@@ -160,12 +160,15 @@ export function saveUpdatedHardware (hardwares, hardware, uid) {
 			updatedHardware = modifiedHardware
 			return ref.child(`feed/hardwares/${updatedHardware.hardwareId}`).update(updatedHardware) // updating hardware in firebase
 		})
+		.then(() => {
+			return updateItemsHasSubContentStatus(hardware, items)
+		})
 		.then(() => resolve(updatedHardware))
 		.catch((err) => err)
 	})
 }
 
-function updatedHardwareMatchesExistingHardware (hardwares, hardware) {
+function testIfMakeAndModelExist (hardwares, hardware) {
 	return new Promise((resolve, reject) => {
 		Object.keys(hardwares).some((hardwareId) => {
 			const newMakeAndModel = `${hardware.make} ${hardware.model}`
@@ -173,6 +176,16 @@ function updatedHardwareMatchesExistingHardware (hardwares, hardware) {
 			if (newMakeAndModel.toLowerCase() === currenMakeAndModel.toLowerCase()) resolve(currenMakeAndModel)
 		})
 		resolve(undefined)
+	})
+}
+
+function updateItemsHasSubContentStatus (hardware, items) {
+	return new Promise((resolve, reject) => {
+		Object.keys(items).forEach((itemId) => {
+			const newSubContentStatus = determineItemHasSubContent(items[itemId], hardware.description)
+			if (newSubContentStatus !== items[itemId].hasSubContent) ref.child(`feed/items/${itemId}`).update({hasSubContent: newSubContentStatus})
+		})
+		resolve(true)
 	})
 }
 
@@ -336,8 +349,8 @@ export function saveNewItem (items, item, uid, hardware) {
 				return Object.assign(newItemBase, {photo: {
 					name: itemPhotoRef.name,
 					fullPath: itemPhotoRef.fullPath,
-					size: hardware.photo.size,
-					type: hardware.photo.type,
+					size: item.photo.size,
+					type: item.photo.type,
 					bucket: itemPhotoRef.bucket,
 					url: '', // Firebase URLs expire, so we get it each time the app loads, then store it in the redux tree
 				}})
@@ -354,7 +367,6 @@ export function saveNewItem (items, item, uid, hardware) {
 
 function verifyNewItem (items, item) {
 	return new Promise((resolve, reject) => {
-		console.warn('in verifyNewItem')
 		Object.keys(items).forEach((itemId) => {
 			const newSerial = item.serial.toString()
 			const currentSerial = items[itemId].serial.toString()
@@ -366,9 +378,73 @@ function verifyNewItem (items, item) {
 	})
 }
 
-export function saveUpdatedItem (items, item, uid, hardwares) {
+export function saveUpdatedItem (items, item, uid, hardware) {
 	return new Promise((resolve, reject) => {
+		let updatedItem
+		let storedItem
+		const itemPhotoRef = item.photo.name !== undefined ? imagesRef.child(`items/${item.photo.name}`) : undefined // the photo is a required property on hardware. However, if there isn't a new photo being submitted with the updated hardware, then photo.name will be undefined.
+		const updatedItemBase = {
+			itemId: item.itemId,
+			serial: item.serial,
+			createdBy: uid,
+			dateLastUpdated: new Date().toString(),
+			purchasedDate: item.purchasedDate.toString(),
+			personId: item.personId,
+			hardwareId: item.hardwareId,
+			note: item.note,
+			collapsed: true,
+			hasSubContent: determineItemHasSubContent(item, hardware.description),
+		}
+		return getItemPromise(item.itemId)
+		.then((storedItemInFB) => {
+			storedItem = storedItemInFB.val()
+			return testIfSerialExists(items, item)
+		})
+		.then((existingSerial) => {
+			const storedSerial = `${storedItem.serial}`
+			if (existingSerial !== undefined &&
+				storedSerial.toLowerCase() !== existingSerial.toLowerCase()) { // if there is a existingSerial, then the new serial for the item we're editing is already in use. As such, we have to check if it's matching against the stored version of itself, or a different serial. The former is okay, the latter we want to prevent.
+				const errorMessage = `Sorry, but the serial number, ${existingSerial} is already registered.`
+				reject(errorMessage)
+				throw new Error(errorMessage)
+			} else { return true }
+		})
+		.then((isVerified) => {
+			if (itemPhotoRef) {
+				return itemPhotoRef.put(item.photo) // Store photo to firebase
+			} else { return undefined } // is updating existing item, and does not have an updated photo
+		})
+		.then((photoSnapshot) => {
+			if (itemPhotoRef !== undefined || photoSnapshot !== undefined) { // new photo has been stored
+				return Object.assign(storedItem, updatedItemBase, { photo: {
+					name: itemPhotoRef.name,
+					fullPath: itemPhotoRef.fullPath,
+					size: item.photo.size,
+					type: item.photo.type,
+					bucket: itemPhotoRef.bucket,
+					url: '', // Firebase URLs expire, so we get it each time the app loads, then store it in the redux tree
+				}})
+			} else {
+				return Object.assign(storedItem, updatedItemBase)
+			}
+		})
+		.then((modifiedItem) => {
+			updatedItem = modifiedItem
+			return ref.child(`feed/items/${updatedItem.itemId}`).update(updatedItem)
+		})
+		.then(() => resolve(updatedItem))
+		.catch((err) => err)
+	})
+}
 
+function testIfSerialExists (items, item) {
+	return new Promise((resolve, reject) => {
+		Object.keys(items).some((itemId) => {
+			const newSerial = `${item.serial}`
+			const currentSerial = `${items[itemId].serial}`
+			if (newSerial.toLowerCase() === currentSerial.toLowerCase()) resolve(currentSerial)
+		})
+		resolve(undefined)
 	})
 }
 
@@ -388,6 +464,11 @@ function getItemsBound (cb, errorCB) { // this version is for the feed, its data
 	}, errorCB)
 }
 
+function getItemPromise (itemId) {
+	return ref.child(`feed/items/${itemId}`).once('value', (snapshot) => Promise.resolve(snapshot))
+	.catch((err) => err)
+}
+
 function getItem (itemId, cb, errorCB) {
 	ref.child(`feed/items/${itemId}`).once('value', (snapshot) => {
 		const item = snapshot.val() || {}
@@ -395,117 +476,3 @@ function getItem (itemId, cb, errorCB) {
 	}, errorCB)
 }
 // END Items related Firebase API Calls
-
-
-
-
-
-function verifyItem (item, isBeingEdited) {
-	return new Promise((resolve, reject) => {
-		getItems(({items, sortedItemIds}) => {
-			for (const itemId in items) {
-				if (`${items[itemId].serial}`.toUpperCase()	=== `${item.serial}`.toUpperCase()) {
-					if (!isBeingEdited) {
-						reject(`Sorry, but the serial number, ${item.serial} is already in use.`)
-					} else { // we want the user to be able to edit an item, without changing the serial number of that item.
-						getItem(item.itemId, (storedItem) => {
-							storedItem.serial !== item.serial
-							? reject(`Sorry, but the serial number, ${item.serial} is already in use.`)
-							: resolve(true)
-						}, (err) => reject(`Error in getItem call, within getItems call, within verifyItem: ${err}`))
-					}
-				}
-			}
-			resolve(true)
-		}, (err) => console.error(`Error in getItems call within verifyItem: ${err}`))
-	})
-}
-
-function updateItemHasSubContentDB (hardwareId, hardwareDescription) {
-	let newSubContentStatus
-	getItems(({items, sortedItemIds}) => {
-		// loop through each item. Update the ones that match the hardwareId to haveSubContent = true
-		sortedItemIds.forEach((itemId) => {
-			if (items[itemId].hardwareId === hardwareId) {
-				newSubContentStatus = determineItemHasSubContent(items[itemId], hardwareDescription)
-				return ref.child(`feed/items/${itemId}`).update({hasSubContent: newSubContentStatus})
-				.then(() => newSubContentStatus) // update hasSubContent status in firebase
-				.catch((err) => `Error in ref.child call within updateItemHasSubContentDB: ${err}`)
-			}
-		})
-	}, (err) => `Error in getItems call within updateItemHasSubContentDB: ${err}`)
-}
-
-
-
-function getNewItemBase (item, itemId, uid) {
-	return new Promise((resolve, reject) => {
-		getHardware(item.hardwareId, (hardware) => {
-			const newItemBase = {
-				itemId: itemId,
-				serial: item.serial,
-				purchasedDate: item.purchasedDate.toString(),
-				personId: item.personId,
-				hardwareId: item.hardwareId,
-				note: item.note,
-				collapsed: true,
-				hasSubContent: determineItemHasSubContent(item, hardware.description),
-				createdBy: uid.uid,
-				dateLastUpdated: new Date().toString(),
-			}
-			resolve(newItemBase)
-		}, (err) => reject(err))
-	})
-}
-
-function storeNewItemPhoto (photo) {
-	return new Promise((resolve, reject) => {
-		const itemPhotoRef = imagesRef.child(`items/${photo.name}`) // Get ref for person photo
-		return itemPhotoRef.put(photo) // saving person photo to firebase
-		.then((photoSnapshot) => resolve({photoSnapshot, itemPhotoRef}))
-		.catch((err) => `Error in storeNewItemPhoto: ${err}`)
-	})
-}
-
-export function saveItem (item, uid) {
-	const itemId = item.editing ? item.itemId : ref.child('feed/items').push().key
-	let newItem
-	return verifyItem(item, item.editing)
-	.then(() => {
-		return getNewItemBase(item, itemId, uid)
-	})
-	.then((newItemBase) => {
-		if (item.photo.size) { // if this is true, then a new photo will have been attached to a new item, or an edited item
-			return storeNewItemPhoto(item.photo)
-			.then(({photoSnapshot, itemPhotoRef}) => {
-				const photo = {
-					name: itemPhotoRef.name,
-					fullPath: itemPhotoRef.fullPath,
-					size: item.photo.size,
-					type: item.photo.type,
-					bucket: itemPhotoRef.bucket,
-					url: photoSnapshot.downloadURL,
-				}
-				return Object.assign(newItemBase, {photo: photo})
-			})
-		} else {
-			return Object.assign(newItemBase, {photo: {}})
-		}
-	})
-	.then((newItemBaseWithPhoto) => {
-		newItem = newItemBaseWithPhoto
-		if (item.editing) {
-			getItem(itemId, (originalItem) => {
-				return ref.child(`feed/items/${itemId}`).update(Object.assign(originalItem, newItem)) // updating edited item
-			}, (err) => console.error(`Error in updating new item, api.js, within .then((newItemBaseWithPhoto)): ${err}`))
-		} else {
-			return ref.child(`feed/items/${itemId}`).set(Object.assign(newItem, {
-				dateCreated: new Date().toString(),
-			})) // saving new item to firebase
-		}
-	})
-	.then(() => {
-		return newItem
-	})
-	.catch((err) => `Error in saveItem: ${err}`)
-}

@@ -135,7 +135,7 @@ export function newHardwareFanout (hardware) {
 
 export function updateHardwareFanout (hardware) {
 	return function (dispatch, getState) {
-		saveUpdatedHardware(getState().hardwares, hardware, getState().users.authedId)
+		saveUpdatedHardware(getState().hardwares, hardware, getState().users.authedId, getState().items)
 		.then(() => dispatch(closeHardwareForm()))
 		.catch((error) => dispatch(updateHardwareFormError(error.toString())))
 	}
