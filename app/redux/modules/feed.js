@@ -1,6 +1,6 @@
 import { addListener } from 'redux/modules/listeners'
 import { listenToFeed, deleteData } from 'helpers/api'
-import { prepItemsForFeed, updateItemsPersonId } from 'redux/modules/items'
+import { prepItemsForFeed } from 'redux/modules/items'
 import { prepPeopleForFeed } from 'redux/modules/people'
 import { prepHardwaresForFeed } from 'redux/modules/hardwares'
 
@@ -47,29 +47,16 @@ export function initiateDeleteData (dataType, dataId) {
 	}
 }
 
-function reduxMoveItemAssignmentToInventory (dispatch, items, people, personId) {
-	for (const id in people) {
-		if (people[id].firstName === 'INVENTORY') { // we have the personId for INVENTORY, now we just need to dispatch the update for each item to have it's personID to be assigned to inventory
-			for (const itemId in items) {
-				if (items[itemId].personId === personId) {
-					dispatch(updateItemsPersonId(itemId, id))
-				}
-			}
-		}
-	}
-}
-
 export function confirmDeleteData () {
 	return function (dispatch, getState) {
 		const dataType = getState().feed.toDeleteType
 		const dataId = getState().feed.toDeleteId
 		const items = getState().items
 		// Delete from Firebase Storage
-		deleteData(dataType, dataId)
+		deleteData(dataType, dataId, items, getState().people)
 		// Delete from Redux state tree
 		switch (dataType) {
 		case 'people':
-			reduxMoveItemAssignmentToInventory(dispatch, items, getState().people, dataId)
 			buildFilterOptions(dispatch, getState)
 			break
 		case 'hardwares':
@@ -599,7 +586,7 @@ export default function feed (state = initialState, action) {
 			...state,
 			itemIds: [action.itemId, ...state.itemIds],
 		}
-	case UPDATE_CONFIRM_DELETE_ACTIVE: 
+	case UPDATE_CONFIRM_DELETE_ACTIVE:
 		return {
 			...state,
 			confirmDeleteActive: action.confirmDeleteActive,
@@ -607,12 +594,12 @@ export default function feed (state = initialState, action) {
 	case UPDATE_TO_DELETE_TYPE:
 		return {
 			...state,
-			toDeleteType: action.toDeleteType, 
+			toDeleteType: action.toDeleteType,
 		}
 	case UPDATE_TO_DELETE_ID:
 		return {
 			...state,
-			toDeleteId: action.toDeleteId, 
+			toDeleteId: action.toDeleteId,
 		}
 	case ADD_FILTER_OPTIONS:
 	case UPDATE_FILTER_NAME_AND_TYPE:

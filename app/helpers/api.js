@@ -21,36 +21,18 @@ export function getUrl (imageFolder, photoName) {
 	.catch((err) => `Error in getUrl: ${err}`)
 }
 
-export function deleteData (dataType, dataId) {
+export function deleteData (dataType, dataId, items, people) {
 	switch (dataType) {
 	case 'people':
 		return ref.child(`feed/people/${dataId}`).remove() // remove person, but need to assign all associated items to INVENTORY
-		.then(() => {
-			getItems(({items}) => {
-				getPeople((people) => {
-					for (const personId in people) {
-						if (people[personId].firstName === 'INVENTORY') {
-							for (const itemId in items) {
-								if (items[itemId].personId === dataId) {
-									return ref.child(`feed/items/${itemId}`).update({personId: personId}) // update the item to be INVENTORY (still considered a person) if the user assigned to it is deleted
-								}
-							}
-						}
-					}
-				}, (err) => console.error(`Error in getPeople call within deleteData: ${err}`))
-			}, (err) => console.error(`Error in getItems call within deleteData: ${err}`))
-		})
+		.then(() => assignToInventory(items, people, dataId))
 		.catch((err) => `Error in deleteData, case 'people': ${err}`)
 	case 'hardwares':
 		return ref.child(`feed/hardwares/${dataId}`).remove()
 		.then(() => {
-			getItems(({items}) => {
-				for (const itemId in items) {
-					if (items[itemId].hardwareId === dataId) {
-						ref.child(`feed/items/${itemId}`).remove() // delete all items that use this hardware
-					}
-				}
-			}, (err) => console.error(`Error in getItems call within deleteData, case 'hardwares': ${err}`))
+			Object.keys(items).forEach((itemId) => {
+				if (items[itemId].hardwareId === dataId) return ref.child(`feed/items/${itemId}`).remove() // delete all items that use this hardware
+			})
 		})
 		.catch((err) => `Error in deleteData, case 'hardwares': ${err}`)
 	default: // items
@@ -58,10 +40,21 @@ export function deleteData (dataType, dataId) {
 		.catch((err) => `Error in deleteData, case 'default' - items: ${err}`)
 	}
 }
+
+function assignToInventory (items, people, deletedPersonId) {
+	return new Promise((resolve, reject) => {
+		Object.keys(people).forEach((personId) => { // need to find the personId for INVENTORY
+			if (people[personId].firstName === 'INVENTORY') {
+				console.log('found inventoryID ', personId)
+				Object.keys(items).forEach((itemId) => {
+					if (items[itemId].personId === deletedPersonId) return ref.child(`feed/items/${itemId}`).update({personId: personId})
+				})
+			}
+		})
+		resolve(true)
+	})
+}
 // END General Firebase API Calls
-
-
-
 // START Hardwares related Firebase API Calls
 export function saveNewHardware (hardwares, hardware, uid) {
 	return new Promise((resolve, reject) => {
@@ -196,21 +189,11 @@ function getHardwaresBound (cb, errorCB) { // this version is for the feed, its 
 	}, errorCB)
 }
 
-function getHardware (hardwareId, cb, errorCB) { // NOTE: this should eventually be replaced with getHardwarePromise`
-	ref.child(`feed/hardwares/${hardwareId}`).once('value', (snapshot) => {
-		const hardware = snapshot.val() || {}
-		cb(hardware)
-	}, errorCB)
-}
-
 function getHardwarePromise (hardwareId) {
 	return ref.child(`feed/hardwares/${hardwareId}`).once('value', (snapshot) => Promise.resolve(snapshot))
 	.catch((err) => err)
 }
 // END Hardwares related Firebase API Calls
-
-
-
 // START People related Firebase API Calls
 export function saveNewPerson (people, person, uid) {
 	return new Promise((resolve, reject) => {
@@ -314,9 +297,6 @@ function getPersonPromise (personId) {
 	.catch((err) => err)
 }
 // END People related Firebase API Calls
-
-
-
 // START Items related Firebase API Calls
 export function saveNewItem (items, item, uid, hardware) {
 	return new Promise((resolve, reject) => {
@@ -474,12 +454,5 @@ function getItemsBound (cb, errorCB) { // this version is for the feed, its data
 function getItemPromise (itemId) {
 	return ref.child(`feed/items/${itemId}`).once('value', (snapshot) => Promise.resolve(snapshot))
 	.catch((err) => err)
-}
-
-function getItem (itemId, cb, errorCB) {
-	ref.child(`feed/items/${itemId}`).once('value', (snapshot) => {
-		const item = snapshot.val() || {}
-		cb(item)
-	}, errorCB)
 }
 // END Items related Firebase API Calls
