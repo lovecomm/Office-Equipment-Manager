@@ -206,11 +206,7 @@ export default function itemForm (state = initialState, action) {
 			isOpen: true,
 		}
 	case CLOSE_ITEM_FORM:
-		console.log('collapsed Item Form')
-		return {
-			...state,
-			...initialState,
-		}
+		return initialState
 	case UPDATE_ITEM_FORM_SERIAL:
 		return {
 			...state,

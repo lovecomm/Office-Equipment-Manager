@@ -65,6 +65,7 @@ export function deleteData (dataType, dataId) {
 // START Hardwares related Firebase API Calls
 export function saveNewHardware (hardwares, hardware, uid) {
 	return new Promise((resolve, reject) => {
+		let newHardware
 		const hardwareId = ref.child('feed/hardwares').push().key
 		const hardwarePhotoRef = imagesRef.child(`hardwares/${hardware.photo.name}`)
 		verifyNewHardware(hardwares, hardware)
@@ -72,7 +73,7 @@ export function saveNewHardware (hardwares, hardware, uid) {
 			return hardwarePhotoRef.put(hardware.photo) // Store photo to firebase
 		})
 		.then((photoSnapshot) => {
-			const newHardware = {
+			const createdHardware = {
 				hardwareId: hardwareId,
 				dateCreated: new Date().toString(),
 				dateLastUpdated: new Date().toString(),
@@ -90,9 +91,10 @@ export function saveNewHardware (hardwares, hardware, uid) {
 					url: '', // Firebase URLs expire, so we get it each time the app loads, then store it in the redux tree
 				},
 			}
-			ref.child(`feed/hardwares/${hardwareId}`).set(newHardware) // saving hardwares to firebase
-			resolve(newHardware)
+			newHardware = createdHardware
+			return ref.child(`feed/hardwares/${hardwareId}`).set(newHardware) // saving hardwares to firebase
 		})
+		.then(() => resolve(newHardware))
 		.catch((err) => reject(err))
 	})
 }
@@ -110,6 +112,7 @@ function verifyNewHardware (hardwares, hardware) {
 
 export function saveUpdatedHardware (hardwares, hardware, uid) {
 	return new Promise((resolve, reject) => {
+		let updatedHardware
 		const hardwarePhotoRef = hardware.photo.name !== undefined ? imagesRef.child(`hardwares/${hardware.photo.name}`) : undefined // the photo is a required property on hardware. However, if there isn't a new photo being submitted with the updated hardware, then photo.name will be undefined.
 		let storedHardware
 		const updatedHardwareBase = {
@@ -153,10 +156,11 @@ export function saveUpdatedHardware (hardwares, hardware, uid) {
 				return Object.assign(storedHardware, updatedHardwareBase)
 			}
 		})
-		.then((updatedHardware) => {
-			ref.child(`feed/hardwares/${updatedHardware.hardwareId}`).update(updatedHardware) // updating hardware in firebase
-			resolve(updatedHardware)
+		.then((modifiedHardware) => {
+			updatedHardware = modifiedHardware
+			return ref.child(`feed/hardwares/${updatedHardware.hardwareId}`).update(updatedHardware) // updating hardware in firebase
 		})
+		.then(() => resolve(updatedHardware))
 		.catch((err) => err)
 	})
 }
@@ -197,10 +201,11 @@ function getHardwarePromise (hardwareId) {
 // START People related Firebase API Calls
 export function saveNewPerson (people, person, uid) {
 	return new Promise((resolve, reject) => {
+		let newPerson
 		const personId = ref.child('feed/people').push().key
 		return verifyNewPerson(people, person)
 		.then((isVerified) => {
-			const newPerson = {
+			newPerson = {
 				personId,
 				dateCreated: new Date().toString(),
 				createdBy: uid,
@@ -208,9 +213,9 @@ export function saveNewPerson (people, person, uid) {
 				firstName: person.firstName,
 				lastName: person.lastName,
 			}
-			ref.child(`feed/people/${personId}`).set(newPerson) // saving new person to firebase
-			resolve(newPerson)
+			return ref.child(`feed/people/${personId}`).set(newPerson) // saving new person to firebase
 		})
+		.then(() => resolve(newPerson))
 		.catch((err) => `Error in savePerson: ${err}`)
 	})
 }
@@ -229,6 +234,7 @@ function verifyNewPerson (people, person) {
 export function saveUpdatedPerson (people, person, uid) {
 	return new Promise((resolve, reject) => {
 		let storedPerson
+		let updatedPerson
 		return getPersonPromise(person.personId)
 		.then((storedPersonInFB) => {
 			storedPerson = storedPersonInFB.val()
@@ -243,7 +249,7 @@ export function saveUpdatedPerson (people, person, uid) {
 			} else { return true }
 		})
 		.then((isVerified) => {
-			const updatedPerson = {
+			updatedPerson = {
 				personId: person.personId,
 				dateCreated: new Date().toString(),
 				createdBy: uid,
@@ -251,9 +257,9 @@ export function saveUpdatedPerson (people, person, uid) {
 				firstName: person.firstName,
 				lastName: person.lastName,
 			}
-			ref.child(`feed/people/${person.personId}`).set(updatedPerson) // saving new person to firebase
-			resolve(updatedPerson)
+			return ref.child(`feed/people/${person.personId}`).set(updatedPerson) // saving new person to firebase
 		})
+		.then(() => resolve(updatedPerson))
 		.catch((err) => err)
 	})
 }
@@ -301,6 +307,7 @@ function getPersonPromise (personId) {
 // START Items related Firebase API Calls
 export function saveNewItem (items, item, uid, hardware) {
 	return new Promise((resolve, reject) => {
+		let newItem
 		const itemId = ref.child('feed/items').push().key
 		const itemPhotoRef = item.photo.name ? imagesRef.child(`hardwares/${item.photo.name}`) : undefined
 		verifyNewItem(items, item)
@@ -336,11 +343,12 @@ export function saveNewItem (items, item, uid, hardware) {
 				}})
 			}
 		})
-		.then((newItem) => {
-			console.warn('newItem', newItem)
-			ref.child(`feed/items/${itemId}`).set(newItem)
-			resolve(newItem)
+		.then((createdItem) => {
+			newItem = createdItem
+			return ref.child(`feed/items/${itemId}`).set(newItem)
 		})
+		.then(() => resolve(newItem))
+		.catch((err) => err)
 	})
 }
 
@@ -350,7 +358,6 @@ function verifyNewItem (items, item) {
 		Object.keys(items).forEach((itemId) => {
 			const newSerial = item.serial.toString()
 			const currentSerial = items[itemId].serial.toString()
-			console.log('newSerial, currentSerial', newSerial, currentSerial)
 			if (newSerial.toLowerCase() === currentSerial.toLowerCase()) {
 				console.warn('item.serial', item.serial, 'items[itemId].serial', items[itemId].serial); reject(`Sorry, but the serial number, ${item.serial} is already in use.`)
 			}
@@ -502,4 +509,3 @@ export function saveItem (item, uid) {
 	})
 	.catch((err) => `Error in saveItem: ${err}`)
 }
-
