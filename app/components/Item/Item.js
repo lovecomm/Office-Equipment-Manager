@@ -46,7 +46,7 @@ export default function Item (props) {
 				</CardText>
 				{props.hasSubContent && !props.collapsed
 					? <div>
-							{props.photo
+							{props.photo.name !== ''
 							? <CardMedia
 									aspectRatio='wide'
 									className={fullWidthPhoto}

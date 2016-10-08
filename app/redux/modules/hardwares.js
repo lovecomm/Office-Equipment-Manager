@@ -7,7 +7,7 @@ const UPDATE_HARDWARE_PHOTO_URL = 'UPDATE_HARDWARE_PHOTO_URL'
 export function prepHardwaresForFeed (hardwares) {
 	return function (dispatch, getState) {
 		return new Promise((resolve, reject) => {
-			dispatch(getUrlFromFirebase(hardwares))
+			dispatch(getHardwareUrlFromFirebase(hardwares))
 			.then(() => dispatch(addHardwareToFeed(hardwares)))
 			resolve()
 		})
@@ -21,7 +21,7 @@ function addHardwareToFeed (hardware) {
 	}
 }
 
-export function getUrlFromFirebase (hardwares) {
+function getHardwareUrlFromFirebase (hardwares) {
 	return function (dispatch, getState) {
 		return new Promise((resolve, reject) => {
 			Object.keys(hardwares).forEach((hardwareId) => {
@@ -44,7 +44,7 @@ function updateHardwarePhotoUrl (hardwareId, photoUrl) {
 }
 
 // REDUCERS
-const initialPhotoState = {
+const initialHardwarePhotoState = {
 	bucket: '',
 	fullPath: '',
 	name: '',
@@ -53,12 +53,12 @@ const initialPhotoState = {
 	url: '',
 }
 
-function photo (state = initialPhotoState, action) {
+function photoHardware (state = initialHardwarePhotoState, action) {
 	switch (action.type) {
 	case UPDATE_HARDWARE_PHOTO_URL:
 		return {
 			...state,
-			url: action.photoUrl
+			url: action.photoUrl,
 		}
 	default:
 		return state
@@ -72,7 +72,7 @@ function hardware (state = initialHardwareState, action) {
 	case UPDATE_HARDWARE_PHOTO_URL:
 		return {
 			...state,
-			photo: photo(state.photo, action)
+			photo: photoHardware(state.photo, action),
 		}
 	default:
 		return state

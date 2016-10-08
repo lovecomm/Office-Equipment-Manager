@@ -344,7 +344,14 @@ export function saveNewItem (items, item, uid, hardware) {
 				hasSubContent: determineItemHasSubContent(item, hardware.description),
 			}
 			if (photoSnapshot === undefined) {
-				return Object.assign(newItemBase, {photo: {}})
+				return Object.assign(newItemBase, {photo: {
+					name: '',
+					fullPath: '',
+					size: '',
+					type: '',
+					bucket: '',
+					url: '',
+				}})
 			} else {
 				return Object.assign(newItemBase, {photo: {
 					name: itemPhotoRef.name,
@@ -371,7 +378,7 @@ function verifyNewItem (items, item) {
 			const newSerial = item.serial.toString()
 			const currentSerial = items[itemId].serial.toString()
 			if (newSerial.toLowerCase() === currentSerial.toLowerCase()) {
-				console.warn('item.serial', item.serial, 'items[itemId].serial', items[itemId].serial); reject(`Sorry, but the serial number, ${item.serial} is already in use.`)
+				reject(`Sorry, but the serial number, ${item.serial} is already in use.`)
 			}
 		})
 		resolve(true)
