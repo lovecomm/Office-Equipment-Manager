@@ -25,9 +25,11 @@ header[data-react-toolbox="app-bar"] {
 	text-align: left;
 
 	> * {
-		padding: 0.35em 0;
+		padding: 0.15em 0;
+		position: relative;
+		transition: transform 0.3s ease;
 
-		&:first-of-type { padding-top: 0; }
+		&:hover { transform: scale(0.95); }
 	}
 
 	span[data-react-toolbox="font-icon"] > li {
@@ -40,6 +42,8 @@ header[data-react-toolbox="app-bar"] {
 	> hr {
 		opacity: 0.1;
 		padding: 0;
+
+		+ div { padding-top: 0; }
 	}
 }
 
