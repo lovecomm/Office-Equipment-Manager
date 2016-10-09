@@ -9,3 +9,4 @@ export HardwareFormToggleContainer from './FormToggles/HardwareFormToggleContain
 export PersonFormToggleContainer from './FormToggles/PersonFormToggleContainer'
 export ItemFormToggleContainer from './FormToggles/ItemFormToggleContainer'
 export EditMenuContainer from './EditMenu/EditMenuContainer'
+export NavigationContainer from './Navigation/NavigationContainer'

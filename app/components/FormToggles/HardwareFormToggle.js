@@ -10,6 +10,6 @@ HardwareFormToggle.propTypes = {
 export default function HardwareFormToggle ({handleOpenEditForm, hardware, editing}) {
 	return (
 		<MenuItem icon={(() => editing ? 'mode_edit' : 'laptop')()} onClick={handleOpenEditForm}
-			caption={(() => editing ? `${hardware.make} ${hardware.model}` : 'New Hardware')()}/>
+			caption={(() => editing ? `${hardware.make} ${hardware.model}` : 'Hardware')()}/>
 	)
 }

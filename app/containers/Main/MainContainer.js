@@ -3,10 +3,10 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as userActionCreators from 'redux/modules/users'
 import { firebaseAuth } from 'config/constants'
-import { Loader, Navigation } from 'components'
-import { FormsDrawersContainer } from 'containers'
+import { Loader } from 'components'
+import { FormsDrawersContainer, NavigationContainer } from 'containers'
 import { ThemeProvider } from 'react-css-themr'
-import { container, innerContainer } from './styles.scss'
+import { container, innerContainer, navWrapper, wrapper, innerWrapper } from './styles.scss'
 
 const MainContainer = React.createClass({
 	propTypes: {
@@ -33,13 +33,16 @@ const MainContainer = React.createClass({
 		return this.props.isFetching === true
 			? <Loader size={2} /> // We want this b/c there is going to be some lag while the Auth check is running
 			: (<ThemeProvider>
-				<div className={container}>
-					<Navigation isAuthed={this.props.isAuthed}/>
-					<div className={innerContainer}>
-						{this.props.children}
-						{/* <FormsDrawersContainer /> */}
+				<div className={wrapper}>
+					<div className={innerWrapper}>
+						<div className={container}>
+							<NavigationContainer isAuthed={this.props.isAuthed} className={navWrapper}/>
+							<div className={innerContainer}>
+								{this.props.children}
+							</div>
+							<FormsDrawersContainer />
+						</div>
 					</div>
-					<FormsDrawersContainer />
 				</div>
 			</ThemeProvider>
 		)
