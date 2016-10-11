@@ -3,6 +3,7 @@ header[data-react-toolbox="app-bar"] {
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
+	position: fixed;
 }
 
 .container {
@@ -29,7 +30,7 @@ header[data-react-toolbox="app-bar"] {
 		position: relative;
 		transition: transform 0.3s ease;
 
-		&:hover { transform: scale(0.95); }
+		// &:hover { transform: scale(0.95); }
 	}
 
 	span[data-react-toolbox="font-icon"] > li {

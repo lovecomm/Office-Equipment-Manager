@@ -26,7 +26,7 @@ Feed.propTypes = {
 
 export default function Feed (props) {
 	return props.isFetching === true
-		? <h3>{'Getting your items...'}</h3>
+		? <h3 style={{textAlign: 'center'}}>{'Getting your items...'}</h3>
 		: <div>
 			<div className={toolbar}>
 				<div className={filterWrapper}>

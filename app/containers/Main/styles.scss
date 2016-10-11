@@ -22,7 +22,8 @@
 }
 
 .innerContainer {
-  max-width: 1200px;
+  max-width: 1400px;
 	width: 100%;
+	padding-left: 188px; // this is to combat the fact that we want a fixed nav on the left, but it breaks document flow
   margin: 2em auto;
 }

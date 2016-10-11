@@ -45,7 +45,6 @@ function assignToInventory (items, people, deletedPersonId) {
 	return new Promise((resolve, reject) => {
 		Object.keys(people).forEach((personId) => { // need to find the personId for INVENTORY
 			if (people[personId].firstName === 'INVENTORY') {
-				console.log('found inventoryID ', personId)
 				Object.keys(items).forEach((itemId) => {
 					if (items[itemId].personId === deletedPersonId) return ref.child(`feed/items/${itemId}`).update({personId: personId})
 				})
@@ -271,13 +270,6 @@ function updatedPersonMatchesExistingPerson (people, person) {
 	})
 }
 
-function getPeople (cb, errorCB) {
-	ref.child('feed/people').once('value', (snapshot) => {
-		const people = snapshot.val() || {}
-		cb(people)
-	}, errorCB)
-}
-
 function getPeopleBound (cb, errorCB) { // this version is for the feed, its data is bounded to firebase
 	ref.child('feed/people').on('value', (snapshot) => {
 		const people = snapshot.val() || {}
@@ -433,14 +425,6 @@ function testIfSerialExists (items, item) {
 		})
 		resolve(undefined)
 	})
-}
-
-function getItems (cb, errorCB) {
-	ref.child('feed/items').once('value', (snapshot) => {
-		const items = snapshot.val() || {}
-		const sortedItemIds = Object.keys(items).sort((a, b) => items[b].dateCreated - items[a].dateCreated)
-		cb({items, sortedItemIds})
-	}, errorCB)
 }
 
 function getItemsBound (cb, errorCB) { // this version is for the feed, its data is bounded to firebase

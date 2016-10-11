@@ -42,6 +42,7 @@ export default function HardwareForm (props, context) {
 	return (
 		<Drawer active={props.isOpen}
 			className={drawer}
+			type='right'
 			onOverlayClick={props.closeHardwareForm}>
 			<div className={headline}>
 				{props.editing === false

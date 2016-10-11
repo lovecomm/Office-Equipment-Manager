@@ -76,6 +76,7 @@ export default function ItemForm (props, context) {
 	return (
 		<Drawer active={props.isOpen}
 			className={drawer}
+			type='right'
 			onOverlayClick={props.closeItemForm}>
 			<div className={headline}>
 				{props.editing === false

@@ -33,6 +33,7 @@ export default function PersonForm (props, context) {
 	return (
 		<Drawer active={props.isOpen}
 			className={drawer}
+			type='right'
 			onOverlayClick={props.closePersonForm}>
 			<div className={headline}>
 				{props.editing === false
