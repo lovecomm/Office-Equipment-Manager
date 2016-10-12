@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import { MenuItem } from 'react-toolbox/lib/menu'
+import { Button } from 'react-toolbox/lib'
 
 PersonFormToggle.propTypes = {
 	handleOpenEditForm: PropTypes.func.isRequired,
@@ -7,8 +8,9 @@ PersonFormToggle.propTypes = {
 }
 
 export default function PersonFormToggle ({handleOpenEditForm, editing}) {
-	return (
-		<MenuItem icon={(() => editing ? 'mode_edit' : 'people')()} onClick={handleOpenEditForm}
-			caption={(() => editing ? 'Edit' : 'Person')()}/>
-	)
+	if (editing) {
+		return (<Button label='Edit' onClick={handleOpenEditForm} />)
+	} else {
+		return (<MenuItem icon='people' onClick={handleOpenEditForm} caption='Person'/>)
+	}
 }

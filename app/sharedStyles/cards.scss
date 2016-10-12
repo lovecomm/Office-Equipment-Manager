@@ -18,19 +18,6 @@ div[data-react-toolbox="card"] {
 	}
 }
 
-.cardHasSubContent div[data-react-toolbox="card"] {
-	background-color: white;
-	cursor: pointer;
-
-	&.cardNotExpanded {
-
-	}
-
-	.cardExpanded {
-
-	}
-}
-
 .fullWidthPhoto { margin: 0; }
 
 .chips {
