@@ -95,7 +95,8 @@ export default function HardwareForm (props, context) {
 							}
 						})()}
 						primary={true} />
-					<input type='file' onChange={(e) => props.updateHardwareFormPhoto(e.target.files[0])} className={imageInput}/>
+					<input type='file' required={true} onChange={(e) => props.updateHardwareFormPhoto(e.target.files[0])}
+					className={imageInput}/>
 				</div>
 				<br />
 				{props.photoName !== ''

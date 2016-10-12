@@ -27,7 +27,7 @@ export default function Hardware (props) {
 					return props.itemIds.map((id) => (
 						<div key={`hardware_item_${id}`} style={{position: 'relative'}}>
 							<CardTitle
-								avatar='http://www.goliath.com/wp-content/uploads/2015/12/darth-vader-730x400.jpg'
+								avatar={props.items[id].person.photo.url}
 								title={`${props.items[id].person.firstName} ${props.items[id].person.lastName}`}
 								subtitle={props.items[id].serial}/>
 							<CardActions className={subCardActions}><EditMenuContainer id={id} type='item'/></CardActions>

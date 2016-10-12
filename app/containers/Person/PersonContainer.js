@@ -41,6 +41,7 @@ function mapStateToProps ({people, items, hardwares}, props) {
 		firstName: person.firstName,
 		lastName: person.lastName,
 		collapsed: person.collapsed,
+		photoUrl: person.photo.url,
 		items: personsItems,
 		itemIds,
 	}

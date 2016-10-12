@@ -8,6 +8,7 @@ Person.propTypes = {
 	personId: PropTypes.string.isRequired,
 	firstName: PropTypes.string.isRequired,
 	lastName: PropTypes.string.isRequired,
+	photoUrl: PropTypes.string.isRequired,
 	items: PropTypes.object.isRequired,
 	itemIds: PropTypes.array.isRequired,
 	collapsed: PropTypes.bool.isRequired,
@@ -18,7 +19,7 @@ export default function Person (props) {
 	return (
 		<Card>
 			<CardTitle
-				avatar='http://www.goliath.com/wp-content/uploads/2015/12/darth-vader-730x400.jpg'
+				avatar={props.photoUrl}
 				title={(() => `${props.firstName} ${props.lastName}`)()}
 				subtitle={`Items: ${props.itemIds.length.toString()}`} />
 			{(() => {

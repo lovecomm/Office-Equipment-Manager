@@ -5,6 +5,8 @@ const OPEN_PERSON_FORM = 'OPEN_PERSON_FORM'
 const CLOSE_PERSON_FORM = 'CLOSE_PERSON_FORM'
 const UPDATE_PERSON_FORM_FIRST_NAME = 'UPDATE_PERSON_FORM_FIRST_NAME'
 const UPDATE_PERSON_FORM_LAST_NAME = 'UPDATE_PERSON_FORM_LAST_NAME'
+const UPDATE_PERSON_FORM_PHOTO = 'UPDATE_PERSON_FORM_PHOTO'
+const UPDATE_PERSON_FORM_PHOTO_NAME = 'UPDATE_PERSON_FORM_PHOTO_NAME'
 const UPDATE_PERSON_FORM_PERSON_ID = 'UPDATE_PERSON_FORM_PERSON_ID'
 const UPDATE_PERSON_FORM_ERROR = 'UPDATE_PERSON_FORM_ERROR'
 const UPDATE_PERSON_FORM_EDITING = 'UPDATE_PERSON_FORM_EDITING'
@@ -63,6 +65,20 @@ function PersonFormAddPerson (people) {
 	}
 }
 
+export function updatePersonFormPhoto (photo) {
+	return {
+		type: UPDATE_PERSON_FORM_PHOTO,
+		photo,
+	}
+}
+
+function updatePersonFormPhotoName (photoName) {
+	return {
+		type: UPDATE_PERSON_FORM_PHOTO_NAME,
+		photoName,
+	}
+}
+
 function activateCurrentPerson (dispatch, getState, personId) {
 	return new Promise((resolve, reject) => {
 		const person = getState().people[personId]
@@ -70,6 +86,7 @@ function activateCurrentPerson (dispatch, getState, personId) {
 		dispatch(updatePersonFormPersonId(person.personId))
 		dispatch(updatePersonFormFirstName(person.firstName))
 		dispatch(updatePersonFormLastName(person.lastName))
+		person.photo !== undefined ? dispatch(updatePersonFormPhotoName(person.photo.name)) : dispatch(updatePersonFormPhotoName(''))
 		resolve(true)
 	})
 }
@@ -112,6 +129,8 @@ const initialState = {
 	isOpen: false,
 	error: '',
 	editing: false,
+	photo: {},
+	photoName: '',
 }
 
 export default function personForm (state = initialState, action) {
@@ -122,14 +141,7 @@ export default function personForm (state = initialState, action) {
 			isOpen: true,
 		}
 	case CLOSE_PERSON_FORM:
-		return {
-			personId: '',
-			firstName: '',
-			lastName: '',
-			isOpen: false,
-			error: '',
-			editing: false,
-		}
+		return initialState
 	case UPDATE_PERSON_FORM_PERSON_ID:
 		return {
 			...state,
@@ -159,6 +171,17 @@ export default function personForm (state = initialState, action) {
 		return {
 			...state,
 			error: action.error,
+		}
+	case UPDATE_PERSON_FORM_PHOTO:
+		return {
+			...state,
+			photo: action.photo,
+			photoName: action.photo.name,
+		}
+	case UPDATE_PERSON_FORM_PHOTO_NAME:
+		return {
+			...state,
+			photoName: action.photoName,
 		}
 	default :
 		return state

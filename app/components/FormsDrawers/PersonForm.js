@@ -1,19 +1,23 @@
 import React, { PropTypes } from 'react'
+import { processImage } from 'helpers/utils'
 import { Drawer, Input, Button } from 'react-toolbox/lib'
-import { button, headline, formWrapper, drawer, error } from './styles.scss'
+import { button, headline, formWrapper, drawer, error, imageInput } from './styles.scss'
 
-const	{ func, bool, string } = PropTypes
+const	{ func, bool, string, object } = PropTypes
 
 PersonForm.propTypes = {
 	personId: string.isRequired,
 	firstName: string.isRequired,
 	lastName: string.isRequired,
+	photo: object.isRequired,
+	photoName: string.isRequired,
 	isOpen: bool.isRequired,
 	editing: bool.isRequired,
 	closePersonForm: func.isRequired,
 	isSubmitDisabled: bool.isRequired,
 	updatePersonFormFirstName: func.isRequired,
 	updatePersonFormLastName: func.isRequired,
+	updatePersonFormPhoto: func.isRequired,
 	newPersonFanout: func.isRequired,
 	updatePersonFanout: func.isRequired,
 	error: string.isRequired,
@@ -21,14 +25,22 @@ PersonForm.propTypes = {
 
 export default function PersonForm (props, context) {
 	function submitPeople () {
-		const person = {
+		let person = {
 			personId: props.personId,
 			firstName: props.firstName,
 			lastName: props.lastName,
 		}
-		props.editing === false
-		? props.newPersonFanout(person)
-		: props.updatePersonFanout(person)
+		if (props.photo.name) {
+			processImage(props.photo)
+			.then((resizedPhoto) => {
+				person = Object.assign(person, {photo: resizedPhoto})
+				props.editing === false
+				? props.newPersonFanout(person)
+				: props.updatePersonFanout(person)
+			})
+		} else {
+			props.updatePersonFanout(person) // new people requires a photo, so we don't need to test if it's editing here
+		}
 	}
 	return (
 		<Drawer active={props.isOpen}
@@ -54,6 +66,21 @@ export default function PersonForm (props, context) {
 					value={props.lastName}
 					hint='Last Name'
 					required={true}/>
+				<br />
+				<div className={button}>
+					<Button
+						raised={true}
+						label={(() => {
+							if (props.editing && props.photoName !== '') { // I'm testing for photoName here, because I'm loading the photoName into the form when the item is being edited, not the original photo object itself.
+								return 'Change Photo?'
+							} else {
+								return 'Add Photo'
+							}
+						})()}
+						primary={true} />
+					<input type='file' required={true} onChange={(e) => props.updatePersonFormPhoto(e.target.files[0])}
+					className={imageInput}/>
+				</div>
 				<br />
 				<Button label={(() => props.editing ? 'Update' : 'Save Person')()} type='submit' raised={true}
 					accent={true}

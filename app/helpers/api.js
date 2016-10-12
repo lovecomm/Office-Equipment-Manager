@@ -62,11 +62,7 @@ export function saveNewHardware (hardwares, hardware, uid) {
 		const hardwarePhotoRef = imagesRef.child(`hardwares/${hardware.photo.name}`)
 		verifyNewHardware(hardwares, hardware)
 		.then((isVerified) => {
-			// return hardwarePhotoRef.put(hardware.photo) // Store photo to firebase
-			return processImage(hardware.photo)
-		})
-		.then((processedImage) => {
-			return hardwarePhotoRef.put(processedImage) // Store photo to firebase
+			return hardwarePhotoRef.put(hardware.photo) // Store photo to firebase
 		})
 		.then((photoSnapshot) => {
 			const createdHardware = {
@@ -203,8 +199,12 @@ export function saveNewPerson (people, person, uid) {
 	return new Promise((resolve, reject) => {
 		let newPerson
 		const personId = ref.child('feed/people').push().key
+		const personPhotoRef = imagesRef.child(`people/${person.photo.name}`)
 		return verifyNewPerson(people, person)
 		.then((isVerified) => {
+			return personPhotoRef.put(person.photo)
+		})
+		.then((photoSnapshot) => {
 			newPerson = {
 				personId,
 				dateCreated: new Date().toString(),
@@ -213,6 +213,14 @@ export function saveNewPerson (people, person, uid) {
 				firstName: person.firstName,
 				lastName: person.lastName,
 				collapsed: true,
+				photo: {
+					name: personPhotoRef.name,
+					fullPath: personPhotoRef.fullPath,
+					size: person.photo.size,
+					type: person.photo.type,
+					bucket: personPhotoRef.bucket,
+					url: '', // Firebase URLs expire, so we get it each time the app loads, then store it in the redux tree
+				},
 			}
 			return ref.child(`feed/people/${personId}`).set(newPerson) // saving new person to firebase
 		})
@@ -236,6 +244,15 @@ export function saveUpdatedPerson (people, person, uid) {
 	return new Promise((resolve, reject) => {
 		let storedPerson
 		let updatedPerson
+		const personPhotoRef = person.photo.name !== undefined ? imagesRef.child(`people/${person.photo.name}`) : undefined // the photo is a required property on hardware. However, if there isn't a new photo being submitted with the updated hardware, then photo.name will be undefined.
+		const updatedPersonBase = {
+			personId: person.personId,
+			dateCreated: new Date().toString(),
+			createdBy: uid,
+			dateLastUpdated: new Date().toString(),
+			firstName: person.firstName,
+			lastName: person.lastName,
+		}
 		return getPersonPromise(person.personId)
 		.then((storedPersonInFB) => {
 			storedPerson = storedPersonInFB.val()
@@ -250,15 +267,36 @@ export function saveUpdatedPerson (people, person, uid) {
 			} else { return true }
 		})
 		.then((isVerified) => {
-			updatedPerson = {
-				personId: person.personId,
-				dateCreated: new Date().toString(),
-				createdBy: uid,
-				dateLastUpdated: new Date().toString(),
-				firstName: person.firstName,
-				lastName: person.lastName,
+			// updatedPerson = {
+			// 	personId: person.personId,
+			// 	dateCreated: new Date().toString(),
+			// 	createdBy: uid,
+			// 	dateLastUpdated: new Date().toString(),
+			// 	firstName: person.firstName,
+			// 	lastName: person.lastName,
+			// }
+			// return ref.child(`feed/people/${person.personId}`).set(updatedPerson) // saving new person to firebase
+			if (personPhotoRef) {
+				return personPhotoRef.put(person.photo)
+			} else { return undefined }
+		})
+		.then((photoSnapshot) => {
+			if (personPhotoRef !== undefined || photoSnapshot !== undefined) { // new photo has been stored
+				return Object.assign(storedPerson, updatedPersonBase, { photo: {
+					name: personPhotoRef.name,
+					fullPath: personPhotoRef.fullPath,
+					size: person.photo.size,
+					type: person.photo.type,
+					bucket: personPhotoRef.bucket,
+					url: '',
+				}})
+			} else {
+				return Object.assign(storedPerson, updatedPersonBase)
 			}
-			return ref.child(`feed/people/${person.personId}`).set(updatedPerson) // saving new person to firebase
+		})
+		.then((modifiedPerson) => {
+			updatedPerson = modifiedPerson
+			return ref.child(`feed/people/${person.personId}`).update(updatedPerson) // saving new person to firebase
 		})
 		.then(() => resolve(updatedPerson))
 		.catch((err) => err)
