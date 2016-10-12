@@ -64,10 +64,6 @@ const base = {
 		],
 		root: path.resolve('./app'),
 	},
-	// node: {
-	// 	fs: 'empty',
-	// 	child_process: 'empty',
-	// },
 }
 
 const developmentConfig = {

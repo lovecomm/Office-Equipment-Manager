@@ -2,6 +2,7 @@
   "feed" : {
     "hardwares" : {
       "-KRettGnKoNpNcHPBc1j" : {
+        "collapsed" : true,
         "createdBy" : "CCj2YiaCETR4qVGBPSXCRgoySH32",
         "dateCreated" : "Wed Sep 14 2016 16:53:24 GMT-0600 (MDT)",
         "dateLastUpdated" : "Wed Sep 14 2016 16:53:24 GMT-0600 (MDT)",
@@ -16,10 +17,11 @@
           "name" : "Mid 2015 15 MacBook Pro Retina.jpg",
           "size" : 48445,
           "type" : "image/jpeg",
-          "url" : "https://firebasestorage.googleapis.com/v0/b/equipment-manager-5a647.appspot.com/o/images%2Fhardwares%2FMid%202015%2015%20MacBook%20Pro%20Retina.jpg?alt=media&token=52351d7a-aa2c-43e7-99d7-bc16583cd050"
+          "url" : ""
         }
       },
       "-KRez2EH-fH3FKs0Sy10" : {
+        "collapsed" : true,
         "createdBy" : "CCj2YiaCETR4qVGBPSXCRgoySH32",
         "dateCreated" : "Wed Sep 14 2016 17:15:54 GMT-0600 (MDT)",
         "dateLastUpdated" : "Wed Sep 14 2016 17:15:54 GMT-0600 (MDT)",
@@ -34,10 +36,11 @@
           "name" : "imac-27-retina.jpg",
           "size" : 69627,
           "type" : "image/jpeg",
-          "url" : "https://firebasestorage.googleapis.com/v0/b/equipment-manager-5a647.appspot.com/o/images%2Fhardwares%2Fimac-27-retina.jpg?alt=media&token=14565b61-e777-45cf-81fd-4f0f04973fb7"
+          "url" : ""
         }
       },
       "-KRezEVrahUjXYtM5XO6" : {
+        "collapsed" : true,
         "createdBy" : "CCj2YiaCETR4qVGBPSXCRgoySH32",
         "dateCreated" : "Wed Sep 14 2016 17:16:45 GMT-0600 (MDT)",
         "dateLastUpdated" : "Wed Sep 14 2016 17:16:45 GMT-0600 (MDT)",
@@ -52,10 +55,11 @@
           "name" : "147391.jpg",
           "size" : 174215,
           "type" : "image/jpeg",
-          "url" : "https://firebasestorage.googleapis.com/v0/b/equipment-manager-5a647.appspot.com/o/images%2Fhardwares%2F147391.jpg?alt=media&token=a26b1bdd-deed-47bd-8228-eb5a03ba6f35"
+          "url" : ""
         }
       },
       "-KRezR_D679Khx4DQg4l" : {
+        "collapsed" : true,
         "createdBy" : "CCj2YiaCETR4qVGBPSXCRgoySH32",
         "dateCreated" : "Wed Sep 14 2016 17:17:39 GMT-0600 (MDT)",
         "dateLastUpdated" : "Wed Sep 14 2016 17:17:39 GMT-0600 (MDT)",
@@ -70,10 +74,11 @@
           "name" : "asus24.jpg",
           "size" : 18241,
           "type" : "image/jpeg",
-          "url" : "https://firebasestorage.googleapis.com/v0/b/equipment-manager-5a647.appspot.com/o/images%2Fhardwares%2Fasus24.jpg?alt=media&token=202e64e7-29d4-4f60-a78b-53d16ef5da68"
+          "url" : ""
         }
       },
       "-KRezdft_w4shrWrLBh_" : {
+        "collapsed" : true,
         "createdBy" : "CCj2YiaCETR4qVGBPSXCRgoySH32",
         "dateCreated" : "Wed Sep 14 2016 17:18:33 GMT-0600 (MDT)",
         "dateLastUpdated" : "Wed Sep 14 2016 17:18:33 GMT-0600 (MDT)",
@@ -88,7 +93,7 @@
           "name" : "avaya.jpg",
           "size" : 94337,
           "type" : "image/jpeg",
-          "url" : "https://firebasestorage.googleapis.com/v0/b/equipment-manager-5a647.appspot.com/o/images%2Fhardwares%2Favaya.jpg?alt=media&token=26659c09-4a95-4ffe-a170-70c8a490f9f6"
+          "url" : ""
         }
       }
     },
@@ -109,7 +114,7 @@
           "name" : "logansmacbook.jpg",
           "size" : 632359,
           "type" : "image/jpeg",
-          "url" : "https://firebasestorage.googleapis.com/v0/b/equipment-manager-5a647.appspot.com/o/images%2Fitems%2Flogansmacbook.jpg?alt=media&token=faa729ba-f2ce-4e29-aeda-a0fe03ac51ab"
+          "url" : ""
         },
         "purchasedDate" : "Wed Sep 14 2016 16:59:48 GMT-0600 (MDT)",
         "serial" : "0001"
@@ -124,6 +129,14 @@
         "itemId" : "-KRezkocKPzOBNM7mnCc",
         "note" : "",
         "personId" : "-KRez5-kdui_KPVfpqQK",
+        "photo" : {
+          "bucket" : "equipment-manager-5a647.appspot.com",
+          "fullPath" : "images/items/logansmacbook.jpg",
+          "name" : "logansmacbook.jpg",
+          "size" : 632359,
+          "type" : "image/jpeg",
+          "url" : ""
+        },
         "purchasedDate" : "Mon Jan 05 2015 17:17:07 GMT-0700 (MST)",
         "serial" : "0002"
       },
@@ -137,6 +150,14 @@
         "itemId" : "-KSMiBNucFM2V9mvU1et",
         "note" : "",
         "personId" : "-KResfQzR9hM4Ej8yvdT",
+        "photo" : {
+          "bucket" : "",
+          "fullPath" : "",
+          "name" : "",
+          "size" : "",
+          "type" : "",
+          "url" : ""
+        },
         "purchasedDate" : "Mon Sep 02 2013 09:41:33 GMT-0600 (MDT)",
         "serial" : "0003"
       },
@@ -150,6 +171,14 @@
         "itemId" : "-KSMiI-jsvsGkVXux6Gp",
         "note" : "Logan's second Monitor",
         "personId" : "-KResfQzR9hM4Ej8yvdT",
+        "photo" : {
+          "bucket" : "",
+          "fullPath" : "",
+          "name" : "",
+          "size" : "",
+          "type" : "",
+          "url" : ""
+        },
         "purchasedDate" : "Mon Sep 23 2013 09:41:33 GMT-0600 (MDT)",
         "serial" : "0004"
       },
@@ -163,6 +192,14 @@
         "itemId" : "-KSMiOtu7PwwvrhcU2DH",
         "note" : "",
         "personId" : "-KResfQzR9hM4Ej8yvdT",
+        "photo" : {
+          "bucket" : "",
+          "fullPath" : "",
+          "name" : "",
+          "size" : "",
+          "type" : "",
+          "url" : ""
+        },
         "purchasedDate" : "Sun Sep 23 2012 09:41:33 GMT-0600 (MDT)",
         "serial" : "0005"
       },
@@ -176,6 +213,14 @@
         "itemId" : "-KSMibn7vCUhClOPi3J-",
         "note" : "One ring to rule the galaxy. Erm, I mean...",
         "personId" : "-KSMhSaE7kNxsIqfPDSG",
+        "photo" : {
+          "bucket" : "",
+          "fullPath" : "",
+          "name" : "",
+          "size" : "",
+          "type" : "",
+          "url" : ""
+        },
         "purchasedDate" : "Wed Jul 01 2015 09:41:33 GMT-0600 (MDT)",
         "serial" : "0006"
       },
@@ -189,6 +234,14 @@
         "itemId" : "-KSMiolUE30vJg6AY9Q6",
         "note" : "",
         "personId" : "-KSMhSaE7kNxsIqfPDSG",
+        "photo" : {
+          "bucket" : "",
+          "fullPath" : "",
+          "name" : "",
+          "size" : "",
+          "type" : "",
+          "url" : ""
+        },
         "purchasedDate" : "Mon Sep 23 2013 09:41:33 GMT-0600 (MDT)",
         "serial" : "0007"
       },
@@ -202,6 +255,14 @@
         "itemId" : "-KSMiuffjaLeKWQTZXUp",
         "note" : "",
         "personId" : "-KRez5-kdui_KPVfpqQK",
+        "photo" : {
+          "bucket" : "",
+          "fullPath" : "",
+          "name" : "",
+          "size" : "",
+          "type" : "",
+          "url" : ""
+        },
         "purchasedDate" : "Mon Sep 23 2013 09:41:33 GMT-0600 (MDT)",
         "serial" : "0008"
       },
@@ -215,6 +276,14 @@
         "itemId" : "-KSMj-BECLyty7zIi64P",
         "note" : "",
         "personId" : "-KRez7DoNW1shUO_L8On",
+        "photo" : {
+          "bucket" : "",
+          "fullPath" : "",
+          "name" : "",
+          "size" : "",
+          "type" : "",
+          "url" : ""
+        },
         "purchasedDate" : "Tue Sep 23 2014 09:41:33 GMT-0600 (MDT)",
         "serial" : "0009"
       },
@@ -228,6 +297,14 @@
         "itemId" : "-KSMj5Pr23167VMgQzkg",
         "note" : "",
         "personId" : "-KSMhUh6oT_S18mO5cWO",
+        "photo" : {
+          "bucket" : "",
+          "fullPath" : "",
+          "name" : "",
+          "size" : "",
+          "type" : "",
+          "url" : ""
+        },
         "purchasedDate" : "Fri Sep 23 2016 09:41:33 GMT-0600 (MDT)",
         "serial" : "0010"
       },
@@ -241,6 +318,14 @@
         "itemId" : "-KSMjAK0RXpONG_ALDl9",
         "note" : "",
         "personId" : "-KSMhYWUZhufRWmyB5wz",
+        "photo" : {
+          "bucket" : "",
+          "fullPath" : "",
+          "name" : "",
+          "size" : "",
+          "type" : "",
+          "url" : ""
+        },
         "purchasedDate" : "Tue Dec 01 2015 09:41:33 GMT-0700 (MST)",
         "serial" : "0011"
       },
@@ -254,6 +339,14 @@
         "itemId" : "-KSMjEgr5gtma_AdbR0h",
         "note" : "",
         "personId" : "-KSMhUh6oT_S18mO5cWO",
+        "photo" : {
+          "bucket" : "",
+          "fullPath" : "",
+          "name" : "",
+          "size" : "",
+          "type" : "",
+          "url" : ""
+        },
         "purchasedDate" : "Mon Sep 23 2013 09:41:33 GMT-0600 (MDT)",
         "serial" : "0012"
       },
@@ -267,6 +360,14 @@
         "itemId" : "-KSMjJdo040XXPoBNYkP",
         "note" : "",
         "personId" : "-KSMhYWUZhufRWmyB5wz",
+        "photo" : {
+          "bucket" : "",
+          "fullPath" : "",
+          "name" : "",
+          "size" : "",
+          "type" : "",
+          "url" : ""
+        },
         "purchasedDate" : "Tue Sep 23 2014 09:41:33 GMT-0600 (MDT)",
         "serial" : "0013"
       },
@@ -280,6 +381,14 @@
         "itemId" : "-KSMjPSV-PGPdcGpxO6z",
         "note" : "",
         "personId" : "-KSMhaFGXnWOxmcS4V8l",
+        "photo" : {
+          "bucket" : "",
+          "fullPath" : "",
+          "name" : "",
+          "size" : "",
+          "type" : "",
+          "url" : ""
+        },
         "purchasedDate" : "Tue Jul 05 2016 09:41:33 GMT-0600 (MDT)",
         "serial" : "0014"
       },
@@ -293,6 +402,14 @@
         "itemId" : "-KSMjTKh2K3H3_31z8NN",
         "note" : "",
         "personId" : "-KSMhaFGXnWOxmcS4V8l",
+        "photo" : {
+          "bucket" : "",
+          "fullPath" : "",
+          "name" : "",
+          "size" : "",
+          "type" : "",
+          "url" : ""
+        },
         "purchasedDate" : "Mon Jul 04 2016 09:41:33 GMT-0600 (MDT)",
         "serial" : "0015"
       },
@@ -306,6 +423,14 @@
         "itemId" : "-KSMjYaV1w-sULmkWuqr",
         "note" : "",
         "personId" : "-KSMhgdMOu8CYEqP5NH_",
+        "photo" : {
+          "bucket" : "",
+          "fullPath" : "",
+          "name" : "",
+          "size" : "",
+          "type" : "",
+          "url" : ""
+        },
         "purchasedDate" : "Thu Sep 23 2010 09:41:33 GMT-0600 (MDT)",
         "serial" : "0016"
       },
@@ -319,6 +444,14 @@
         "itemId" : "-KSMjhcceZSvtr4qLt_Q",
         "note" : "",
         "personId" : "-KSMhgdMOu8CYEqP5NH_",
+        "photo" : {
+          "bucket" : "",
+          "fullPath" : "",
+          "name" : "",
+          "size" : "",
+          "type" : "",
+          "url" : ""
+        },
         "purchasedDate" : "Mon Sep 23 2013 09:41:33 GMT-0600 (MDT)",
         "serial" : "0017"
       },
@@ -332,6 +465,14 @@
         "itemId" : "-KSMjlkcOFnK21igtCbT",
         "note" : "",
         "personId" : "-KSMhkFHWjK1WXbBA7pl",
+        "photo" : {
+          "bucket" : "",
+          "fullPath" : "",
+          "name" : "",
+          "size" : "",
+          "type" : "",
+          "url" : ""
+        },
         "purchasedDate" : "Sun Sep 23 2001 09:41:33 GMT-0600 (MDT)",
         "serial" : "0018"
       },
@@ -345,12 +486,21 @@
         "itemId" : "-KSMjrd5KjRgATmBhm7T",
         "note" : "",
         "personId" : "-KSMhnGHE7Erc_u45_dc",
+        "photo" : {
+          "bucket" : "",
+          "fullPath" : "",
+          "name" : "",
+          "size" : "",
+          "type" : "",
+          "url" : ""
+        },
         "purchasedDate" : "Sun Sep 23 2012 09:41:33 GMT-0600 (MDT)",
         "serial" : "0019"
       }
     },
     "people" : {
       "-KResfQzR9hM4Ej8yvdT" : {
+        "collapsed" : true,
         "createdBy" : "CCj2YiaCETR4qVGBPSXCRgoySH32",
         "dateCreated" : "Wed Sep 14 2016 16:48:03 GMT-0600 (MDT)",
         "dateLastUpdated" : "Wed Sep 14 2016 16:48:03 GMT-0600 (MDT)",
@@ -359,6 +509,7 @@
         "personId" : "-KResfQzR9hM4Ej8yvdT"
       },
       "-KRez5-kdui_KPVfpqQK" : {
+        "collapsed" : true,
         "createdBy" : "CCj2YiaCETR4qVGBPSXCRgoySH32",
         "dateCreated" : "Wed Sep 14 2016 17:16:05 GMT-0600 (MDT)",
         "dateLastUpdated" : "Wed Sep 14 2016 17:16:05 GMT-0600 (MDT)",
@@ -367,6 +518,7 @@
         "personId" : "-KRez5-kdui_KPVfpqQK"
       },
       "-KRez7DoNW1shUO_L8On" : {
+        "collapsed" : true,
         "createdBy" : "CCj2YiaCETR4qVGBPSXCRgoySH32",
         "dateCreated" : "Wed Sep 14 2016 17:16:14 GMT-0600 (MDT)",
         "dateLastUpdated" : "Wed Sep 14 2016 17:16:14 GMT-0600 (MDT)",
@@ -375,6 +527,7 @@
         "personId" : "-KRez7DoNW1shUO_L8On"
       },
       "-KSMhSaE7kNxsIqfPDSG" : {
+        "collapsed" : true,
         "createdBy" : "CCj2YiaCETR4qVGBPSXCRgoySH32",
         "dateCreated" : "Fri Sep 23 2016 09:41:57 GMT-0600 (MDT)",
         "dateLastUpdated" : "Fri Sep 23 2016 09:41:57 GMT-0600 (MDT)",
@@ -383,6 +536,7 @@
         "personId" : "-KSMhSaE7kNxsIqfPDSG"
       },
       "-KSMhUh6oT_S18mO5cWO" : {
+        "collapsed" : true,
         "createdBy" : "CCj2YiaCETR4qVGBPSXCRgoySH32",
         "dateCreated" : "Fri Sep 23 2016 09:42:06 GMT-0600 (MDT)",
         "dateLastUpdated" : "Fri Sep 23 2016 09:42:06 GMT-0600 (MDT)",
@@ -391,6 +545,7 @@
         "personId" : "-KSMhUh6oT_S18mO5cWO"
       },
       "-KSMhYWUZhufRWmyB5wz" : {
+        "collapsed" : true,
         "createdBy" : "CCj2YiaCETR4qVGBPSXCRgoySH32",
         "dateCreated" : "Fri Sep 23 2016 09:42:22 GMT-0600 (MDT)",
         "dateLastUpdated" : "Fri Sep 23 2016 09:42:22 GMT-0600 (MDT)",
@@ -399,6 +554,7 @@
         "personId" : "-KSMhYWUZhufRWmyB5wz"
       },
       "-KSMhaFGXnWOxmcS4V8l" : {
+        "collapsed" : true,
         "createdBy" : "CCj2YiaCETR4qVGBPSXCRgoySH32",
         "dateCreated" : "Fri Sep 23 2016 09:42:33 GMT-0600 (MDT)",
         "dateLastUpdated" : "Fri Sep 23 2016 09:42:33 GMT-0600 (MDT)",
@@ -407,6 +563,7 @@
         "personId" : "-KSMhaFGXnWOxmcS4V8l"
       },
       "-KSMhgdMOu8CYEqP5NH_" : {
+        "collapsed" : true,
         "createdBy" : "CCj2YiaCETR4qVGBPSXCRgoySH32",
         "dateCreated" : "Fri Sep 23 2016 09:42:59 GMT-0600 (MDT)",
         "dateLastUpdated" : "Fri Sep 23 2016 09:42:59 GMT-0600 (MDT)",
@@ -415,6 +572,7 @@
         "personId" : "-KSMhgdMOu8CYEqP5NH_"
       },
       "-KSMhkFHWjK1WXbBA7pl" : {
+        "collapsed" : true,
         "createdBy" : "CCj2YiaCETR4qVGBPSXCRgoySH32",
         "dateCreated" : "Fri Sep 23 2016 09:43:14 GMT-0600 (MDT)",
         "dateLastUpdated" : "Fri Sep 23 2016 09:43:14 GMT-0600 (MDT)",
@@ -423,6 +581,7 @@
         "personId" : "-KSMhkFHWjK1WXbBA7pl"
       },
       "-KSMhnGHE7Erc_u45_dc" : {
+        "collapsed" : true,
         "createdBy" : "CCj2YiaCETR4qVGBPSXCRgoySH32",
         "dateCreated" : "Fri Sep 23 2016 09:43:26 GMT-0600 (MDT)",
         "dateLastUpdated" : "Fri Sep 23 2016 09:43:26 GMT-0600 (MDT)",
@@ -431,6 +590,7 @@
         "personId" : "-KSMhnGHE7Erc_u45_dc"
       },
       "-KSrLCzp_8InTpuFXyXc" : {
+        "collapsed" : true,
         "createdBy" : "CCj2YiaCETR4qVGBPSXCRgoySH32",
         "dateCreated" : "Thu Sep 29 2016 13:08:16 GMT-0600 (MDT)",
         "dateLastUpdated" : "Thu Sep 29 2016 13:08:16 GMT-0600 (MDT)",

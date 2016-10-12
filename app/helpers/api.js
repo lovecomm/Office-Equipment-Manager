@@ -75,6 +75,7 @@ export function saveNewHardware (hardwares, hardware, uid) {
 				dateLastUpdated: new Date().toString(),
 				make: hardware.make,
 				model: hardware.model,
+				collapsed: true,
 				description: hardware.description,
 				isComputer: hardware.isComputer,
 				createdBy: uid,
@@ -211,6 +212,7 @@ export function saveNewPerson (people, person, uid) {
 				dateLastUpdated: new Date().toString(),
 				firstName: person.firstName,
 				lastName: person.lastName,
+				collapsed: true,
 			}
 			return ref.child(`feed/people/${personId}`).set(newPerson) // saving new person to firebase
 		})

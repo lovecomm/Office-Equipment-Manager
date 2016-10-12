@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { processImage } from 'helpers/utils'
 import { Drawer, Input, Button, Checkbox } from 'react-toolbox/lib'
 import { drawer, button, headline, formWrapper, selectedPhoto, imageInput, error } from './styles.scss'
 const	{ func, bool, string, object } = PropTypes
@@ -27,17 +28,25 @@ HardwareForm.propTypes = {
 
 export default function HardwareForm (props, context) {
 	function submitHardware () {
-		const hardware = {
+		let hardware = {
 			hardwareId: props.hardwareId,
 			make:	props.make,
 			model: props.model,
-			description: props.description,
 			photo: props.photo,
+			description: props.description,
 			isComputer: props.isComputer,
 		}
-		props.editing === false
-		? props.newHardwareFanout(hardware)
-		: props.updateHardwareFanout(hardware)
+		if (props.photo.name) {
+			processImage(props.photo)
+			.then((resizedPhoto) => {
+				hardware = Object.assign(hardware, {photo: resizedPhoto})
+				props.editing === false
+				? props.newHardwareFanout(hardware)
+				: props.updateHardwareFanout(hardware)
+			})
+		} else {
+			props.updateHardwareFanout(hardware) // new hardware requires a photo, so we don't need to test if it's editing here
+		}
 	}
 	return (
 		<Drawer active={props.isOpen}

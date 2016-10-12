@@ -122,6 +122,7 @@ export function initiateHardwareForm (hardwareId) {
 
 export function newHardwareFanout (hardware) {
 	return function (dispatch, getState) {
+		console.log('in newHardwareFanout photo', hardware.photo)
 		saveNewHardware(getState().hardwares, hardware, getState().users.authedId)
 		.then((hardwareWithId) => {
 			dispatch(hardwareFormAddHardware(hardwareWithId))
