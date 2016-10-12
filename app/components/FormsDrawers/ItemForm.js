@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { processImage } from 'helpers/utils'
 import { Drawer, Input, Button, DatePicker, Autocomplete } from 'react-toolbox/lib'
 import { button, headline, formWrapper, drawer, imageInput, selectedPhoto, error } from './styles.scss'
 
@@ -57,7 +58,7 @@ export default function ItemForm (props, context) {
 		return hardwareList
 	}
 	function submitItems () {
-		const item = {
+		let item = {
 			itemId: props.itemId,
 			purchasedDate: props.purchasedDate,
 			serial: props.serial,
@@ -69,9 +70,19 @@ export default function ItemForm (props, context) {
 			photo: props.photo,
 			photoName: props.photoName,
 		}
-		props.editing === false
-		? props.newItemFanout(item)
-		: props.updateItemFanout(item)
+		if (props.photo.name) {
+			processImage(props.photo)
+			.then((resizedPhoto) => {
+				item = Object.assign(item, {photo: resizedPhoto})
+				props.editing === false
+				? props.newItemFanout(item)
+				: props.updateItemFanout(item)
+			})
+		} else {
+			props.editing === false
+			? props.newItemFanout(item)
+			: props.updateItemFanout(item)
+		}
 	}
 	return (
 		<Drawer active={props.isOpen}
