@@ -1,8 +1,11 @@
+$pink: #ff4081;
+$blue: #1976D2;
+
 div[data-react-toolbox="card"] {
-	margin: 0 7px 7px;
+	margin: 14px 14px;
 	position: relative;
-	background-color: rgba(0,0,0,0.025);
 	width: 250px;
+	height: 0%;
 
 	h4 {
 		font-weight: 600;
@@ -15,6 +18,15 @@ div[data-react-toolbox="card"] {
 	div[data-react-toolbox="avatar"] {
 		width: 45px;
 		height: 37px;
+	}
+
+	.cardActions {
+		background: lighten($pink, 35%);
+	}
+
+	.subCardActions {
+		background: lighten($pink, 32%);
+		text-align: right;
 	}
 }
 
@@ -41,6 +53,6 @@ div[data-react-toolbox="card"] {
 		text-transform: uppercase;
 	}
 
-	.statusReplace { background-color: darken(red, 15%); }
-	.statusWarning { background-color: darken(orange, 15%); }
+	.statusReplace { background-color: darken($pink, 25%); }
+	.statusWarning { background-color: darken($blue, 25%); }
 }

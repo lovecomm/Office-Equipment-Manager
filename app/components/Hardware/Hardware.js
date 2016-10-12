@@ -4,30 +4,31 @@ import { Button } from 'react-toolbox/lib'
 import { cardActions, subCardActions } from 'sharedStyles/cards.scss'
 import { EditMenuContainer } from 'containers'
 
-Person.propTypes = {
-	personId: PropTypes.string.isRequired,
-	firstName: PropTypes.string.isRequired,
-	lastName: PropTypes.string.isRequired,
+Hardware.propTypes = {
+	hardwareId: PropTypes.string.isRequired,
+	make: PropTypes.string.isRequired,
+	model: PropTypes.string.isRequired,
 	items: PropTypes.object.isRequired,
 	itemIds: PropTypes.array.isRequired,
+	photoUrl: PropTypes.string.isRequired,
 	collapsed: PropTypes.bool.isRequired,
 	envokeHandleCollapsed: PropTypes.func.isRequired,
 }
 
-export default function Person (props) {
+export default function Hardware (props) {
 	return (
 		<Card>
 			<CardTitle
-				avatar='http://www.goliath.com/wp-content/uploads/2015/12/darth-vader-730x400.jpg'
-				title={(() => `${props.firstName} ${props.lastName}`)()}
+				avatar={props.photoUrl}
+				title={(() => `${props.make} ${props.model}`)()}
 				subtitle={`Items: ${props.itemIds.length.toString()}`} />
 			{(() => {
 				if (props.itemIds.length > 0 && !props.collapsed) {
 					return props.itemIds.map((id) => (
-						<div key={`person_item_${id}`} style={{position: 'relative'}}>
+						<div key={`hardware_item_${id}`} style={{position: 'relative'}}>
 							<CardTitle
-								avatar={props.items[id].hardware.photo.url}
-								title={`${props.items[id].hardware.make} ${props.items[id].hardware.model}`}
+								avatar='http://www.goliath.com/wp-content/uploads/2015/12/darth-vader-730x400.jpg'
+								title={`${props.items[id].person.firstName} ${props.items[id].person.lastName}`}
 								subtitle={props.items[id].serial}/>
 							<CardActions className={subCardActions}><EditMenuContainer id={id} type='item'/></CardActions>
 						</div>
@@ -38,7 +39,7 @@ export default function Person (props) {
 				{props.itemIds.length > 0
 				? <Button label={(() => props.collapsed ? 'Show Items' : 'Hide Items')()} onClick={props.envokeHandleCollapsed}/>
 				: ''}
-				<EditMenuContainer id={props.personId} type='person' />
+				<EditMenuContainer id={props.hardwareId} type='hardware' />
 			</CardActions>
 		</Card>
 	)

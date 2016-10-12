@@ -18,7 +18,7 @@ function addPersonToFeed (people) {
 	}
 }
 
-export function handleCollapsed (personId, collapsed) {
+export function handlePersonCollapsed (personId, collapsed) {
 	return function (dispatch, getState) {
 		return new Promise((resolve, reject) => {
 			Object.keys(getState().people).forEach((personId) => {

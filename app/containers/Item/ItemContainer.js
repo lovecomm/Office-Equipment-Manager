@@ -15,7 +15,7 @@ const ItemContainer = React.createClass({
 		purchasedDate: PropTypes.string.isRequired,
 		itemId: PropTypes.string.isRequired,
 		collapsed: PropTypes.bool.isRequired,
-		handleCollapsed: PropTypes.func.isRequired,
+		handleItemCollapsed: PropTypes.func.isRequired,
 	},
 	getYearsOld () {
 		const itemDate = new Date(this.props.purchasedDate)
@@ -27,7 +27,7 @@ const ItemContainer = React.createClass({
 	envokeHandleCollapsed () {
 		if (this.props.hasSubContent) {
 			const newCollapse = !this.props.collapsed
-			this.props.handleCollapsed(this.props.itemId, newCollapse)
+			this.props.handleItemCollapsed(this.props.itemId, newCollapse)
 		}
 	},
 	render () {

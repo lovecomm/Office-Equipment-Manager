@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { ItemContainer, PersonContainer } from 'containers'
+import { ItemContainer, PersonContainer, HardwareContainer } from 'containers'
 import { toolbar, list, filter, filterWrapper, filterName } from './styles.scss'
 import { Autocomplete, Chip } from 'react-toolbox/lib'
 import { Snackbar } from 'react-toolbox'
@@ -62,7 +62,11 @@ export default function Feed (props) {
 								key={id} />
 						))
 					case 'hardware':
-						return 'hardware cards'
+						return props.hardwareIds.map((id) => (
+							<HardwareContainer
+								hardwareId={id}
+								key={id} />
+						))
 					}
 				})()}
 			</div>

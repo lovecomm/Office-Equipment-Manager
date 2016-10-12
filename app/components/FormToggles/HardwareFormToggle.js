@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import { MenuItem } from 'react-toolbox/lib/menu'
+import { Button } from 'react-toolbox/lib'
 
 HardwareFormToggle.propTypes = {
 	handleOpenEditForm: PropTypes.func.isRequired,
@@ -7,8 +8,9 @@ HardwareFormToggle.propTypes = {
 }
 
 export default function HardwareFormToggle ({handleOpenEditForm, editing}) {
-	return (
-		<MenuItem icon={(() => editing ? 'mode_edit' : 'laptop')()} onClick={handleOpenEditForm}
-			caption={(() => editing ? 'Edit' : 'Hardware')()}/>
-	)
+	if (editing) {
+		return (<Button label='Edit' onClick={handleOpenEditForm} />)
+	} else {
+		return (<MenuItem icon='laptop' onClick={handleOpenEditForm} caption='Hardware'/>)
+	}
 }

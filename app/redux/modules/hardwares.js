@@ -2,6 +2,7 @@ import { getUrl } from 'helpers/api'
 
 const ADD_HARDWARE_TO_FEED = 'ADD_HARDWARE_TO_FEED'
 const UPDATE_HARDWARE_PHOTO_URL = 'UPDATE_HARDWARE_PHOTO_URL'
+const UPDATE_HARDWARE_COLLAPSED = 'UPDATE_HARDWARE_COLLAPSED'
 
 // ACTIONS
 export function prepHardwaresForFeed (hardwares) {
@@ -43,6 +44,27 @@ function updateHardwarePhotoUrl (hardwareId, photoUrl) {
 	}
 }
 
+
+export function handleHardwareCollapsed (hardwareId, collapsed) {
+	return function (dispatch, getState) {
+		return new Promise((resolve, reject) => {
+			Object.keys(getState().hardwares).forEach((hardwareId) => {
+				dispatch(updateHardwareCollapsed(hardwareId, true))
+			})
+			resolve()
+		})
+		.then(() => dispatch(updateHardwareCollapsed(hardwareId, collapsed)))
+	}
+}
+
+function updateHardwareCollapsed (hardwareId, collapsed) {
+	return {
+		type: UPDATE_HARDWARE_COLLAPSED,
+		hardwareId,
+		collapsed,
+	}
+}
+
 // REDUCERS
 const initialHardwarePhotoState = {
 	bucket: '',
@@ -65,7 +87,12 @@ function photoHardware (state = initialHardwarePhotoState, action) {
 	}
 }
 
-const initialHardwareState = {}
+const initialHardwareState = {
+	collapsed: true,
+	make: '',
+	model: '',
+	hardwareId: '',
+}
 
 function hardware (state = initialHardwareState, action) {
 	switch (action.type) {
@@ -73,6 +100,11 @@ function hardware (state = initialHardwareState, action) {
 		return {
 			...state,
 			photo: photoHardware(state.photo, action),
+		}
+	case UPDATE_HARDWARE_COLLAPSED:
+		return {
+			...state,
+			collapsed: action.collapsed,
 		}
 	default:
 		return state
@@ -88,6 +120,7 @@ export default function hardwares (state = initialState, action) {
 			...state,
 			...action.hardware,
 		}
+	case UPDATE_HARDWARE_COLLAPSED:
 	case UPDATE_HARDWARE_PHOTO_URL:
 		return {
 			...state,

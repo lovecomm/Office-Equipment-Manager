@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Button } from 'react-toolbox/lib'
 import { Card, CardMedia, CardTitle, CardText, CardActions } from 'react-toolbox/lib/card'
-import { statusWarning, statusReplace, status, chips, fullWidthPhoto } from 'sharedStyles/cards.scss'
+import { statusWarning, statusReplace, status, chips, fullWidthPhoto, cardActions } from 'sharedStyles/cards.scss'
 import { EditMenuContainer } from 'containers'
 
 Item.propTypes = {
@@ -62,7 +62,7 @@ export default function Item (props) {
 						</CardText>
 					</div>
 				: ''}
-				<CardActions>
+				<CardActions className={cardActions}>
 					{props.hasSubContent
 					? <Button label={(() => props.collapsed ? 'Show More' : 'Show Less')()} onClick={props.envokeHandleCollapsed}/>
 					: ''}

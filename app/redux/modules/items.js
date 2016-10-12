@@ -46,7 +46,7 @@ function updateItemPhotoUrl (itemId, photoUrl) {
 	}
 }
 
-export function handleCollapsed (itemId, collapsed) {
+export function handleItemCollapsed (itemId, collapsed) {
 	return function (dispatch, getState) {
 		return new Promise((resolve, reject) => {
 			Object.keys(getState().items).forEach((itemId) => {

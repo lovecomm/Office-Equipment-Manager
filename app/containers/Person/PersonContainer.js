@@ -8,11 +8,11 @@ const PersonContainer = React.createClass({
 	propTypes: {
 		personId: PropTypes.string.isRequired,
 		collapsed: PropTypes.bool.isRequired,
-		handleCollapsed: PropTypes.func.isRequired,
+		handlePersonCollapsed: PropTypes.func.isRequired,
 	},
 	envokeHandleCollapsed () {
 		const newCollapse = !this.props.collapsed
-		this.props.handleCollapsed(this.props.personId, newCollapse)
+		this.props.handlePersonCollapsed(this.props.personId, newCollapse)
 	},
 	render () {
 		return (
