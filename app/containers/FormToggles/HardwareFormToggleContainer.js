@@ -22,8 +22,7 @@ const HardwareFormToggleContainer = React.createClass({
 		return (
 			<HardwareFormToggle
 				handleOpenEditForm={this.handleOpenEditForm}
-				editing={this.props.editing}
-				hardware={(() => this.props.hardware === undefined ? {} : this.props.hardware)()} />
+				editing={this.props.editing} />
 		)
 	},
 })

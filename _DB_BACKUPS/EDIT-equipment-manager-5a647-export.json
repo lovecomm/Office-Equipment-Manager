@@ -500,7 +500,8 @@
         "dateLastUpdated" : "Wed Sep 14 2016 16:48:03 GMT-0600 (MDT)",
         "firstName" : "Logan",
         "lastName" : "Call",
-        "personId" : "-KResfQzR9hM4Ej8yvdT"
+        "personId" : "-KResfQzR9hM4Ej8yvdT",
+				"collapsed" : true
       },
       "-KRez5-kdui_KPVfpqQK" : {
         "createdBy" : "CCj2YiaCETR4qVGBPSXCRgoySH32",
@@ -508,7 +509,8 @@
         "dateLastUpdated" : "Wed Sep 14 2016 17:16:05 GMT-0600 (MDT)",
         "firstName" : "Steve",
         "lastName" : "Wright",
-        "personId" : "-KRez5-kdui_KPVfpqQK"
+        "personId" : "-KRez5-kdui_KPVfpqQK",
+				"collapsed" : true
       },
       "-KRez7DoNW1shUO_L8On" : {
         "createdBy" : "CCj2YiaCETR4qVGBPSXCRgoySH32",
@@ -516,7 +518,8 @@
         "dateLastUpdated" : "Wed Sep 14 2016 17:16:14 GMT-0600 (MDT)",
         "firstName" : "Summer",
         "lastName" : "Call",
-        "personId" : "-KRez7DoNW1shUO_L8On"
+        "personId" : "-KRez7DoNW1shUO_L8On",
+				"collapsed" : true
       },
       "-KSMhSaE7kNxsIqfPDSG" : {
         "createdBy" : "CCj2YiaCETR4qVGBPSXCRgoySH32",
@@ -524,7 +527,8 @@
         "dateLastUpdated" : "Fri Sep 23 2016 09:41:57 GMT-0600 (MDT)",
         "firstName" : "Darth",
         "lastName" : "Vader",
-        "personId" : "-KSMhSaE7kNxsIqfPDSG"
+        "personId" : "-KSMhSaE7kNxsIqfPDSG",
+				"collapsed" : true
       },
       "-KSMhUh6oT_S18mO5cWO" : {
         "createdBy" : "CCj2YiaCETR4qVGBPSXCRgoySH32",
@@ -532,7 +536,8 @@
         "dateLastUpdated" : "Fri Sep 23 2016 09:42:06 GMT-0600 (MDT)",
         "firstName" : "Han",
         "lastName" : "Solo",
-        "personId" : "-KSMhUh6oT_S18mO5cWO"
+        "personId" : "-KSMhUh6oT_S18mO5cWO",
+				"collapsed" : true
       },
       "-KSMhYWUZhufRWmyB5wz" : {
         "createdBy" : "CCj2YiaCETR4qVGBPSXCRgoySH32",
@@ -540,7 +545,8 @@
         "dateLastUpdated" : "Fri Sep 23 2016 09:42:22 GMT-0600 (MDT)",
         "firstName" : "Rey",
         "lastName" : "CLASSIFIED",
-        "personId" : "-KSMhYWUZhufRWmyB5wz"
+        "personId" : "-KSMhYWUZhufRWmyB5wz",
+				"collapsed" : true
       },
       "-KSMhaFGXnWOxmcS4V8l" : {
         "createdBy" : "CCj2YiaCETR4qVGBPSXCRgoySH32",
@@ -548,7 +554,8 @@
         "dateLastUpdated" : "Fri Sep 23 2016 09:42:33 GMT-0600 (MDT)",
         "firstName" : "Luke",
         "lastName" : "Skywalker",
-        "personId" : "-KSMhaFGXnWOxmcS4V8l"
+        "personId" : "-KSMhaFGXnWOxmcS4V8l",
+				"collapsed" : true
       },
       "-KSMhgdMOu8CYEqP5NH_" : {
         "createdBy" : "CCj2YiaCETR4qVGBPSXCRgoySH32",
@@ -556,7 +563,8 @@
         "dateLastUpdated" : "Fri Sep 23 2016 09:42:59 GMT-0600 (MDT)",
         "firstName" : "Leia",
         "lastName" : "Organa",
-        "personId" : "-KSMhgdMOu8CYEqP5NH_"
+        "personId" : "-KSMhgdMOu8CYEqP5NH_",
+				"collapsed" : true
       },
       "-KSMhkFHWjK1WXbBA7pl" : {
         "createdBy" : "CCj2YiaCETR4qVGBPSXCRgoySH32",
@@ -564,7 +572,8 @@
         "dateLastUpdated" : "Fri Sep 23 2016 09:43:14 GMT-0600 (MDT)",
         "firstName" : "Chewbacca",
         "lastName" : "Wookie",
-        "personId" : "-KSMhkFHWjK1WXbBA7pl"
+        "personId" : "-KSMhkFHWjK1WXbBA7pl",
+				"collapsed" : true
       },
       "-KSMhnGHE7Erc_u45_dc" : {
         "createdBy" : "CCj2YiaCETR4qVGBPSXCRgoySH32",
@@ -572,7 +581,8 @@
         "dateLastUpdated" : "Fri Sep 23 2016 09:43:26 GMT-0600 (MDT)",
         "firstName" : "Darth",
         "lastName" : "Sidius",
-        "personId" : "-KSMhnGHE7Erc_u45_dc"
+        "personId" : "-KSMhnGHE7Erc_u45_dc",
+				"collapsed" : true
       },
       "-KSrLCzp_8InTpuFXyXc" : {
         "createdBy" : "CCj2YiaCETR4qVGBPSXCRgoySH32",
@@ -580,7 +590,8 @@
         "dateLastUpdated" : "Thu Sep 29 2016 13:08:16 GMT-0600 (MDT)",
         "firstName" : "INVENTORY",
         "lastName" : "N/A",
-        "personId" : "-KSrLCzp_8InTpuFXyXc"
+        "personId" : "-KSrLCzp_8InTpuFXyXc",
+				"collapsed" : true
       }
     }
   },

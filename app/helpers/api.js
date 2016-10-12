@@ -1,5 +1,5 @@
 import { ref, imagesRef } from 'config/constants'
-import { determineItemHasSubContent } from 'helpers/utils'
+import { determineItemHasSubContent, processImage } from 'helpers/utils'
 
 // START General Firebase API Calls
 export function listenToFeed (cb, errorCB) {
@@ -62,7 +62,11 @@ export function saveNewHardware (hardwares, hardware, uid) {
 		const hardwarePhotoRef = imagesRef.child(`hardwares/${hardware.photo.name}`)
 		verifyNewHardware(hardwares, hardware)
 		.then((isVerified) => {
-			return hardwarePhotoRef.put(hardware.photo) // Store photo to firebase
+			// return hardwarePhotoRef.put(hardware.photo) // Store photo to firebase
+			return processImage(hardware.photo)
+		})
+		.then((processedImage) => {
+			return hardwarePhotoRef.put(processedImage) // Store photo to firebase
 		})
 		.then((photoSnapshot) => {
 			const createdHardware = {

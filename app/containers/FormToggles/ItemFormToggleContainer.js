@@ -7,7 +7,6 @@ import { ItemFormToggle } from 'components'
 const ItemFormToggleContainer = React.createClass({
 	propTypes: {
 		itemId: PropTypes.string.isRequired,
-		serial: PropTypes.string.isRequired,
 		editing: PropTypes.bool.isRequired,
 		openItemForm: PropTypes.func.isRequired,
 		initiateItemForm: PropTypes.func.isRequired,
@@ -21,7 +20,7 @@ const ItemFormToggleContainer = React.createClass({
 	},
 	render () {
 		return (
-			<ItemFormToggle handleOpenForm={this.handleOpenForm} serial={this.props.serial} editing={this.props.editing}/>
+			<ItemFormToggle handleOpenForm={this.handleOpenForm} editing={this.props.editing}/>
 		)
 	},
 })

@@ -1,8 +1,7 @@
 import { getUrl } from 'helpers/api'
 
 const ADD_ITEMS_TO_FEED = 'ADD_ITEMS_TO_FEED'
-const UPDATE_COLLAPSED = 'UPDATE_COLLAPSED'
-const COLLAPSE_ITEM = 'COLLAPSE_ITEM'
+const UPDATE_ITEM_COLLAPSED = 'UPDATE_ITEM_COLLAPSED'
 const UPDATE_ITEM_PERSONID = 'UPDATE_ITEM_PERSONID'
 const UPDATE_ITEM_PHOTO_URL = 'UPDATE_ITEM_PHOTO_URL'
 
@@ -49,14 +48,13 @@ function updateItemPhotoUrl (itemId, photoUrl) {
 
 export function handleCollapsed (itemId, collapsed) {
 	return function (dispatch, getState) {
-		const items = Object.keys(getState().items)
 		return new Promise((resolve, reject) => {
-			items.forEach((itemId) => {
-				dispatch(updateCollapseItem(itemId))
+			Object.keys(getState().items).forEach((itemId) => {
+				dispatch(updateItemCollapsed(itemId, true))
 			})
 			resolve()
 		})
-		.then(() => dispatch(updateCollapsed(itemId, collapsed)))
+		.then(() => dispatch(updateItemCollapsed(itemId, collapsed)))
 	}
 }
 
@@ -68,16 +66,9 @@ export function updateItemsPersonId (itemId, personId) {
 	}
 }
 
-function updateCollapseItem (itemId) {
+function updateItemCollapsed (itemId, collapsed) {
 	return {
-		type: COLLAPSE_ITEM,
-		itemId,
-	}
-}
-
-function updateCollapsed (itemId, collapsed) {
-	return {
-		type: UPDATE_COLLAPSED,
+		type: UPDATE_ITEM_COLLAPSED,
 		itemId,
 		collapsed,
 	}
@@ -122,12 +113,7 @@ const initialItemState = {
 
 function item (state = initialItemState, action) {
 	switch (action.type) {
-	case COLLAPSE_ITEM:
-		return {
-			...state,
-			collapsed: true,
-		}
-	case UPDATE_COLLAPSED:
+	case UPDATE_ITEM_COLLAPSED:
 		return {
 			...state,
 			collapsed: action.collapsed,
@@ -157,9 +143,8 @@ export default function items (state = initialState, action) {
 			...state,
 			...action.items,
 		}
-	case COLLAPSE_ITEM:
 	case UPDATE_ITEM_PERSONID:
-	case UPDATE_COLLAPSED:
+	case UPDATE_ITEM_COLLAPSED:
 	case UPDATE_ITEM_PHOTO_URL:
 		return {
 			...state,

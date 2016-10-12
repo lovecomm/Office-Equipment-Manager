@@ -5,10 +5,10 @@ import { initiateDeleteData } from 'redux/modules/feed'
 
 const EditMenuContainer = React.createClass({
 	propTypes: {
-		itemId: PropTypes.string.isRequired,
-		serial: PropTypes.string.isRequired,
-		person: PropTypes.object.isRequired,
-		hardware: PropTypes.object.isRequired,
+		itemId: PropTypes.string,
+		serial: PropTypes.string,
+		person: PropTypes.object,
+		hardware: PropTypes.object,
 		dispatch: PropTypes.func.isRequired,
 	},
 	handleDeletion (dataType, dataId) {
@@ -22,12 +22,29 @@ const EditMenuContainer = React.createClass({
 })
 
 function mapStateToProps ({items, people, hardwares}, ownProps) {
-	const item = items[ownProps.itemId]
-	return {
-		itemId: item.itemId,
-		serial: item.serial,
-		hardware: hardwares[item.hardwareId],
-		person: people[item.personId],
+	switch (ownProps.type) {
+	case 'item':
+		const item = items[ownProps.id]
+		return {
+			type: ownProps.type,
+			itemId: item.itemId,
+			serial: item.serial,
+			hardware: hardwares[item.hardwareId],
+			person: people[item.personId],
+		}
+	case 'person':
+		const person = people[ownProps.id]
+		return {
+			type: ownProps.type,
+			person,
+		}
+	case 'hardware':
+		const hardware = hardwares[ownProps.id]
+		return {
+			type: ownProps.type,
+			hardware,
+		}
+	default:
 	}
 }
 

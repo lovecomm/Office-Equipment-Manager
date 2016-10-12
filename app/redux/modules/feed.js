@@ -6,7 +6,9 @@ import { prepHardwaresForFeed } from 'redux/modules/hardwares'
 
 const SETTING_FEED_LISTENER = 'SETTING_FEED_LISTENER'
 const SETTING_FEED_LISTENER_ERROR = 'SETTING_FEED_LISTENER_ERROR'
-const SETTING_FEED_LISTENER_SUCCESS = 'SETTING_FEED_LISTENER_SUCCESS'
+const SETTING_FEED_LISTENER_SUCCESS_ITEMS = 'SETTING_FEED_LISTENER_SUCCESS_ITEMS'
+const SETTING_FEED_LISTENER_SUCCESS_PEOPLE = 'SETTING_FEED_LISTENER_SUCCESS_PEOPLE'
+const SETTING_FEED_LISTENER_SUCCESS_HARDWARE = 'SETTING_FEED_LISTENER_SUCCESS_HARDWARE'
 const ADD_NEW_ITEM_TO_FEED = 'ADD_NEW_ITEM_TO_FEED'
 const UPDATE_SORT_STATUS = 'UPDATE_SORT_STATUS'
 const UPDATE_SORT_ORDER = 'UPDATE_SORT_ORDER'
@@ -16,8 +18,16 @@ const UPDATE_IS_FILTERING = 'UPDATE_IS_FILTERING'
 const UPDATE_CONFIRM_DELETE_ACTIVE = 'UPDATE_CONFIRM_DELETE_ACTIVE'
 const UPDATE_TO_DELETE_ID = 'UPDATE_TO_DELETE_ID'
 const UPDATE_TO_DELETE_TYPE = 'UPDATE_TO_DELETE_TYPE'
+const UPDATE_ACTIVE_CARDS = 'UPDATE_ACTIVE_CARDS'
 
 // ACTIONS
+export function updateActiveCards (newCardType) {
+	return {
+		type: UPDATE_ACTIVE_CARDS,
+		newCardType,
+	}
+}
+
 export function updateConfirmDeleteActive (confirmDeleteActive) {
 	return {
 		type: UPDATE_CONFIRM_DELETE_ACTIVE,
@@ -63,14 +73,14 @@ export function confirmDeleteData () {
 			const newHardwareItemIds = getState().feed.itemIds.filter((itemId) => {
 				return items[itemId].hardwareId !== dataId
 			})
-			dispatch(settingFeedListenerSuccess(newHardwareItemIds))
+			dispatch(settingFeedListenerSuccessItems(newHardwareItemIds))
 			buildFilterOptions(dispatch, getState)
 			break
 		default: // items
 			const newItemIds = getState().feed.itemIds.filter((id) => {
 				return id !== dataId
 			})
-			dispatch(settingFeedListenerSuccess(newItemIds))
+			dispatch(settingFeedListenerSuccessItems(newItemIds))
 			buildFilterOptions(dispatch, getState)
 		}
 	}
@@ -90,10 +100,24 @@ function settingFeedListenerError (error) {
 	}
 }
 
-function settingFeedListenerSuccess (itemIds) {
+function settingFeedListenerSuccessItems (itemIds) {
 	return {
-		type: SETTING_FEED_LISTENER_SUCCESS,
+		type: SETTING_FEED_LISTENER_SUCCESS_ITEMS,
 		itemIds,
+	}
+}
+
+function settingFeedListenerSuccessPeople (personIds) {
+	return {
+		type: SETTING_FEED_LISTENER_SUCCESS_PEOPLE,
+		personIds,
+	}
+}
+
+function settingFeedListenerSuccessHardware (hardwareIds) {
+	return {
+		type: SETTING_FEED_LISTENER_SUCCESS_HARDWARE,
+		hardwareIds,
 	}
 }
 
@@ -140,12 +164,26 @@ export function setAndHandleFeedListener () {
 			.then(() => {
 				buildFilterOptions(dispatch, getState)
 				if (initialFetch === true) {
-					dispatch(settingFeedListenerSuccess(sortedItemIds))
+					dispatch(settingFeedListenerSuccessItems(sortedItemIds))
+					dispatch(settingFeedListenerSuccessPeople(getSortedPeopleIds(people)))
+					dispatch(settingFeedListenerSuccessHardware(getSortedHardwareIds(hardwares)))
 				}
 				initialFetch = false
 			})
 		}, (error) => dispatch(settingFeedListenerError(error)))
 	}
+}
+
+function getSortedPeopleIds (people) {
+	let sortedPersonIds = []
+	Object.keys(people).forEach((personId) => sortedPersonIds.push(personId))
+	return sortedPersonIds
+}
+
+function getSortedHardwareIds (hardwares) {
+	let sortedHardwareIds = []
+	Object.keys(hardwares).forEach((hardwareId) => sortedHardwareIds.push(hardwareId))
+	return sortedHardwareIds
 }
 
 function getActiveItems (getState, sortStatus) {
@@ -217,7 +255,7 @@ function applySortStatusByDate (dispatch, getState, sortStatus) {
 			})
 		}
 		const sortedIds = itemsArray.map((item) => item[0])
-		dispatch(settingFeedListenerSuccess(sortedIds))
+		dispatch(settingFeedListenerSuccessItems(sortedIds))
 	})
 }
 
@@ -263,7 +301,7 @@ function applySortStatusPeople (dispatch, getState, sortStatus, name) {
 			})
 		}
 		const sortedIds = itemsArray.map((item) => item[0])
-		dispatch(settingFeedListenerSuccess(sortedIds))
+		dispatch(settingFeedListenerSuccessItems(sortedIds))
 	})
 }
 
@@ -309,7 +347,7 @@ function applySortStatusHardware (dispatch, getState, sortStatus) {
 			})
 		}
 		const sortedIds = itemsArray.map((item) => item[0])
-		dispatch(settingFeedListenerSuccess(sortedIds))
+		dispatch(settingFeedListenerSuccessItems(sortedIds))
 	})
 }
 
@@ -367,7 +405,7 @@ function restoreAllItemsToFeed (dispatch, getState) {
 		const items = getState().items
 		const itemsArray = []
 		for (const itemId in items) { itemsArray.push(itemId)	}
-		dispatch(settingFeedListenerSuccess(itemsArray))
+		dispatch(settingFeedListenerSuccessItems(itemsArray))
 		resolve()
 	})
 }
@@ -405,7 +443,7 @@ function updateIsFiltering () {
 }
 
 function filterByItem (dispatch, getState, itemId) {
-	dispatch(settingFeedListenerSuccess([itemId]))
+	dispatch(settingFeedListenerSuccessItems([itemId]))
 }
 
 function filterByPerson (dispatch, getState, personId) {
@@ -414,7 +452,7 @@ function filterByPerson (dispatch, getState, personId) {
 	for (let item in items) {
 		items[item].personId === personId ? sortedIds.push(item) : ''
 	}
-	dispatch(settingFeedListenerSuccess(sortedIds))
+	dispatch(settingFeedListenerSuccessItems(sortedIds))
 }
 
 function filterByHardware (dispatch, getState, hardwareId) {
@@ -423,7 +461,7 @@ function filterByHardware (dispatch, getState, hardwareId) {
 	for (let item in items) {
 		items[item].hardwareId === hardwareId ? sortedIds.push(item) : ''
 	}
-	dispatch(settingFeedListenerSuccess(sortedIds))
+	dispatch(settingFeedListenerSuccessItems(sortedIds))
 }
 
 export function updateAndHandleFilter (nameId) {
@@ -537,7 +575,10 @@ function filter (state, action) {
 const initialState = {
 	isFetching: false,
 	error: '',
+	activeCards: 'items',
 	itemIds: [],
+	personIds: [],
+	hardwareIds: [],
 	sortStatus: 'dateCreated',
 	sortOrder: 'asc',
 	filter: {
@@ -564,13 +605,25 @@ export default function feed (state = initialState, action) {
 			isFetching: false,
 			error: action.error,
 		}
-	case SETTING_FEED_LISTENER_SUCCESS:
+	case SETTING_FEED_LISTENER_SUCCESS_ITEMS:
 		return {
 			...state,
 			isFetching: false,
 			error: '',
 			itemIds: action.itemIds,
 		}
+	case SETTING_FEED_LISTENER_SUCCESS_PEOPLE: {
+		return {
+			...state,
+			personIds: action.personIds,
+		}
+	}
+	case SETTING_FEED_LISTENER_SUCCESS_HARDWARE: {
+		return {
+			...state,
+			hardwareIds: action.hardwareIds,
+		}
+	}
 	case UPDATE_SORT_STATUS:
 		return {
 			...state,
@@ -600,6 +653,11 @@ export default function feed (state = initialState, action) {
 		return {
 			...state,
 			toDeleteId: action.toDeleteId,
+		}
+	case UPDATE_ACTIVE_CARDS:
+		return {
+			...state,
+			activeCards: action.newCardType,
 		}
 	case ADD_FILTER_OPTIONS:
 	case UPDATE_FILTER_NAME_AND_TYPE:

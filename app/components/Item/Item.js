@@ -63,7 +63,7 @@ export default function Item (props) {
 						</div>
 					: ''}
 			</Card>
-			<EditMenuContainer itemId={props.itemId} />
+			<EditMenuContainer id={props.itemId} type='item' />
 		</div>
 	)
 }

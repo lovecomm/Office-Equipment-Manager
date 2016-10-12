@@ -7,6 +7,8 @@ import { HardwareFormToggleContainer, PersonFormToggleContainer, ItemFormToggleC
 
  Navigation.propTypes = MenuItems.propTypes = {
 	isAuthed: PropTypes.bool.isRequired,
+	activeCards: PropTypes.string.isRequired,
+	changeActiveCards: PropTypes.func.isRequired,
 	changeSortOrder: PropTypes.func.isRequired,
 	sortFeedCreationDate: PropTypes.func.isRequired,
 	sortFeedPurchaseDate: PropTypes.func.isRequired,
@@ -19,6 +21,14 @@ function MenuItems (props) {
 	if (props.isAuthed) {
 		return (<div className={menuItems}>
 			<MenuDivider />
+			<IconMenu
+				icon={<MenuItem>{`Cards: ${props.activeCards}`}</MenuItem>}
+				position='topLeft'
+				iconRipple={false}>
+				<MenuItem icon='view_agenda' caption='Items' onClick={(() => props.changeActiveCards('items'))}/>
+				<MenuItem icon='people' caption='People' onClick={(() => props.changeActiveCards('people'))}/>
+				<MenuItem icon='laptop' caption='Hardware' onClick={(() => props.changeActiveCards('hardware'))}/>
+			</IconMenu>
 			<IconMenu
 				className={dropdownMenu}
 				icon={<MenuItem>{'New'}</MenuItem>}

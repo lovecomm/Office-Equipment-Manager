@@ -1,11 +1,14 @@
 import React, { PropTypes } from 'react'
-import { ItemContainer } from 'containers'
+import { ItemContainer, PersonContainer } from 'containers'
 import { toolbar, list, filter, filterWrapper, filterName } from './styles.scss'
 import { Autocomplete, Chip } from 'react-toolbox/lib'
 import { Snackbar } from 'react-toolbox'
 
 Feed.propTypes = {
+	activeCards: PropTypes.string.isRequired,
 	itemIds: PropTypes.array.isRequired,
+	personIds: PropTypes.array.isRequired,
+	hardwareIds: PropTypes.array.isRequired,
 	error: PropTypes.string.isRequired,
 	isFetching: PropTypes.bool.isRequired,
 	filter: PropTypes.object.isRequired,
@@ -44,11 +47,24 @@ export default function Feed (props) {
 				</div>
 			</div>
 			<div className={list}>
-				{props.itemIds.map((id) => (
-					<ItemContainer
-						itemId={id}
-						key={id} />
-				))}
+				{(() => {
+					switch (props.activeCards) {
+					case 'items':
+						return props.itemIds.map((id) => (
+							<ItemContainer
+								itemId={id}
+								key={id} />
+						))
+					case 'people':
+						return props.personIds.map((id) => (
+							<PersonContainer
+								personId={id}
+								key={id} />
+						))
+					case 'hardware':
+						return 'hardware cards'
+					}
+				})()}
 			</div>
 			<Snackbar
 				action='delete'
