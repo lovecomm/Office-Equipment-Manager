@@ -9,7 +9,7 @@ ItemFormToggle.propTypes = {
 
 export default function ItemFormToggle ({handleOpenForm, editing}) {
 	if (editing) {
-		return (<Button label='Edit' onClick={handleOpenForm} />)
+		return (<Button label='Edit' accent={true} onClick={handleOpenForm} />)
 	} else {
 		return (<MenuItem icon='view_agenda' onClick={handleOpenForm} caption='Item'/>)
 	}

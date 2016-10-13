@@ -54,17 +54,17 @@ export default function Item (props) {
 						: ''}
 						<CardText>
 							{props.hardware.description
-								? <div><h4>Hardware Description:</h4><p>{props.hardware.description}</p></div>
+								? <div><h4>{'Hardware Description:'}</h4><p>{props.hardware.description}</p></div>
 								: ''}
 							{props.note
-								? <div><h4>Item Note:</h4><p>{props.note}</p></div>
+								? <div><h4>{'Item Note:'}</h4><p>{props.note}</p></div>
 								: ''}
 						</CardText>
 					</div>
 				: ''}
 				<CardActions className={cardActions}>
 					{props.hasSubContent
-					? <Button label={(() => props.collapsed ? 'Show More' : 'Show Less')()} onClick={props.envokeHandleCollapsed}/>
+					? <Button primary={true} label={(() => props.collapsed ? 'Show More' : 'Show Less')()} onClick={props.envokeHandleCollapsed}/>
 					: ''}
 					<EditMenuContainer id={props.itemId} type='item' />
 				</CardActions>

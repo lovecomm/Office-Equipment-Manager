@@ -37,7 +37,7 @@ export default function Hardware (props) {
 			})()}
 			<CardActions className={cardActions}>
 				{props.itemIds.length > 0
-				? <Button label={(() => props.collapsed ? 'Show Items' : 'Hide Items')()} onClick={props.envokeHandleCollapsed}/>
+				? <Button primary={true} label={(() => props.collapsed ? 'Show Items' : 'Hide Items')()} onClick={props.envokeHandleCollapsed}/>
 				: ''}
 				<EditMenuContainer id={props.hardwareId} type='hardware' />
 			</CardActions>

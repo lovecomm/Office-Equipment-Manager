@@ -1,6 +1,4 @@
 import React, { PropTypes } from 'react'
-import { editMenu } from './styles.scss'
-import { IconMenu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu'
 import { Button } from 'react-toolbox/lib'
 import { ItemFormToggleContainer, PersonFormToggleContainer, HardwareFormToggleContainer } from 'containers'
 
@@ -19,21 +17,21 @@ export default function EditMenu (props) {
 		return (
 			<div>
 				<ItemFormToggleContainer itemId={props.itemId} editing={true}/>
-				<Button label='Delete' onClick={() => props.handleDeletion('items', props.itemId)} />
+				<Button label='Delete' accent={true} onClick={() => props.handleDeletion('items', props.itemId)} />
 			</div>
 		)
 	case 'person':
 		return (
 			<div>
 				<PersonFormToggleContainer person={props.person} editing={true}/>
-				<Button label='Delete' onClick={() => props.handleDeletion('people', props.person.personId)} />
+				<Button label='Delete' accent={true} onClick={() => props.handleDeletion('people', props.person.personId)} />
 			</div>
 		)
 	case 'hardware':
 		return (
 			<div>
 				<HardwareFormToggleContainer editing={true} hardware={props.hardware}/>
-				<Button label='Delete' onClick={() => props.handleDeletion('hardwares', props.hardware.hardwareId)} />
+				<Button label='Delete' accent={true} onClick={() => props.handleDeletion('hardwares', props.hardware.hardwareId)} />
 			</div>
 		)
 	default:

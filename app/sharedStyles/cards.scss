@@ -21,13 +21,10 @@ div[data-react-toolbox="card"] {
 	}
 
 	.cardActions {
-		background: lighten($pink, 35%);
+		background: #efefef;
 	}
 
-	.subCardActions {
-		background: lighten($pink, 32%);
-		text-align: right;
-	}
+	.subCardActions {}
 }
 
 .fullWidthPhoto { margin: 0; }
