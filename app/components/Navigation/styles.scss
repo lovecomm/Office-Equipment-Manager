@@ -32,11 +32,18 @@ header[data-react-toolbox="app-bar"] {
 		color: white;
 	}
 
-	> li[data-react-toolbox="menu-item"]{
-		font-weight: 300;
+	> li[data-react-toolbox="menu-item"],
+	> a > li[data-react-toolbox="menu-item"],
+	> div > button[data-react-toolbox="button"] {
+		font-weight: 400;
+		color: white;
+		padding-left: 0;
+		padding-right: 0;
+		-webkit-font-smoothing: antialiased !important;
+		font-smoothing: antialiased !important;
 
 		&[class*='active'] {
-			font-weight: 400;
+			font-weight: 600;
 		}
 
 		&:hover { background-color: rgba(0,0,0,0); }

@@ -48,7 +48,7 @@ function MenuItems (props) {
 				<MenuItem icon='laptop' caption='Make & Model' onClick={props.sortFeedHardware}/>
 			</IconMenu>
 			<MenuDivider />
-			<Link to='/logout'>{'Sign Out'}</Link>
+			<Link to='/logout' ><MenuItem caption='Sign Out'/></Link>
 		</div>)
 	} else {
 		return <span></span>
