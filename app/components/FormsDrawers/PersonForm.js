@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import { processImage } from 'helpers/utils'
+import { Loader } from 'components'
 import { Drawer, Input, Button } from 'react-toolbox/lib'
 import { button, headline, formWrapper, drawer, error, imageInput } from './styles.scss'
 
@@ -13,6 +14,7 @@ PersonForm.propTypes = {
 	photoName: string.isRequired,
 	isOpen: bool.isRequired,
 	editing: bool.isRequired,
+	isSubmitting: bool.isRequired,
 	closePersonForm: func.isRequired,
 	isSubmitDisabled: bool.isRequired,
 	updatePersonFormFirstName: func.isRequired,
@@ -21,10 +23,12 @@ PersonForm.propTypes = {
 	newPersonFanout: func.isRequired,
 	updatePersonFanout: func.isRequired,
 	error: string.isRequired,
+	updatePersonFormIsSubmitting: func.isRequired,
 }
 
 export default function PersonForm (props, context) {
 	function submitPeople () {
+		props.updatePersonFormIsSubmitting(true)
 		let person = {
 			personId: props.personId,
 			firstName: props.firstName,
@@ -88,6 +92,9 @@ export default function PersonForm (props, context) {
 					onClick={submitPeople}
 					disabled={props.isSubmitDisabled}
 					className={button} />
+				{props.error === '' && props.isSubmitting === true
+				? <div style={{position: 'relative'}}><Loader marginTop='25px' marginBottom='0' /></div>
+				: ''}
 				<span className={error}>{props.error}</span>
 			</div>
 		</Drawer>

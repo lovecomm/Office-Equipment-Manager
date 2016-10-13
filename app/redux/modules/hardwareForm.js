@@ -12,6 +12,7 @@ const UPDATE_HARDWARE_FORM_PHOTO = 'UPDATE_HARDWARE_FORM_PHOTO'
 const UPDATE_HARDWARE_FORM_PHOTO_NAME = 'UPDATE_HARDWARE_FORM_PHOTO_NAME'
 const UPDATE_HARDWARE_FORM_IS_COMPUTER = 'UPDATE_HARDWARE_FORM_IS_COMPUTER'
 const UPDATE_HARDWARE_FORM_ERROR = 'UPDATE_HARDWARE_FORM_ERROR'
+const UPDATE_HARDWARE_FORM_IS_SUBMITTING = 'UPDATE_HARDWARE_FORM_IS_SUBMITTING'
 const UPDATE_HARDWARE_FORM_EDITING = 'UPDATE_HARDWARE_FORM_EDITING'
 const UPDATE_HARDWARE_FORM_HARDWARE_ID = 'UPDATE_HARDWARE_FORM_HARDWARE_ID'
 
@@ -25,6 +26,13 @@ export function openHardwareForm () {
 export function closeHardwareForm () {
 	return {
 		type: CLOSE_HARDWARE_FORM,
+	}
+}
+
+export function updateHardwareFormIsSubmitting (isSubmitting) {
+	return {
+		type: UPDATE_HARDWARE_FORM_IS_SUBMITTING,
+		isSubmitting,
 	}
 }
 
@@ -122,13 +130,13 @@ export function initiateHardwareForm (hardwareId) {
 
 export function newHardwareFanout (hardware) {
 	return function (dispatch, getState) {
-		console.log('in newHardwareFanout photo', hardware.photo)
 		saveNewHardware(getState().hardwares, hardware, getState().users.authedId)
 		.then((hardwareWithId) => {
 			dispatch(hardwareFormAddHardware(hardwareWithId))
 			dispatch(closeHardwareForm())
 		})
 		.catch((err) => {
+			dispatch(updateHardwareFormIsSubmitting(false))
 			dispatch(updateHardwareFormError(err.toString()))
 		})
 	}
@@ -138,7 +146,10 @@ export function updateHardwareFanout (hardware) {
 	return function (dispatch, getState) {
 		saveUpdatedHardware(getState().hardwares, hardware, getState().users.authedId, getState().items)
 		.then(() => dispatch(closeHardwareForm()))
-		.catch((error) => dispatch(updateHardwareFormError(error.toString())))
+		.catch((error) => {
+			dispatch(updateHardwareFormIsSubmitting(false))
+			dispatch(updateHardwareFormError(error.toString()))
+		})
 	}
 }
 
@@ -153,6 +164,7 @@ const initialState = {
 	isComputer: false,
 	isOpen: false,
 	error: '',
+	isSubmitting: false,
 	editing: false,
 }
 
@@ -164,18 +176,7 @@ export default function hardwareForm (state = initialState, action) {
 			isOpen: true,
 		}
 	case CLOSE_HARDWARE_FORM:
-		return {
-			hardwareId: '',
-			make: '',
-			model: '',
-			description: '',
-			photo: {},
-			photoName: '',
-			isComputer: false,
-			isOpen: false,
-			error: '',
-			editing: false,
-		}
+		return initialState
 	case UPDATE_HARDWARE_FORM_HARDWARE_ID:
 		return {
 			...state,
@@ -216,6 +217,11 @@ export default function hardwareForm (state = initialState, action) {
 		return {
 			...state,
 			error: action.error,
+		}
+	case UPDATE_HARDWARE_FORM_IS_SUBMITTING:
+		return {
+			...state,
+			isSubmitting: action.isSubmitting,
 		}
 	case UPDATE_HARDWARE_FORM_EDITING:
 		return {

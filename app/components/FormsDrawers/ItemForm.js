@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import { processImage } from 'helpers/utils'
+import { Loader } from 'components'
 import { Drawer, Input, Button, DatePicker, Autocomplete } from 'react-toolbox/lib'
 import { button, headline, formWrapper, drawer, imageInput, selectedPhoto, error } from './styles.scss'
 
@@ -20,6 +21,7 @@ ItemForm.propTypes = {
 	people: object.isRequired,
 	editing: bool.isRequired,
 	error: string.isRequired,
+	isSubmitting: bool.isRequired,
 	// START Bound to dispatch
 	closeItemForm: func.isRequired,
 	updateItemFormSerial: func.isRequired,
@@ -30,6 +32,7 @@ ItemForm.propTypes = {
 	updateItemFormHardwareInfo: func.isRequired,
 	newItemFanout: func.isRequired,
 	updateItemFanout: func.isRequired,
+	updateItemFormIsSubmitting: func.isRequired,
 	// END Bound to dispatch
 	isSubmitDisabled: bool.isRequired,
 }
@@ -58,6 +61,7 @@ export default function ItemForm (props, context) {
 		return hardwareList
 	}
 	function submitItems () {
+		props.updateItemFormIsSubmitting(true)
 		let item = {
 			itemId: props.itemId,
 			purchasedDate: props.purchasedDate,
@@ -161,6 +165,9 @@ export default function ItemForm (props, context) {
 					onClick={submitItems}
 					disabled={props.isSubmitDisabled}
 					className={button} />
+				{props.error === '' && props.isSubmitting === true
+				? <div style={{position: 'relative'}}><Loader marginTop='25px' marginBottom='0' /></div>
+				: ''}
 				<span className={error}>{props.error}</span>
 			</div>
 		</Drawer>

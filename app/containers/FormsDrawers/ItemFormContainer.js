@@ -32,6 +32,7 @@ function mapStateToProps ({itemForm, people, hardwares}, props) {
 		hardwares,
 		error: itemForm.error,
 		isSubmitDisabled: disableSubmit(),
+		isSubmitting: itemForm.isSubmitting,
 	}
 }
 

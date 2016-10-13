@@ -26,6 +26,7 @@ function mapStateToProps ({hardwareForm}, props) {
 		error: hardwareForm.error,
 		editing: hardwareForm.editing,
 		isSubmitDisabled: disableSubmit(),
+		isSubmitting: hardwareForm.isSubmitting,
 	}
 }
 

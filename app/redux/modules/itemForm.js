@@ -13,6 +13,7 @@ const UPDATE_ITEM_FORM_PERSON_ID = 'UPDATE_ITEM_FORM_PERSON_ID'
 const UPDATE_ITEM_FORM_HARDWARE = 'UPDATE_ITEM_FORM_HARDWARE'
 const UPDATE_ITEM_FORM_HARDWARE_ID = 'UPDATE_ITEM_FORM_HARDWARE_ID'
 const UPDATE_ITEM_FORM_ERROR = 'UPDATE_ITEM_FORM_ERROR'
+const UPDATE_ITEM_FORM_IS_SUBMITTING = 'UPDATE_ITEM_FORM_IS_SUBMITTING'
 const UPDATE_ITEM_FORM_ITEM_ID = 'UPDATE_ITEM_FORM_ITEM_ID'
 const UPDATE_ITEM_FORM_PHOTO_NAME = 'UPDATE_ITEM_FORM_PHOTO_NAME'
 const UPDATE_ITEM_FORM_EDITING = 'UPDATE_ITEM_FORM_EDITING'
@@ -56,6 +57,13 @@ export function openItemForm () {
 export function closeItemForm () {
 	return {
 		type: CLOSE_ITEM_FORM,
+	}
+}
+
+export function updateItemFormIsSubmitting (isSubmitting) {
+	return {
+		type: UPDATE_ITEM_FORM_IS_SUBMITTING,
+		isSubmitting,
 	}
 }
 
@@ -195,6 +203,7 @@ const initialState = {
 	photo: {},
 	photoName: '',
 	error: '',
+	isSubmitting: false,
 	editing: false,
 }
 
@@ -268,10 +277,10 @@ export default function itemForm (state = initialState, action) {
 			...state,
 			editing: true,
 		}
-	case UPDATE_ITEM_FORM_PHOTO_NAME:
+	case UPDATE_ITEM_FORM_IS_SUBMITTING:
 		return {
 			...state,
-			photoName: action.photoName,
+			isSubmitting: action.isSubmitting,
 		}
 	default:
 		return state

@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import { IconMenu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu'
+import { Button } from 'react-toolbox/lib'
 import { AppBar } from 'react-toolbox/lib/app_bar'
 import { title, dropdownMenu, container, menuItems } from './styles.scss'
 import { HardwareFormToggleContainer, PersonFormToggleContainer, ItemFormToggleContainer } from 'containers'
@@ -21,14 +22,10 @@ function MenuItems (props) {
 	if (props.isAuthed) {
 		return (<div className={menuItems}>
 			<MenuDivider />
-			<IconMenu
-				icon={<MenuItem>{`Cards: ${props.activeCards}`}</MenuItem>}
-				position='topLeft'
-				iconRipple={false}>
-				<MenuItem icon='view_agenda' caption='Items' onClick={(() => props.changeActiveCards('items'))}/>
-				<MenuItem icon='people' caption='People' onClick={(() => props.changeActiveCards('people'))}/>
-				<MenuItem icon='laptop' caption='Hardware' onClick={(() => props.changeActiveCards('hardware'))}/>
-			</IconMenu>
+			<MenuItem onClick={(() => props.changeActiveCards('items'))} className={(() => props.activeCards === 'items' ? 'active' : '')()}>{'Items'}</MenuItem>
+			<MenuItem onClick={(() => props.changeActiveCards('people'))} className={(() => props.activeCards === 'people' ? 'active' : '')()}>{'People'}</MenuItem>
+			<MenuItem onClick={(() => props.changeActiveCards('hardware'))} className={(() => props.activeCards === 'hardware' ? 'active' : '')()}>{'Hardware'}</MenuItem>
+			<MenuDivider />
 			<IconMenu
 				className={dropdownMenu}
 				icon={<MenuItem>{'New'}</MenuItem>}

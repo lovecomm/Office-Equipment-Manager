@@ -29,8 +29,18 @@ header[data-react-toolbox="app-bar"] {
 		padding: 0.15em 0;
 		position: relative;
 		transition: transform 0.3s ease;
+		color: white;
+	}
 
-		// &:hover { transform: scale(0.95); }
+	> li[data-react-toolbox="menu-item"]{
+		font-weight: 300;
+
+		&[class*='active'] {
+			font-style: italic;
+			font-weight: 400;
+		}
+
+		&:hover { background-color: rgba(0,0,0,0); }
 	}
 
 	span[data-react-toolbox="font-icon"] > li {

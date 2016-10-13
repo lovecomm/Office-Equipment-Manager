@@ -31,7 +31,7 @@ const MainContainer = React.createClass({
 	},
 	render () {
 		return this.props.isFetching === true
-			? <Loader size={2} /> // We want this b/c there is going to be some lag while the Auth check is running
+			? <Loader marginTop='25%' marginBottom='0' /> // We want this b/c there is going to be some lag while the Auth check is running
 			: (<ThemeProvider>
 				<div className={wrapper}>
 					<div className={innerWrapper}>

@@ -9,6 +9,7 @@ const UPDATE_PERSON_FORM_PHOTO = 'UPDATE_PERSON_FORM_PHOTO'
 const UPDATE_PERSON_FORM_PHOTO_NAME = 'UPDATE_PERSON_FORM_PHOTO_NAME'
 const UPDATE_PERSON_FORM_PERSON_ID = 'UPDATE_PERSON_FORM_PERSON_ID'
 const UPDATE_PERSON_FORM_ERROR = 'UPDATE_PERSON_FORM_ERROR'
+const UPDATE_PERSON_FORM_IS_SUBMITTING = 'UPDATE_PERSON_FORM_IS_SUBMITTING'
 const UPDATE_PERSON_FORM_EDITING = 'UPDATE_PERSON_FORM_EDITING'
 
 // ACTIONS
@@ -21,6 +22,13 @@ export function openPersonForm () {
 export function closePersonForm () {
 	return {
 		type: CLOSE_PERSON_FORM,
+	}
+}
+
+export function updatePersonFormIsSubmitting (isSubmitting) {
+	return {
+		type: UPDATE_PERSON_FORM_IS_SUBMITTING,
+		isSubmitting,
 	}
 }
 
@@ -107,8 +115,9 @@ export function newPersonFanout (person) {
 			dispatch(PersonFormAddPerson(personWithId))
 			dispatch(closePersonForm())
 		})
-		.catch((error) => {
-			dispatch(updatePersonFormError(error.toString()))
+		.catch((err) => {
+			dispatch(updatePersonFormIsSubmitting(false))
+			dispatch(updatePersonFormError(err.toString()))
 		})
 	}
 }
@@ -117,7 +126,10 @@ export function updatePersonFanout (person) {
 	return function (dispatch, getState) {
 		saveUpdatedPerson(getState().people, person, getState().users.authedId)
 		.then(() => dispatch(closePersonForm()))
-		.catch((error) => dispatch(updatePersonFormError(error.toString())))
+		.catch((error) => {
+			dispatch(updatePersonFormIsSubmitting(false))
+			dispatch(updatePersonFormError(error.toString()))
+		})
 	}
 }
 
@@ -127,6 +139,7 @@ const initialState = {
 	firstName: '',
 	lastName: '',
 	isOpen: false,
+	isSubmitting: false,
 	error: '',
 	editing: false,
 	photo: {},
@@ -171,6 +184,11 @@ export default function personForm (state = initialState, action) {
 		return {
 			...state,
 			error: action.error,
+		}
+	case UPDATE_PERSON_FORM_IS_SUBMITTING:
+		return {
+			...state,
+			isSubmitting: action.isSubmitting,
 		}
 	case UPDATE_PERSON_FORM_PHOTO:
 		return {

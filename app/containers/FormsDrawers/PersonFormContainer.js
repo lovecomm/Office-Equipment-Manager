@@ -25,6 +25,7 @@ function mapStateToProps ({personForm}, props) {
 		error: personForm.error,
 		editing: personForm.editing,
 		isSubmitDisabled: disableSubmit(),
+		isSubmitting: personForm.isSubmitting,
 	}
 }
 

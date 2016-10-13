@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import { processImage } from 'helpers/utils'
+import { Loader } from 'components'
 import { Drawer, Input, Button, Checkbox } from 'react-toolbox/lib'
 import { drawer, button, headline, formWrapper, selectedPhoto, imageInput, error } from './styles.scss'
 const	{ func, bool, string, object } = PropTypes
@@ -14,6 +15,7 @@ HardwareForm.propTypes = {
 	isComputer: bool.isRequired,
 	isOpen: bool.isRequired,
 	error: string.isRequired,
+	isSubmitting: bool.isRequired,
 	editing: bool.isRequired,
 	closeHardwareForm: func.isRequired,
 	isSubmitDisabled: bool.isRequired,
@@ -24,10 +26,12 @@ HardwareForm.propTypes = {
 	updateHardwareFormIsComputer: func.isRequired,
 	newHardwareFanout: func.isRequired,
 	updateHardwareFanout: func.isRequired,
+	updateHardwareFormIsSubmitting: func.isRequired,
 }
 
 export default function HardwareForm (props, context) {
 	function submitHardware () {
+		props.updateHardwareFormIsSubmitting(true)
 		let hardware = {
 			hardwareId: props.hardwareId,
 			make:	props.make,
@@ -112,6 +116,9 @@ export default function HardwareForm (props, context) {
 					onClick={submitHardware}
 					disabled={props.isSubmitDisabled}
 					className={button} />
+				{props.error === '' && props.isSubmitting === true
+				? <div style={{position: 'relative'}}><Loader marginTop='25px' marginBottom='0' /></div>
+				: ''}
 				<span className={error}>{props.error}</span>
 			</div>
 		</Drawer>
