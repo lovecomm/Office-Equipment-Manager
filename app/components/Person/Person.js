@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
-import { Card, CardTitle, CardActions } from 'react-toolbox/lib/card'
+import { Card, CardTitle, CardActions, CardText } from 'react-toolbox/lib/card'
 import { Button } from 'react-toolbox/lib'
-import { cardActions, subCardActions } from 'sharedStyles/cards.scss'
+import { cardActions, subCardActions, chips } from 'sharedStyles/cards.scss'
 import { EditMenuContainer } from 'containers'
 
 Person.propTypes = {
@@ -20,8 +20,10 @@ export default function Person (props) {
 		<Card>
 			<CardTitle
 				avatar={props.photoUrl}
-				title={(() => `${props.firstName} ${props.lastName}`)()}
-				subtitle={`Items: ${props.itemIds.length.toString()}`} />
+				title={(() => `${props.firstName} ${props.lastName}`)()} />
+			<CardText className={chips}>
+				<span>{(() => `${props.itemIds.length.toString()} item(s) assigned`)()}</span>
+			</CardText>
 			{(() => {
 				if (props.itemIds.length > 0 && !props.collapsed) {
 					return props.itemIds.map((id) => (

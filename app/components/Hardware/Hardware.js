@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
-import { Card, CardTitle, CardActions } from 'react-toolbox/lib/card'
+import { Card, CardTitle, CardActions, CardText } from 'react-toolbox/lib/card'
 import { Button } from 'react-toolbox/lib'
-import { cardActions, subCardActions } from 'sharedStyles/cards.scss'
+import { cardActions, subCardActions, chips } from 'sharedStyles/cards.scss'
 import { EditMenuContainer } from 'containers'
 
 Hardware.propTypes = {
@@ -20,8 +20,10 @@ export default function Hardware (props) {
 		<Card>
 			<CardTitle
 				avatar={props.photoUrl}
-				title={(() => `${props.make} ${props.model}`)()}
-				subtitle={`Items: ${props.itemIds.length.toString()}`} />
+				title={(() => `${props.make} ${props.model}`)()} />
+			<CardText className={chips}>
+				<span>{(() => `Used by ${props.itemIds.length.toString()} item(s)`)()}</span>
+			</CardText>
 			{(() => {
 				if (props.itemIds.length > 0 && !props.collapsed) {
 					return props.itemIds.map((id) => (
