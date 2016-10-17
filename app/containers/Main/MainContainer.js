@@ -6,7 +6,7 @@ import { firebaseAuth } from 'config/constants'
 import { Loader } from 'components'
 import { FormsDrawersContainer, NavigationContainer } from 'containers'
 import { ThemeProvider } from 'react-css-themr'
-import { container, innerContainer, navWrapper, wrapper, innerWrapper } from './styles.scss'
+import { container } from 'sharedStyles/layout.scss'
 
 const MainContainer = React.createClass({
 	propTypes: {
@@ -33,16 +33,12 @@ const MainContainer = React.createClass({
 		return this.props.isFetching === true
 			? <Loader marginTop='25%' marginBottom='0' /> // We want this b/c there is going to be some lag while the Auth check is running
 			: (<ThemeProvider>
-				<div className={wrapper}>
-					<div className={innerWrapper}>
-						<div className={container}>
-							<NavigationContainer isAuthed={this.props.isAuthed} className={navWrapper}/>
-							<div className={innerContainer}>
-								{this.props.children}
-							</div>
-							<FormsDrawersContainer />
-						</div>
+				<div>
+					<NavigationContainer isAuthed={this.props.isAuthed} />
+					<div className={container}>
+						{this.props.children}
 					</div>
+					<FormsDrawersContainer />
 				</div>
 			</ThemeProvider>
 		)

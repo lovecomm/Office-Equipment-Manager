@@ -1,70 +1,37 @@
 header[data-react-toolbox="app-bar"] {
+	width: 100%;
+	padding: 0 3em;
 	height: auto;
-	display: flex;
-	flex-direction: column;
-	justify-content: flex-start;
-	position: fixed;
-}
 
-.container {
-	display: flex;
-	flex-direction: column;
-	justify-content: flex-start;
-	align-items: flex-start;
-	padding-top: 1.25em;
-	min-width: 140px;
+	> div[class*="container"] {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+	}
 }
 
 .menuItems {
-	width: 100%;
-	padding-top: 1.15em;
-	display: flex;
-	flex-direction: column;
-	justify-content: flex-start;
-	align-items: flex-start;
 	text-transform: uppercase;
-	text-align: left;
 
-	> * {
-		padding: 0.15em 0;
-		position: relative;
-		transition: transform 0.3s ease;
-		color: white;
-	}
-
-	> li[data-react-toolbox="menu-item"],
-	> a > li[data-react-toolbox="menu-item"],
-	> div > button[data-react-toolbox="button"] {
+	li, a {
 		font-weight: 400;
-		color: white;
-		padding-left: 0;
-		padding-right: 0;
+		font-size: 14px;
+		color: black;
 		-webkit-font-smoothing: antialiased !important;
 		font-smoothing: antialiased !important;
 
-		&[class*='active'] {
-			font-weight: 600;
-		}
-
-		&:hover { background-color: rgba(0,0,0,0); }
+		&[class*='active'] { font-weight: 600; }
 	}
 
-	span[data-react-toolbox="font-icon"] > li {
-		color: white;
-		padding: 0;
-	}
-
-	div[data-react-toolbox="menu"] { color: black;}
-
-	> hr {
-		opacity: 0.1;
-		padding: 0;
-
-		+ div { padding-top: 0; }
-	}
+	> button > span[data-react-toolbox="font-icon"] { color: white;	}
 }
 
 .title {
 	text-decoration: none;
 	text-transform: uppercase;
+	font-size: 18px;
+	margin-top: -4px;
+	margin-right: 17px;
+	padding: 0.75em 0;
 }
