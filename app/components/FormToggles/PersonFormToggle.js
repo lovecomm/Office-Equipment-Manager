@@ -9,7 +9,7 @@ PersonFormToggle.propTypes = {
 
 export default function PersonFormToggle ({handleOpenEditForm, editing}) {
 	if (editing) {
-		return (<Button label='Edit' accent={true} onClick={handleOpenEditForm} />)
+		return (<Button icon='edit' onClick={handleOpenEditForm} />)
 	} else {
 		return (<MenuItem icon='people' onClick={handleOpenEditForm} caption='Person'/>)
 	}

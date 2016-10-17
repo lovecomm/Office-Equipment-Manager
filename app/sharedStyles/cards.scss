@@ -16,15 +16,26 @@ div[data-react-toolbox="card"] {
 	}
 
 	div[data-react-toolbox="avatar"] {
-		width: 45px;
-		height: 37px;
+		width: 35px;
+		height: 35px;
+		overflow: hidden;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: white;
+
+		> img {
+			width: 300px;
+		}
 	}
 
 	.cardActions {
 		background: #efefef;
-	}
+		display: flex;
 
-	.subCardActions {}
+		&[data-content="true"] { justify-content: space-between; }
+		&[data-content="false"] { justify-content: flex-end; }
+	}
 }
 
 .fullWidthPhoto { margin: 0; }

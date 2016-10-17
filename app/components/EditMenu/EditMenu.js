@@ -17,21 +17,21 @@ export default function EditMenu (props) {
 		return (
 			<div>
 				<ItemFormToggleContainer itemId={props.itemId} editing={true}/>
-				<Button label='Delete' accent={true} onClick={() => props.handleDeletion('items', props.itemId)} />
+				<Button icon='delete' onClick={() => props.handleDeletion('items', props.itemId)} />
 			</div>
 		)
 	case 'person':
 		return (
 			<div>
 				<PersonFormToggleContainer person={props.person} editing={true}/>
-				<Button label='Delete' accent={true} onClick={() => props.handleDeletion('people', props.person.personId)} />
+				<Button icon='delete' onClick={() => props.handleDeletion('people', props.person.personId)} />
 			</div>
 		)
 	case 'hardware':
 		return (
 			<div>
 				<HardwareFormToggleContainer editing={true} hardware={props.hardware}/>
-				<Button label='Delete' accent={true} onClick={() => props.handleDeletion('hardwares', props.hardware.hardwareId)} />
+				<Button icon='delete' onClick={() => props.handleDeletion('hardwares', props.hardware.hardwareId)} />
 			</div>
 		)
 	default:

@@ -23,8 +23,8 @@ export default function Item (props) {
 		<Card>
 			<CardTitle
 				avatar={props.hardware.photo.url}
-				subtitle={props.serial}
-				title={(() => `${props.hardware.make} ${props.hardware.model}`)()}/>
+				title={props.serial}
+				subtitle={(() => `${props.hardware.make} ${props.hardware.model}`)()}/>
 			<CardText className={chips}>
 				<span>{(() => `${props.person.firstName} ${props.person.lastName}`)()}</span>
 				<div className={status}>
@@ -62,7 +62,7 @@ export default function Item (props) {
 						</CardText>
 					</div>
 				: ''}
-				<CardActions className={cardActions}>
+				<CardActions className={cardActions} data-content={(() => props.hasSubContent)()}>
 					{props.hasSubContent
 					? <Button primary={true} label={(() => props.collapsed ? 'Show More' : 'Show Less')()} onClick={props.envokeHandleCollapsed}/>
 					: ''}

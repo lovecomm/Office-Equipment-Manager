@@ -9,7 +9,7 @@ HardwareFormToggle.propTypes = {
 
 export default function HardwareFormToggle ({handleOpenEditForm, editing}) {
 	if (editing) {
-		return (<Button label='Edit' accent={true} onClick={handleOpenEditForm} />)
+		return (<Button icon='edit' onClick={handleOpenEditForm} />)
 	} else {
 		return (<MenuItem icon='laptop' onClick={handleOpenEditForm} caption='Hardware'/>)
 	}

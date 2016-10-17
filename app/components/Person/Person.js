@@ -35,7 +35,7 @@ export default function Person (props) {
 					))
 				}
 			})()}
-			<CardActions className={cardActions}>
+			<CardActions className={cardActions} data-content={(() => props.itemIds.length > 0)()}>
 				{props.itemIds.length > 0
 				? <Button primary={true} label={(() => props.collapsed ? 'Show Items' : 'Hide Items')()} onClick={props.envokeHandleCollapsed}/>
 				: ''}
