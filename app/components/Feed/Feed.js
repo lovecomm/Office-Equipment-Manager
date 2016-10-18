@@ -49,7 +49,7 @@ export default function Feed (props) {
 			<div className={list}>
 				{(() => {
 					switch (props.activeCards) {
-					case 'items':
+					case '/':
 						return props.itemIds.map((id) => (
 							<ItemContainer
 								itemId={id}

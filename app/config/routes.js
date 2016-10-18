@@ -8,7 +8,11 @@ export default function getRoutes (checkAuth) {
 			<Route path='/' component={MainContainer}>
 				<Route path='auth' component={AuthenticateContainer} onEnter={checkAuth} />
 				<Route path='logout' component={LogoutContainer} />
-				<IndexRoute component={FeedContainer} onEnter={checkAuth} />
+				<Route path='people' component={FeedContainer} onEnter={checkAuth}
+					activeCards={'people'}/>
+				<Route path='hardware' component={FeedContainer} onEnter={checkAuth}
+					activeCards={'hardware'}/>
+				<IndexRoute component={FeedContainer} onEnter={checkAuth} activeCards={'/'}/>
 			</Route>
 		</Router>
 	)
