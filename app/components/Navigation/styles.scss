@@ -1,7 +1,10 @@
-header[data-react-toolbox="app-bar"] {
+@import 'theme/_theme.scss';
+
+.appBar {
 	width: 100%;
 	padding: 0 3em;
 	height: auto;
+	background-color: $color-primary;
 
 	> div[class*="container"] {
 		display: flex;
@@ -25,6 +28,43 @@ header[data-react-toolbox="app-bar"] {
 	}
 
 	> button > span[data-react-toolbox="font-icon"] { color: white;	}
+}
+
+.menuItemsDesktop {
+	display: flex;
+	flex-wrap: nowrap;
+
+	li[data-react-toolbox="menu-item"] { 
+		transition: background 0.3s ease;
+		color: white;
+		text-transform: uppercase;
+		margin: 12px 0;
+		padding: 8px 15px;
+		border-radius: 4px;
+
+		&:hover { background-color: rgba(0,0,0,0.1)}
+		&:first-child { margin-left: 0;}
+		&[class*='active'] { font-weight: 600; }
+		
+		&:last-child {
+			margin-left: 30px;
+			position: relative;
+			overflow: visible;
+
+			&::before {
+				content: '';
+				display: block;
+				position: absolute;
+				height: 75%;
+				width: 1px;
+				top: 0;
+				bottom: 0;
+				margin: auto;
+				left: -15px;
+				background-color: rgba(255,255,255,0.1);
+			}
+		}
+	}
 }
 
 .title {

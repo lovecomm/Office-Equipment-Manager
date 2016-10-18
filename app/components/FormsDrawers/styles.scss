@@ -1,3 +1,5 @@
+@import 'theme/_theme.scss';
+
 .drawer {
 	width: 350px;
 }
@@ -25,7 +27,7 @@
 	font-size: 22px;
 	padding: 10px 25px;
 	color: white;
-	background-color: #1976D2;
+	background-color: $color-primary;
 }
 
 .formWrapper {

@@ -1,5 +1,4 @@
-$pink: #ff4081;
-$blue: #1976D2;
+@import 'theme/_theme.scss';
 
 div[data-react-toolbox="card"] {
 	margin: 14px 14px;
@@ -61,6 +60,6 @@ div[data-react-toolbox="card"] {
 		text-transform: uppercase;
 	}
 
-	.statusReplace { background-color: darken($pink, 25%); }
-	.statusWarning { background-color: darken($blue, 25%); }
+	.statusReplace { background-color: darken($color-primary, 25%); }
+	.statusWarning { background-color: darken($color-accent, 25%); }
 }
