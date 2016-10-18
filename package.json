@@ -17,6 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "autoprefixer": "^6.4.0",
+    "classnames": "^2.2.5",
     "firebase": "^3.2.1",
     "imagemin-jpegtran": "^5.0.2",
     "normalize.css": "^4.2.0",

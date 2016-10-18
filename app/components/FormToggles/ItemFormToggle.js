@@ -11,6 +11,6 @@ export default function ItemFormToggle ({handleOpenForm, editing}) {
 	if (editing) {
 		return (<Button icon='edit' onClick={handleOpenForm} />)
 	} else {
-		return (<MenuItem icon='view_agenda' onClick={handleOpenForm} caption='Item'/>)
+		return (<MenuItem icon='add' onClick={handleOpenForm} caption='New Item'/>)
 	}
 }

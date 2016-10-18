@@ -29,7 +29,7 @@ div[data-react-toolbox="card"] {
 	}
 
 	.cardActions {
-		background: #efefef;
+		background: $palette-grey-200;
 		display: flex;
 
 		&[data-content="true"] { justify-content: space-between; }

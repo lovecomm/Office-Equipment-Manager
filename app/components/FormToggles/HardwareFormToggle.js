@@ -11,6 +11,6 @@ export default function HardwareFormToggle ({handleOpenEditForm, editing}) {
 	if (editing) {
 		return (<Button icon='edit' onClick={handleOpenEditForm} />)
 	} else {
-		return (<MenuItem icon='laptop' onClick={handleOpenEditForm} caption='Hardware'/>)
+		return (<MenuItem icon='add' onClick={handleOpenEditForm} caption='New Hardware'/>)
 	}
 }

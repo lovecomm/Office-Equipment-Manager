@@ -1,0 +1,100 @@
+@import 'theme/_theme.scss';
+
+.toolbarWrapper {
+	margin: 46px auto;
+	width: 75%;
+}
+
+.toolbar {
+	background-color: $palette-grey-200;
+	border-radius: 4px;
+	display: flex;
+	justify-content: space-between;
+	text-transform: uppercase;
+
+	> * {
+		width: 33.3333%;
+		height: auto;
+	}
+
+	li[data-react-toolbox="menu-item"],
+	button[data-react-toolbox="button"] { height: 100%; }
+}
+
+.filterWrapper {
+	position: relative;
+	background-color: $color-primary;
+
+	> span { text-transform: uppercase; }
+	div[data-react-toolbox="input"]::after { border-top-color: white; }
+
+	> div[data-react-toolbox="autocomplete"] {
+		padding: 0 20px;
+
+		> ul,
+		> div[data-react-toolbox="input"] { padding: 0; }
+		> div[data-react-toolbox="input"] > input { border-color: rgba(255,255,255,0.1); }
+
+		label[class*='theme__label'] {
+			top: 1.3rem;
+			color: white !important;
+		}
+
+		input[type='text'] {
+			color: white;
+			font-weight: 300;
+			position: relative;
+			z-index: 99999;
+			padding-top: 20px;
+			padding-bottom: 2px;
+		}
+
+		> ul[class*='theme__suggestions'] {
+			margin-top: 8px;
+			margin-left: -20px;
+			color: black;
+		}
+	}
+
+	.filterChip {
+		font-size: 12px;
+		background-color: $color-accent;
+		color: #fff;
+	}
+
+	.chipWrapper {
+		color: white;
+		display: flex;
+		flex-wrap: nowrap;
+		justify-content: space-around;
+		align-content: center;
+		align-items: center;
+		height: 100%;
+		padding: 1em;
+	}
+}
+
+.sortWrapper {
+	display: flex;
+	// align-content: center;
+	height: auto;
+
+	> button[class*='toggle'] {
+		display: flex;
+		// align-content: center;
+		width: 100%;
+		justify-content: flex-end;
+
+		li[class*='menuItem'] {
+			&:first-child { padding-right: 0; }
+			&:last-child { padding-left: 0; }
+		}
+	}
+}
+
+.sortWrapperIcon {
+	padding: 0;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}

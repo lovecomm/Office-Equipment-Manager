@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react'
-import { ItemContainer, PersonContainer, HardwareContainer } from 'containers'
-import { toolbar, list, filter, filterWrapper, filterName } from './styles.scss'
-import { Autocomplete, Chip } from 'react-toolbox/lib'
+import { ItemContainer, PersonContainer, HardwareContainer, ToolbarContainer } from 'containers'
+import { list } from './styles.scss'
 import { Snackbar } from 'react-toolbox'
 
 Feed.propTypes = {
@@ -11,15 +10,6 @@ Feed.propTypes = {
 	hardwareIds: PropTypes.array.isRequired,
 	error: PropTypes.string.isRequired,
 	isFetching: PropTypes.bool.isRequired,
-	filter: PropTypes.object.isRequired,
-	sortFeedCreationDate: PropTypes.func.isRequired,
-	sortFeedPurchaseDate: PropTypes.func.isRequired,
-	sortFeedLastName: PropTypes.func.isRequired,
-	sortFeedFirstName: PropTypes.func.isRequired,
-	sortFeedHardware: PropTypes.func.isRequired,
-	changeSortOrder: PropTypes.func.isRequired,
-	updateAndHandleFilter: PropTypes.func.isRequired,
-	disableIsFiltering: PropTypes.func.isRequired,
 	handleConfirmDeleteTimeout: PropTypes.func.isRequired,
 	handleDeleteData: PropTypes.func.isRequired,
 	confirmDeleteActive: PropTypes.bool.isRequired,
@@ -31,21 +21,7 @@ export default function Feed (props) {
 	return props.isFetching === true
 		? <h3 style={{textAlign: 'center'}}>{'Getting your items...'}</h3>
 		: <div>
-			<div className={toolbar}>
-				<div className={filterWrapper}>
-					<span>{'Filter'}</span>
-					<Autocomplete
-						direction='down'
-						selectedPosition='above'
-						className={filter}
-						onChange={(value) => props.updateAndHandleFilter(value)}
-						value={props.filter.name}
-						source={props.filter.options}/>
-					{props.filter.isFiltering
-					? <Chip deletable={true} onDeleteClick={props.disableIsFiltering} className={filterName}>{props.filter.name}</Chip>
-					: ''}
-				</div>
-			</div>
+			<ToolbarContainer activeCards={props.activeCards}/>
 			<div className={list}>
 				{(() => {
 					switch (props.activeCards) {
