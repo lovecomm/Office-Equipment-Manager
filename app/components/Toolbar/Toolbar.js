@@ -1,7 +1,5 @@
 import React, { PropTypes } from 'react'
-// import classNames from 'classnames'
 import { toolbar, toolbarWrapper, filterChip, filterWrapper, sortWrapper, chipWrapper, sortWrapperIcon, newWrapper } from './styles.scss'
-// import { container } from 'sharedStyles/layout.scss'
 import { Autocomplete, Chip } from 'react-toolbox/lib'
 import { IconMenu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu'
 import { HardwareFormToggleContainer, ItemFormToggleContainer, PersonFormToggleContainer } from 'containers'
@@ -62,13 +60,35 @@ export default function Toolbar (props) {
 					position='topRight'
 					className={sortWrapper}
 					iconRipple={false}>
-					<MenuItem icon='cached' caption='Reverse Sort Order' onClick={props.changeSortOrder}/>
-					<MenuDivider />
-					<MenuItem icon='view_agenda' caption='Creation Date' onClick={props.sortFeedCreationDate}/>
-					<MenuItem icon='monetization_on' caption='Purchase Date' onClick={props.sortFeedPurchaseDate}/>
-					<MenuItem icon='people' caption='Last Name' onClick={props.sortFeedLastName}/>
-					<MenuItem icon='people' caption='First Name' onClick={props.sortFeedFirstName}/>
-					<MenuItem icon='laptop' caption='Make & Model' onClick={props.sortFeedHardware}/>
+					{(() => {
+						switch (props.activeView) {
+						case '/':
+							return (<div>
+								<MenuItem icon='cached' caption='Reverse Sort Order' onClick={props.changeSortOrder}/>
+								<MenuDivider />
+								<MenuItem icon='sim_card' caption='Serial' onClick={props.sortFeedPurchaseDate}/>
+								<MenuItem icon='event' caption='Date Created' onClick={props.sortFeedCreationDate}/>
+								<MenuItem icon='monetization_on' caption='Purchase Date' onClick={props.sortFeedPurchaseDate}/>
+							</div>)
+						case '/people':
+							return (<div>
+								<MenuItem icon='cached' caption='Reverse Sort Order' onClick={props.changeSortOrder}/>
+								<MenuDivider />
+								<MenuItem icon='event' caption='Date Created' onClick={props.sortFeedCreationDate}/>
+								<MenuItem icon='first_page' caption='First Name' onClick={props.sortFeedFirstName}/>
+								<MenuItem icon='last_page' caption='Last Name' onClick={props.sortFeedLastName}/>
+							</div>)
+						case '/hardware':
+							return (<div>
+								<MenuItem icon='cached' caption='Reverse Sort Order' onClick={props.changeSortOrder}/>
+								<MenuDivider />
+								<MenuItem icon='event' caption='Date Created' onClick={props.sortFeedCreationDate}/>
+								<MenuItem icon='devices_other' caption='Make' onClick={props.sortFeedHardware}/>
+								<MenuItem icon='tv' caption='Model' onClick={props.sortFeedHardware}/>
+							</div>)
+						default:
+						}
+					})()}
 				</IconMenu>
 			</div>
 		</div>
