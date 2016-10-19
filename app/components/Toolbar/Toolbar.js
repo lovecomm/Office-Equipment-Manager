@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
-import classNames from 'classnames'
-import { toolbar, toolbarWrapper, filterChip, filterWrapper, sortWrapper, chipWrapper, sortWrapperIcon } from './styles.scss'
-import { container } from 'sharedStyles/layout.scss'
+// import classNames from 'classnames'
+import { toolbar, toolbarWrapper, filterChip, filterWrapper, sortWrapper, chipWrapper, sortWrapperIcon, newWrapper } from './styles.scss'
+// import { container } from 'sharedStyles/layout.scss'
 import { Autocomplete, Chip } from 'react-toolbox/lib'
 import { IconMenu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu'
 import { HardwareFormToggleContainer, ItemFormToggleContainer, PersonFormToggleContainer } from 'containers'
@@ -21,9 +21,9 @@ Toolbar.propTypes = {
 
 export default function Toolbar (props) {
 	return (
-		<div className={classNames(container, toolbarWrapper)} >
+		<div className={toolbarWrapper} >
 			<div className={toolbar}>
-				<div>
+				<div className={newWrapper}>
 					{(() => {
 						switch (props.activeCards) {
 						case '/':

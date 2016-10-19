@@ -1,7 +1,11 @@
 @import 'theme/_theme.scss';
 
 .container {
-	width: 100%;
+	width: 90%;
 	max-width: 1300px;
 	margin: 0 auto;
+
+	@media (min-width: 900px) {
+		width: 80%;
+	}
 }
