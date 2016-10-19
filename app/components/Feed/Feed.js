@@ -4,7 +4,7 @@ import { list } from './styles.scss'
 import { Snackbar } from 'react-toolbox'
 
 Feed.propTypes = {
-	activeCards: PropTypes.string.isRequired,
+	activeView: PropTypes.string.isRequired,
 	itemIds: PropTypes.array.isRequired,
 	personIds: PropTypes.array.isRequired,
 	hardwareIds: PropTypes.array.isRequired,
@@ -21,23 +21,23 @@ export default function Feed (props) {
 	return props.isFetching === true
 		? <h3 style={{textAlign: 'center', marginTop: '25%'}}>{'Getting your items...'}</h3>
 		: <div>
-			<ToolbarContainer activeCards={props.activeCards}/>
+			<ToolbarContainer activeView={props.activeView}/>
 			<div className={list}>
 				{(() => {
-					switch (props.activeCards) {
+					switch (props.activeView) {
 					case '/':
 						return props.itemIds.map((id) => (
 							<ItemContainer
 								itemId={id}
 								key={id} />
 						))
-					case 'people':
+					case '/people':
 						return props.personIds.map((id) => (
 							<PersonContainer
 								personId={id}
 								key={id} />
 						))
-					case 'hardware':
+					case '/hardware':
 						return props.hardwareIds.map((id) => (
 							<HardwareContainer
 								hardwareId={id}

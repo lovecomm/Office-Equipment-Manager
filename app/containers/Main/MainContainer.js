@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as userActionCreators from 'redux/modules/users'
+import * as feedActionCreators from 'redux/modules/feed'
 import { firebaseAuth } from 'config/constants'
 import { Loader } from 'components'
 import { FormsDrawersContainer, NavigationContainer } from 'containers'
@@ -16,6 +17,10 @@ const MainContainer = React.createClass({
 		authUser: PropTypes.func.isRequired,
 		fetchingUserSuccess: PropTypes.func.isRequired,
 		removeFetchingUser: PropTypes.func.isRequired,
+		updateActiveView: PropTypes.func.isRequired,
+	},
+	contextTypes: {
+		router: PropTypes.object.isRequired,
 	},
 	componentDidMount () {
 		firebaseAuth().onAuthStateChanged((user) => {
@@ -28,6 +33,10 @@ const MainContainer = React.createClass({
 				this.props.removeFetchingUser()
 			}
 		})
+		// Set current active view
+		if (this.context.router.isActive('/people')) {
+			this.props.updateActiveView('/people')
+		} else if (this.context.router.isActive('/hardware')) this.props.updateActiveView('/hardware')
 	},
 	render () {
 		return this.props.isFetching === true
@@ -53,7 +62,7 @@ function mapStateToProps ({users}) {
 }
 
 function mapDispatchToProps (dispatch) {
-	return bindActionCreators(userActionCreators, dispatch)
+	return bindActionCreators({...userActionCreators, ...feedActionCreators}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainContainer)

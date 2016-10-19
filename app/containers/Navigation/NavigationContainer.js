@@ -13,26 +13,26 @@ const NavigationContainer = React.createClass({
 		sortFeedLastName: PropTypes.func.isRequired,
 		sortFeedFirstName: PropTypes.func.isRequired,
 		sortFeedHardware: PropTypes.func.isRequired,
-		updateActiveCards: PropTypes.func.isRequired,
+		updateActiveView: PropTypes.func.isRequired,
 	},
-	changeActiveCards: function (newCardType) {
-		this.props.updateActiveCards(newCardType)
+	changeActiveView (newView) {
+		this.props.updateActiveView(newView)
 	},
 	render () {
 		return (
-			<Navigation {...this.props} changeActiveCards={this.changeActiveCards}/>
+			<Navigation {...this.props} changeActiveView={this.changeActiveView}/>
 		)
 	},
 })
 
 function mapStateToProps ({feed}) {
-	const { isFetching, error, itemIds, filter, activeCards } = feed
+	const { isFetching, error, itemIds, filter, activeView } = feed
 	return {
 		isFetching,
 		error,
 		itemIds,
 		filter,
-		activeCards,
+		activeView,
 	}
 }
 

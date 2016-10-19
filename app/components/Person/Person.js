@@ -22,7 +22,9 @@ export default function Person (props) {
 				avatar={props.photoUrl}
 				title={(() => `${props.firstName} ${props.lastName}`)()} />
 			<CardText className={chips}>
-				<span>{(() => `${props.itemIds.length.toString()} item(s) assigned`)()}</span>
+				{(() => props.itemIds.map((id) => (
+					<span key={id}>{props.items[id].serial}</span>
+				)))()}
 			</CardText>
 			{(() => {
 				if (props.itemIds.length > 0 && !props.collapsed) {
@@ -30,9 +32,11 @@ export default function Person (props) {
 						<div key={`person_item_${id}`} style={{position: 'relative'}}>
 							<CardTitle
 								avatar={props.items[id].hardware.photo.url}
-								title={`${props.items[id].hardware.make} ${props.items[id].hardware.model}`}
-								subtitle={props.items[id].serial}/>
-							<CardActions className={subCardActions}><EditMenuContainer id={id} type='item'/></CardActions>
+								title={props.items[id].serial}
+								subtitle={`${props.items[id].hardware.make}  ${props.items[id].hardware.model}`}/>
+							<CardActions className={subCardActions}>
+								<EditMenuContainer id={id} type='item'/>
+							</CardActions>
 						</div>
 					))
 				}

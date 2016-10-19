@@ -7,7 +7,7 @@ import { IconMenu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu'
 import { HardwareFormToggleContainer, ItemFormToggleContainer, PersonFormToggleContainer } from 'containers'
 
 Toolbar.propTypes = {
-	activeCards: PropTypes.string.isRequired,
+	activeView: PropTypes.string.isRequired,
 	filter: PropTypes.object.isRequired,
 	sortFeedCreationDate: PropTypes.func.isRequired,
 	sortFeedPurchaseDate: PropTypes.func.isRequired,
@@ -25,12 +25,12 @@ export default function Toolbar (props) {
 			<div className={toolbar}>
 				<div className={newWrapper}>
 					{(() => {
-						switch (props.activeCards) {
+						switch (props.activeView) {
 						case '/':
 							return (<ItemFormToggleContainer editing={false} itemId='' serial=''/>)
-						case 'people':
+						case '/people':
 							return (<PersonFormToggleContainer editing={false} />)
-						case 'hardware':
+						case '/hardware':
 							return (<HardwareFormToggleContainer editing={false} />)
 						default:
 						}

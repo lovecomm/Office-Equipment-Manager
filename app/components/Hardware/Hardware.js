@@ -22,7 +22,9 @@ export default function Hardware (props) {
 				avatar={props.photoUrl}
 				title={(() => `${props.make} ${props.model}`)()} />
 			<CardText className={chips}>
-				<span>{(() => `Used by ${props.itemIds.length.toString()} item(s)`)()}</span>
+				{(() => props.itemIds.map((id) => (
+					<span key={id}>{props.items[id].serial}</span>
+				)))()}
 			</CardText>
 			{(() => {
 				if (props.itemIds.length > 0 && !props.collapsed) {
@@ -30,8 +32,8 @@ export default function Hardware (props) {
 						<div key={`hardware_item_${id}`} style={{position: 'relative'}}>
 							<CardTitle
 								avatar={props.items[id].person.photo.url}
-								title={`${props.items[id].person.firstName} ${props.items[id].person.lastName}`}
-								subtitle={props.items[id].serial}/>
+								subtitle={`${props.items[id].person.firstName} ${props.items[id].person.lastName}`}
+								title={props.items[id].serial}/>
 							<CardActions className={subCardActions}><EditMenuContainer id={id} type='item'/></CardActions>
 						</div>
 					))

@@ -23,9 +23,9 @@ export default function Item (props) {
 		<Card>
 			<CardTitle
 				avatar={props.hardware.photo.url}
-				title={props.serial}
-				subtitle={(() => `${props.hardware.make} ${props.hardware.model}`)()}/>
+				title={props.serial}/>
 			<CardText className={chips}>
+				<span>{(() => `${props.hardware.make} ${props.hardware.model}`)()}</span>
 				<span>{(() => `${props.person.firstName} ${props.person.lastName}`)()}</span>
 				<div className={status}>
 					{(() => {

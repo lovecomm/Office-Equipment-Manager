@@ -6,7 +6,7 @@ import * as feedActionCreators from 'redux/modules/feed'
 
 const ToolbarContainer = React.createClass({
 	propTypes: {
-		activeCards: PropTypes.string.isRequired,
+		activeView: PropTypes.string.isRequired,
 	},
 	render () {
 		return (

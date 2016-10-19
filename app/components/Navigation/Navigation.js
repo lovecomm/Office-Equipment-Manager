@@ -12,48 +12,48 @@ function MenuItems (props) {
 				<MenuItem caption={'Items'}
 					onClick={() => {
 						props.router.push('/')
-						props.changeActiveCards('items')
+						props.changeActiveView('/')
 					}}
-					className={(() => props.activeCards === 'items' ? 'active' : '')()} icon='view_agenda' />
+					className={(() => props.activeView === '/' ? 'active' : '')()} icon='view_agenda' />
 				<MenuItem caption={'People'}
 					onClick={() => {
 						props.router.push('/people')
-						props.changeActiveCards('people')
+						props.changeActiveView('/people')
 					}}
-					className={(() => props.activeCards === 'people' ? 'active' : '')()} icon='people' />
+					className={(() => props.activeView === '/people' ? 'active' : '')()} icon='people' />
 				<MenuItem caption={'Hardware'}
 					onClick={() => {
 						props.router.push('/hardware')
-						props.changeActiveCards('hardware')
+						props.changeActiveView('/hardware')
 					}}
-					className={(() => props.activeCards === 'hardware' ? 'active' : '')()} icon='laptop' />
+					className={(() => props.activeView === '/hardware' ? 'active' : '')()} icon='laptop' />
 				<MenuDivider />
 				<MenuItem icon='close' caption={'Sign Out'}
 					onClick={() => props.router.push('/logout')} />
 			</IconMenu>)
 		} else { // desktop menu
-			return <div className={menuItemsDesktop}>
+			return (<div className={menuItemsDesktop}>
 				<MenuItem caption={'Items'}
 					onClick={() => {
 						props.router.push('/')
-						props.changeActiveCards('items')
+						props.changeActiveView('/')
 					}}
-					className={(() => props.activeCards === 'items' ? 'active' : '')()}/>
+					className={(() => props.activeView === '/' ? 'active' : '')()}/>
 				<MenuItem caption={'People'}
 					onClick={() => {
 						props.router.push('/people')
-						props.changeActiveCards('people')
+						props.changeActiveView('/people')
 					}}
-					className={(() => props.activeCards === 'people' ? 'active' : '')()}/>
+					className={(() => props.activeView === '/people' ? 'active' : '')()}/>
 				<MenuItem caption={'Hardware'}
 					onClick={() => {
 						props.router.push('/hardware')
-						props.changeActiveCards('hardware')
+						props.changeActiveView('/hardware')
 					}}
-					className={(() => props.activeCards === 'hardware' ? 'active' : '')()}/>
+					className={(() => props.activeView === '/hardware' ? 'active' : '')()}/>
 				<MenuItem caption={'Sign Out'}
 					onClick={() => props.router.push('/logout')} />
-			</div>
+			</div>)
 		}
 	} else {
 		return <span></span>
@@ -71,8 +71,7 @@ export default function Navigation (props, context) {
 	)
 }
 
-
-Navigation.propTypes = MenuItems.propTypes = {
+Navigation.propTypes = {
 	isAuthed: PropTypes.bool.isRequired,
 	changeSortOrder: PropTypes.func.isRequired,
 	sortFeedCreationDate: PropTypes.func.isRequired,
@@ -80,10 +79,15 @@ Navigation.propTypes = MenuItems.propTypes = {
 	sortFeedLastName: PropTypes.func.isRequired,
 	sortFeedFirstName: PropTypes.func.isRequired,
 	sortFeedHardware: PropTypes.func.isRequired,
-	changeActiveCards: PropTypes.func.isRequired,
-	activeCards: PropTypes.string.isRequired,
+	changeActiveView: PropTypes.func.isRequired,
+	activeView: PropTypes.string.isRequired,
 }
 
-Navigation.contextTypes = MenuItems.contextTypes = {
+MenuItems.propTypes = {
+	...Navigation.propTypes,
+	router: PropTypes.object.isRequired,
+}
+
+Navigation.contextTypes = {
 	router: PropTypes.object.isRequired,
 }

@@ -18,12 +18,12 @@ const UPDATE_IS_FILTERING = 'UPDATE_IS_FILTERING'
 const UPDATE_CONFIRM_DELETE_ACTIVE = 'UPDATE_CONFIRM_DELETE_ACTIVE'
 const UPDATE_TO_DELETE_ID = 'UPDATE_TO_DELETE_ID'
 const UPDATE_TO_DELETE_TYPE = 'UPDATE_TO_DELETE_TYPE'
-const UPDATE_ACTIVE_CARDS = 'UPDATE_ACTIVE_CARDS'
+const UPDATE_ACTIVE_VIEW = 'UPDATE_ACTIVE_VIEW'
 
 // ACTIONS
-export function updateActiveCards (newCardType) {
+export function updateActiveView (newCardType) {
 	return {
-		type: UPDATE_ACTIVE_CARDS,
+		type: UPDATE_ACTIVE_VIEW,
 		newCardType,
 	}
 }
@@ -575,10 +575,10 @@ function filter (state, action) {
 const initialState = {
 	isFetching: false,
 	error: '',
-	activeCards: 'items',
 	itemIds: [],
 	personIds: [],
 	hardwareIds: [],
+	activeView: '/',
 	sortStatus: 'dateCreated',
 	sortOrder: 'asc',
 	filter: {
@@ -654,10 +654,10 @@ export default function feed (state = initialState, action) {
 			...state,
 			toDeleteId: action.toDeleteId,
 		}
-	case UPDATE_ACTIVE_CARDS:
+	case UPDATE_ACTIVE_VIEW:
 		return {
 			...state,
-			activeCards: action.newCardType,
+			activeView: action.newCardType,
 		}
 	case ADD_FILTER_OPTIONS:
 	case UPDATE_FILTER_NAME_AND_TYPE:

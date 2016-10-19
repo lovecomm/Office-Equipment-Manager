@@ -30,7 +30,7 @@ const FeedContainer = React.createClass({
 })
 
 function mapStateToProps ({feed}) {
-	const { isFetching, error, itemIds, personIds, hardwareIds, confirmDeleteActive, toDeleteType, toDeleteId } = feed
+	const { isFetching, error, itemIds, personIds, hardwareIds, confirmDeleteActive, toDeleteType, toDeleteId, activeView } = feed
 	return {
 		isFetching,
 		error,
@@ -40,6 +40,7 @@ function mapStateToProps ({feed}) {
 		confirmDeleteActive,
 		toDeleteType,
 		toDeleteId,
+		activeView,
 	}
 }
 
