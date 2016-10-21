@@ -14,32 +14,21 @@ const FeedContainer = React.createClass({
 	componentDidMount () {
 		this.props.setAndHandleFeedListener()
 	},
-	handleConfirmDeleteTimeout () {
-		this.props.updateConfirmDeleteActive(false)
-	},
-	handleDeleteData () {
-		this.props.confirmDeleteData()
-		this.props.updateConfirmDeleteActive(false)
-	},
 	render () {
 		return (
-			<Feed {...this.props} handleConfirmDeleteTimeout={this.handleConfirmDeleteTimeout}
-				handleDeleteData={this.handleDeleteData} activeCards={this.props.route.activeCards}/>
+			<Feed {...this.props} activeCards={this.props.route.activeCards}/>
 		)
 	},
 })
 
 function mapStateToProps ({feed}) {
-	const { isFetching, error, itemIds, personIds, hardwareIds, confirmDeleteActive, toDeleteType, toDeleteId, activeView } = feed
+	const { isFetching, error, itemIds, personIds, hardwareIds, activeView } = feed
 	return {
 		isFetching,
 		error,
 		itemIds,
 		personIds,
 		hardwareIds,
-		confirmDeleteActive,
-		toDeleteType,
-		toDeleteId,
 		activeView,
 	}
 }
