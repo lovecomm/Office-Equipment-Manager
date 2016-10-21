@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { Button } from 'react-toolbox/lib'
 import { Snackbar } from 'react-toolbox'
 
-EditMenu.propTypes = {
+DeleteData.propTypes = {
 	type: PropTypes.string.isRequired,
 	itemId: PropTypes.string,
 	serial: PropTypes.string,
@@ -16,7 +16,7 @@ EditMenu.propTypes = {
 	toDeleteId: PropTypes.string.isRequired,
 }
 
-export default function EditMenu (props) {
+export default function DeleteData (props) {
 	return (
 		<div>
 			{(() => {

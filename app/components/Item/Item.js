@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { Button } from 'react-toolbox/lib'
 import { Card, CardMedia, CardTitle, CardText, CardActions } from 'react-toolbox/lib/card'
 import { statusWarning, statusReplace, status, chips, fullWidthPhoto, cardActions } from 'sharedStyles/cards.scss'
-import { EditMenuContainer, ItemFormToggleContainer } from 'containers'
+import { DeleteDataContainer, ItemFormToggleContainer } from 'containers'
 
 Item.propTypes = {
 	itemId: PropTypes.string.isRequired,
@@ -67,7 +67,7 @@ export default function Item (props) {
 					? <Button primary={true} label={(() => props.collapsed ? 'Show More' : 'Show Less')()} onClick={props.envokeHandleCollapsed}/>
 					: ''}
 					<ItemFormToggleContainer itemId={props.itemId} editing={true}/>
-					<EditMenuContainer id={props.itemId} type='item' />
+					<DeleteDataContainer id={props.itemId} type='item' />
 				</CardActions>
 		</Card>
 	)

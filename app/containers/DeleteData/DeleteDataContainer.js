@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react'
-import { EditMenu } from 'components'
+import { DeleteData } from 'components'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as feedActionCreators from 'redux/modules/feed'
 
-const EditMenuContainer = React.createClass({
+const DeleteDataContainer = React.createClass({
 	propTypes: {
 		itemId: PropTypes.string,
 		serial: PropTypes.string,
@@ -26,7 +26,7 @@ const EditMenuContainer = React.createClass({
 	},
 	render () {
 		return (
-			<EditMenu {...this.props}
+			<DeleteData {...this.props}
 				handleConfirmDeleteTimeout={this.handleConfirmDeleteTimeout}
 				handleDeleteData={this.handleDeleteData}
 				handleDeletion={this.handleDeletion}/>
@@ -73,4 +73,4 @@ function mapStateToProps ({items, people, hardwares, feed}, ownProps) {
 export default connect(
 	mapStateToProps,
 	(dispatch) => bindActionCreators(feedActionCreators, dispatch),
-)(EditMenuContainer)
+)(DeleteDataContainer)
