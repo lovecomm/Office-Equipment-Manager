@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react'
 import { Button } from 'react-toolbox/lib'
-import { ItemFormToggleContainer, PersonFormToggleContainer, HardwareFormToggleContainer } from 'containers'
 import { Snackbar } from 'react-toolbox'
 
 EditMenu.propTypes = {
@@ -24,24 +23,15 @@ export default function EditMenu (props) {
 				switch (props.type) {
 				case 'item':
 					return (
-						<div>
-							<ItemFormToggleContainer itemId={props.itemId} editing={true}/>
-							<Button icon='delete' onClick={() => props.handleDeletion('items', props.itemId)} />
-						</div>
+						<Button icon='delete' onClick={() => props.handleDeletion('items', props.itemId)} />
 					)
 				case 'person':
 					return (
-						<div>
-							<PersonFormToggleContainer person={props.person} editing={true}/>
-							<Button icon='delete' onClick={() => props.handleDeletion('people', props.person.personId)} />
-						</div>
+						<Button icon='delete' onClick={() => props.handleDeletion('people', props.person.personId)} />
 					)
 				case 'hardware':
 					return (
-						<div>
-							<HardwareFormToggleContainer editing={true} hardware={props.hardware}/>
-							<Button icon='delete' onClick={() => props.handleDeletion('hardwares', props.hardware.hardwareId)} />
-						</div>
+						<Button icon='delete' onClick={() => props.handleDeletion('hardwares', props.hardware.hardwareId)} />
 					)
 				default:
 					return (<div></div>)

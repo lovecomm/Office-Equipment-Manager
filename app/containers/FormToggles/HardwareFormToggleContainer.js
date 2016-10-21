@@ -6,14 +6,14 @@ import { HardwareFormToggle } from 'components'
 
 const HardwareFormToggleContainer = React.createClass({
 	propTypes: {
-		hardware: PropTypes.object, // only going to be getting a make if the user is editing a hardware, not if they are creating a new one.
+		hardwareId: PropTypes.string, // only going to be getting a make if the user is editing a hardware, not if they are creating a new one.
 		editing: PropTypes.bool.isRequired,
 		openHardwareForm: PropTypes.func.isRequired,
 		initiateHardwareForm: PropTypes.func.isRequired,
 	},
 	handleOpenEditForm () {
 		if (this.props.editing) {
-			this.props.initiateHardwareForm(this.props.hardware.hardwareId)
+			this.props.initiateHardwareForm(this.props.hardwareId)
 		} else {
 			this.props.openHardwareForm()
 		}

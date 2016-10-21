@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { Card, CardTitle, CardActions, CardText } from 'react-toolbox/lib/card'
 import { Button } from 'react-toolbox/lib'
 import { cardActions, subCardActions, chips } from 'sharedStyles/cards.scss'
-import { EditMenuContainer } from 'containers'
+import { EditMenuContainer, PersonFormToggleContainer, ItemFormToggleContainer } from 'containers'
 
 Person.propTypes = {
 	personId: PropTypes.string.isRequired,
@@ -35,6 +35,7 @@ export default function Person (props) {
 								title={props.items[id].serial}
 								subtitle={`${props.items[id].hardware.make}  ${props.items[id].hardware.model}`}/>
 							<CardActions className={subCardActions}>
+								<ItemFormToggleContainer itemId={id} editing={true}/>
 								<EditMenuContainer id={id} type='item'/>
 							</CardActions>
 						</div>
@@ -45,6 +46,7 @@ export default function Person (props) {
 				{props.itemIds.length > 0
 				? <Button primary={true} label={(() => props.collapsed ? 'Show Items' : 'Hide Items')()} onClick={props.envokeHandleCollapsed}/>
 				: ''}
+				<PersonFormToggleContainer personId={props.personId} editing={true}/>
 				<EditMenuContainer id={props.personId} type='person' />
 			</CardActions>
 		</Card>

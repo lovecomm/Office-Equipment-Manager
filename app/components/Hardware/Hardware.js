@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { Card, CardTitle, CardActions, CardText } from 'react-toolbox/lib/card'
 import { Button } from 'react-toolbox/lib'
 import { cardActions, subCardActions, chips } from 'sharedStyles/cards.scss'
-import { EditMenuContainer } from 'containers'
+import { EditMenuContainer, HardwareFormToggleContainer, ItemFormToggleContainer } from 'containers'
 
 Hardware.propTypes = {
 	hardwareId: PropTypes.string.isRequired,
@@ -34,7 +34,10 @@ export default function Hardware (props) {
 								avatar={props.items[id].person.photo.url}
 								subtitle={`${props.items[id].person.firstName} ${props.items[id].person.lastName}`}
 								title={props.items[id].serial}/>
-							<CardActions className={subCardActions}><EditMenuContainer id={id} type='item'/></CardActions>
+							<CardActions className={subCardActions}>
+								<ItemFormToggleContainer itemId={id} editing={true}/>
+								<EditMenuContainer id={id} type='item'/>
+							</CardActions>
 						</div>
 					))
 				}
@@ -43,6 +46,7 @@ export default function Hardware (props) {
 				{props.itemIds.length > 0
 				? <Button primary={true} label={(() => props.collapsed ? 'Show Items' : 'Hide Items')()} onClick={props.envokeHandleCollapsed}/>
 				: ''}
+				<HardwareFormToggleContainer editing={true} hardwareId={props.hardwareId}/>
 				<EditMenuContainer id={props.hardwareId} type='hardware' />
 			</CardActions>
 		</Card>
