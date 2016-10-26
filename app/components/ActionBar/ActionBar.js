@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react'
-import { toolbar, toolbarWrapper, filterWrapper, sortWrapper, sortWrapperIcon, newWrapper } from './styles.scss'
-import { IconMenu, MenuItem } from 'react-toolbox/lib/menu'
+import { toolbar, toolbarWrapper, newWrapper } from 'sharedStyles/actionBar.scss'
 
 ActionBar.propTypes = {
 	newFormToggle: PropTypes.object.isRequired,
@@ -13,15 +12,8 @@ export default function ActionBar (props) {
 		<div className={toolbarWrapper}>
 			<div className={toolbar}>
 				<div className={newWrapper}>{props.newFormToggle}</div>
-				<div className={filterWrapper}>{props.filter}</div>
-				<IconMenu
-					icon={<span
-						className={sortWrapperIcon}><MenuItem>{'Sort'}</MenuItem><MenuItem icon='sort' /></span>}
-					position='topRight'
-					className={sortWrapper}
-					iconRipple={false}>
-					{props.sortMenu}
-				</IconMenu>
+				{props.filter}
+				{props.sortMenu}
 			</div>
 		</div>
 	)

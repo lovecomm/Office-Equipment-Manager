@@ -5,6 +5,11 @@ const SETTING_FEED_LISTENER_SUCCESS_PEOPLE = 'SETTING_FEED_LISTENER_SUCCESS_PEOP
 const UPDATE_PEOPLE_FEED_INITIAL_FETCH = 'UPDATE_PEOPLE_FEED_INITIAL_FETCH'
 const UPDATE_PERSON_PHOTO_URL = 'UPDATE_PERSON_PHOTO_URL'
 const UPDATE_PERSON_COLLAPSED = 'UPDATE_PERSON_COLLAPSED'
+const ADD_PEOPLE_FILTER_OPTIONS = 'ADD_PEOPLE_FILTER_OPTIONS'
+const UPDATE_PEOPLE_FILTER_NAME_AND_TYPE = 'UPDATE_PEOPLE_FILTER_NAME_AND_TYPE'
+const UPDATE_IS_FILTERING_PEOPLE = 'UPDATE_IS_FILTERING_PEOPLE'
+const UPDATE_PEOPLE_SORT_ORDER = 'UPDATE_PEOPLE_SORT_ORDER'
+const UPDATE_PEOPLE_SORT_STATUS = 'UPDATE_PEOPLE_SORT_STATUS'
 
 // THUNKS & HELPERS
 export function prepPeopleForFeed (people) {
@@ -45,6 +50,81 @@ export function handlePersonCollapsed (personId, collapsed) {
 		.then(() => dispatch(updatePersonCollapsed(personId, collapsed)))
 	}
 }
+
+// START FILTER FUNCTIONS
+export function updateAndHandlePeopleFilter (nameId) {
+	return function (dispatch, getState) {
+		// return findFilterNameAndType(getState, nameId)
+		// .then(({name, filterType}) => {
+		// 	dispatch(updateFilterName(name, filterType))
+		// 	filterByPerson(dispatch, getState, nameId[0])
+		// })
+	}
+}
+
+export function disableIsFilteringPeople () {
+	return function (dispatch, getState) {
+		// restoreAllItemsToFeed(dispatch, getState)
+		// .then(() => {
+		// 	dispatch(updateIsFiltering())
+		// 	switch (getState().feed.sortStatus) {
+		// 	case 'purchasedDate':
+		// 		applySortStatusByDate(dispatch, getState, 'purchasedDate')
+		// 		return
+		// 	case 'peopleLastName':
+		// 		applySortStatusPeople(dispatch, getState, 'peopleLastName', 'lastName')
+		// 		return
+		// 	case 'peopleFirstName':
+		// 		applySortStatusPeople(dispatch, getState, 'peoplefirstName', 'firstName')
+		// 		return
+		// 	case 'hardwares':
+		// 		applySortStatusHardware(dispatch, getState, 'hardwares')
+		// 		return
+		// 	default: // dateCreated
+		// 		applySortStatusByDate(dispatch, getState, 'dateCreated')
+		// 		return
+		// 	}
+		// })
+	}
+}
+// END FILTER FUNCTIONS
+// START SORTING FUNCTIONS
+export function changeSortOrder () {
+	return function (dispatch, getState) {
+		// applyNewSortOrder(dispatch, getState)
+		// .then(() => {
+		// 	const sortStatus = getState().feed.sortStatus
+		// 	if (sortStatus === 'purchasedDate' || sortStatus === 'dateCreated') {
+		// 		applySortStatusByDate(dispatch, getState, sortStatus)
+		// 	} else if (sortStatus === 'hardwares') {
+		// 		applySortStatusHardware(dispatch, getState, sortStatus)
+		// 	} else if (sortStatus === 'peopleLastName') {
+		// 		applySortStatusPeople(dispatch, getState, sortStatus, 'lastName')
+		// 	} else if (sortStatus === 'peopleFirstName') {
+		// 		applySortStatusPeople(dispatch, getState, sortStatus, 'firstName')
+		// 	}
+		// })
+	}
+}
+
+export function sortFeedCreationDate () {
+	return function (dispatch, getState) {
+		// applySortStatusByDate(dispatch, getState, 'dateCreated')
+	}
+}
+
+export function sortFeedLastName () {
+	return function (dispatch, getState) {
+		// applySortStatusPeople(dispatch, getState, 'peopleLastName', 'lastName')
+	}
+}
+
+export function sortFeedFirstName () {
+	return function (dispatch, getState) {
+		// applySortStatusPeople(dispatch, getState, 'peopleFirstName', 'firstName')
+	}
+}
+// END SORTING FUNCTIONS
 
 // ACTIONS
 function addPeopleToFeed (people) {
@@ -125,13 +205,61 @@ function person (state = initialPersonState, action) {
 	}
 }
 
+function filterPeople (state, action) {
+	switch (action.type) {
+	case ADD_PEOPLE_FILTER_OPTIONS:
+		return {
+			...state,
+			options: action.options,
+		}
+	case UPDATE_PEOPLE_FILTER_NAME_AND_TYPE:
+		return {
+			...state,
+			isFiltering: true,
+			name: action.name,
+			filterType: action.filterType,
+		}
+	case UPDATE_IS_FILTERING_PEOPLE: {
+		return {
+			...state,
+			isFiltering: false,
+		}
+	}
+	default:
+		return state
+	}
+}
+
+function sortingPeople (state, action) {
+	switch (action) {
+	case UPDATE_PEOPLE_SORT_STATUS:
+		return {
+			...state,
+			sortStatus: action.sortStatus,
+		}
+	case UPDATE_PEOPLE_SORT_ORDER:
+		return {
+			...state,
+			sortOrder: action.sortOrder,
+		}
+	}
+}
+
 const initialState = {
 	initialFetch: true,
 	isFetching: false,
 	feedIds: [],
-	filter: {},
-	sorting: {},
 	people: {},
+	filter: {
+		isFiltering: false,
+		options: {},
+		filterType: '',
+		name: '',
+	},
+	sorting: {
+		sortStatus: 'firstName',
+		sortOrder: 'asc',
+	},
 }
 
 export default function peopleFeed (state = initialState, action) {
@@ -160,6 +288,19 @@ export default function peopleFeed (state = initialState, action) {
 				...state.people,
 				[action.personId]: person(state.people[action.personId], action),
 			},
+		}
+	case ADD_PEOPLE_FILTER_OPTIONS:
+	case UPDATE_PEOPLE_FILTER_NAME_AND_TYPE:
+	case UPDATE_IS_FILTERING_PEOPLE:
+		return {
+			...state,
+			filter: filterPeople(state.filter, action),
+		}
+	case UPDATE_PEOPLE_SORT_ORDER:
+	case UPDATE_PEOPLE_SORT_STATUS:
+		return {
+			...state,
+			sorting: sortingPeople(state.sorting, action),
 		}
 	default:
 		return state

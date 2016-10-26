@@ -1,14 +1,20 @@
 import React, { PropTypes } from 'react'
 import { Autocomplete, Chip } from 'react-toolbox/lib'
-import { filterChip, chipWrapper } from 'sharedStyles/filter.scss'
+import { filterChip, chipWrapper, filterWrapper } from 'sharedStyles/actionBar.scss'
+
+PeopleFilter.propTypes = {
+	filter: PropTypes.object.isRequired,
+	updateAndHandlePeopleFilter: PropTypes.func.isRequired,
+	disableIsFilteringPeople: PropTypes.func.isRequired,
+}
 
 export default function PeopleFilter (props) {
-	return (<div>
+	return (<div className={filterWrapper}>
 		{(() => props.filter.isFiltering
 			? (<div className={chipWrapper}>
 					<span>{'Showing Only:'}</span>
 					<Chip deletable={true}
-						onDeleteClick={props.disableIsFiltering}
+						onDeleteClick={props.disableIsFilteringPeople}
 						className={filterChip}>
 						{props.filter.name}</Chip>
 				</div>
@@ -18,7 +24,7 @@ export default function PeopleFilter (props) {
 						? 'Show Only...' : '')()}
 					direction='down'
 					selectedPosition='above'
-					onChange={(value) => props.updateAndHandleFilter(value)}
+					onChange={(value) => props.updateAndHandlePeopleFilter(value)}
 					value={props.filter.name}
 					source={props.filter.options}/>
 			))()}

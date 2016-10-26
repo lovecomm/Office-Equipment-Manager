@@ -1,12 +1,14 @@
-import React from 'react'
 import { PeopleFilter } from 'components'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as peopleFeedActionCreators from 'redux/modules/peopleFeed'
 
-const PeopleFilterContainer = React.createClass({
-	render () {
-		return (
-			<PeopleFilter />
-		)
-	},
-})
+function mapStateToProps ({peopleFeed}) {
+	return {
+		filter: peopleFeed.filter,
+	}
+}
 
-export default PeopleFilterContainer
+export default connect(mapStateToProps,
+	(dispatch) => bindActionCreators(peopleFeedActionCreators, dispatch)
+)(PeopleFilter)
