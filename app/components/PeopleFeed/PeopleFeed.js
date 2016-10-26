@@ -12,10 +12,6 @@ export default function PeopleFeed (props) {
 	return props.isFetching === true
 		? <h3 style={{textAlign: 'center', marginTop: '25%'}}>{'Getting your items...'}</h3>
 		: <div>
-			<ActionBar
-				newFormToggle={<PersonFormToggleContainer editing={false} />}
-				filter={<PeopleFilterContainer />}
-				sortMenu={<PeopleSortMenuContainer />}/>
 			<div className={list}>
 				{(() => {
 					return props.feedIds.map((id) => (

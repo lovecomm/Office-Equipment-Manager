@@ -50,7 +50,7 @@ function mapStateToProps ({items, peopleFeed, hardwares, deleteData}, ownProps) 
 			itemId: item.itemId,
 			serial: item.serial,
 			hardware: hardwares[item.hardwareId],
-			person: people[item.personId],
+			person: peopleFeed.people[item.personId],
 		}
 	case 'person':
 		const person = peopleFeed.people[ownProps.id]
