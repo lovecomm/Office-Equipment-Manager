@@ -21,12 +21,12 @@ export function getUrl (imageFolder, photoName) {
 	.catch((err) => `Error in getUrl: ${err}`)
 }
 
-export function deleteData (dataType, dataId, items, people) {
+export function deleteDataDB (dataType, dataId, items, people) {
 	switch (dataType) {
 	case 'people':
 		return ref.child(`feed/people/${dataId}`).remove() // remove person, but need to assign all associated items to INVENTORY
 		.then(() => assignToInventory(items, people, dataId))
-		.catch((err) => `Error in deleteData, case 'people': ${err}`)
+		.catch((err) => `Error in deleteDataDB, case 'people': ${err}`)
 	case 'hardwares':
 		return ref.child(`feed/hardwares/${dataId}`).remove()
 		.then(() => {
@@ -34,10 +34,10 @@ export function deleteData (dataType, dataId, items, people) {
 				if (items[itemId].hardwareId === dataId) return ref.child(`feed/items/${itemId}`).remove() // delete all items that use this hardware
 			})
 		})
-		.catch((err) => `Error in deleteData, case 'hardwares': ${err}`)
+		.catch((err) => `Error in deleteDataDB, case 'hardwares': ${err}`)
 	default: // items
 		return ref.child(`feed/items/${dataId}`).remove()
-		.catch((err) => `Error in deleteData, case 'default' - items: ${err}`)
+		.catch((err) => `Error in deleteDataDB, case 'default' - items: ${err}`)
 	}
 }
 

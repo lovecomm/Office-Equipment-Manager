@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { DeleteData } from 'components'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import * as feedActionCreators from 'redux/modules/feed'
+import * as deleteDataActionCreators from 'redux/modules/deleteData'
 
 const DeleteDataContainer = React.createClass({
 	propTypes: {
@@ -34,11 +34,11 @@ const DeleteDataContainer = React.createClass({
 	},
 })
 
-function mapStateToProps ({items, people, hardwares, feed}, ownProps) {
+function mapStateToProps ({items, people, hardwares, deleteData}, ownProps) {
 	const forAllProps = {
-		confirmDeleteActive: feed.confirmDeleteActive,
-		toDeleteType: feed.toDeleteType,
-		toDeleteId: feed.toDeleteId,
+		confirmDeleteActive: deleteData.confirmDeleteActive,
+		toDeleteType: deleteData.toDeleteType,
+		toDeleteId: deleteData.toDeleteId,
 	}
 
 	switch (ownProps.type) {
@@ -72,5 +72,5 @@ function mapStateToProps ({items, people, hardwares, feed}, ownProps) {
 
 export default connect(
 	mapStateToProps,
-	(dispatch) => bindActionCreators(feedActionCreators, dispatch),
+	(dispatch) => bindActionCreators(deleteDataActionCreators, dispatch),
 )(DeleteDataContainer)

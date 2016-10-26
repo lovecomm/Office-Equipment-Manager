@@ -6,9 +6,6 @@ import * as feedActionCreators from 'redux/modules/feed'
 
 const FeedContainer = React.createClass({
 	propTypes: {
-		setAndHandleFeedListener: PropTypes.func.isRequired,
-		updateConfirmDeleteActive: PropTypes.func.isRequired,
-		confirmDeleteData: PropTypes.func.isRequired,
 		route: PropTypes.object.isRequired,
 	},
 	componentDidMount () {
