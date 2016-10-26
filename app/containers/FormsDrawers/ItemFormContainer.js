@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { ItemForm } from 'components'
 import * as itemFormActionCreators from 'redux/modules/itemForm'
 
-function mapStateToProps ({itemForm, people, hardwares}, props) {
+function mapStateToProps ({itemForm, peopleFeed, hardwares}, props) {
 	function disableSubmit () {
 		if (itemForm.serial.length <= 0 ||
 			itemForm.person.length <= 0 ||
@@ -28,7 +28,7 @@ function mapStateToProps ({itemForm, people, hardwares}, props) {
 		photo: itemForm.photo,
 		photoName: itemForm.photoName,
 		editing: itemForm.editing,
-		people,
+		people: peopleFeed.people,
 		hardwares,
 		error: itemForm.error,
 		isSubmitDisabled: disableSubmit(),

@@ -40,7 +40,7 @@ const ItemContainer = React.createClass({
 	},
 })
 
-function mapStateToProps ({items, people, hardwares}, props) {
+function mapStateToProps ({items, peopleFeed, hardwares}, props) {
 	// not all items are used at once, so this needs to get only the items on the feed.itemIds
 	const item = items[props.itemId]
 	return {
@@ -48,7 +48,7 @@ function mapStateToProps ({items, people, hardwares}, props) {
 		hasSubContent: item.hasSubContent,
 		itemId: item.itemId,
 		hardware: hardwares[item.hardwareId],
-		person: people[item.personId],
+		person: peopleFeed.people[item.personId],
 		note: item.note,
 		photo: item.photo,
 		purchasedDate: item.purchasedDate,

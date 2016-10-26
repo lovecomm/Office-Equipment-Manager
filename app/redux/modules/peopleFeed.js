@@ -1,24 +1,22 @@
 import { getUrl } from 'helpers/api'
 
 const ADD_PEOPLE_TO_FEED = 'ADD_PEOPLE_TO_FEED'
-const UPDATE_PERSON_COLLAPSED = 'UPDATE_PERSON_COLLAPSED'
+const SETTING_FEED_LISTENER_SUCCESS_PEOPLE = 'SETTING_FEED_LISTENER_SUCCESS_PEOPLE'
+const UPDATE_PEOPLE_FEED_INITIAL_FETCH = 'UPDATE_PEOPLE_FEED_INITIAL_FETCH'
 const UPDATE_PERSON_PHOTO_URL = 'UPDATE_PERSON_PHOTO_URL'
+const UPDATE_PERSON_COLLAPSED = 'UPDATE_PERSON_COLLAPSED'
 
-// ACTIONS
+// THUNKS & HELPERS
 export function prepPeopleForFeed (people) {
 	return function (dispatch, getState) {
 		return new Promise((resolve, reject) => {
-			dispatch(getPeopleUrlFromFirebase(people))
-			dispatch(addPersonToFeed(people))
+			dispatch(addPeopleToFeed(people))
+			if (getState().peopleFeed.initialFetch === true) {
+				dispatch(getPeopleUrlFromFirebase(people))
+				dispatch(updatePeopleFeedInitialFetch(false))
+			}
 			resolve()
 		})
-	}
-}
-
-function addPersonToFeed (people) {
-	return {
-		type: ADD_PEOPLE_TO_FEED,
-		people,
 	}
 }
 
@@ -36,23 +34,39 @@ function getPeopleUrlFromFirebase (people) {
 	}
 }
 
-function updatePersonPhotoUrl (personId, photoUrl) {
-	return {
-		type: UPDATE_PERSON_PHOTO_URL,
-		personId,
-		photoUrl,
-	}
-}
-
 export function handlePersonCollapsed (personId, collapsed) {
 	return function (dispatch, getState) {
 		return new Promise((resolve, reject) => {
-			Object.keys(getState().people).forEach((personId) => {
+			Object.keys(getState().peopleFeed.people).forEach((personId) => {
 				dispatch(updatePersonCollapsed(personId, true))
 			})
 			resolve()
 		})
 		.then(() => dispatch(updatePersonCollapsed(personId, collapsed)))
+	}
+}
+
+// ACTIONS
+function addPeopleToFeed (people) {
+	return {
+		type: ADD_PEOPLE_TO_FEED,
+		people,
+		feedIds: Object.keys(people),
+	}
+}
+
+function updatePeopleFeedInitialFetch (initialFetch) {
+	return {
+		type: UPDATE_PEOPLE_FEED_INITIAL_FETCH,
+		initialFetch,
+	}
+}
+
+function updatePersonPhotoUrl (personId, photoUrl) {
+	return {
+		type: UPDATE_PERSON_PHOTO_URL,
+		personId,
+		photoUrl,
 	}
 }
 
@@ -111,20 +125,41 @@ function person (state = initialPersonState, action) {
 	}
 }
 
-const initialState = {}
+const initialState = {
+	initialFetch: true,
+	isFetching: false,
+	feedIds: [],
+	filter: {},
+	sorting: {},
+	people: {},
+}
 
-export default function people (state = initialState, action) {
+export default function peopleFeed (state = initialState, action) {
 	switch (action.type) {
+	case SETTING_FEED_LISTENER_SUCCESS_PEOPLE:
+		return {
+			...state,
+			isFetching: true,
+		}
+	case UPDATE_PEOPLE_FEED_INITIAL_FETCH:
+		return {
+			...state,
+			initialFetch: action.initialFetch,
+		}
 	case ADD_PEOPLE_TO_FEED:
 		return {
 			...state,
-			...action.people,
+			feedIds: action.feedIds,
+			people: action.people,
 		}
 	case UPDATE_PERSON_PHOTO_URL:
 	case UPDATE_PERSON_COLLAPSED:
 		return {
 			...state,
-			[action.personId]: person(state[action.personId], action),
+			people: {
+				...state.people,
+				[action.personId]: person(state.people[action.personId], action),
+			},
 		}
 	default:
 		return state

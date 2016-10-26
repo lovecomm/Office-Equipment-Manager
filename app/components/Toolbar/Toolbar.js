@@ -19,7 +19,7 @@ Toolbar.propTypes = {
 
 export default function Toolbar (props) {
 	return (
-		<div className={toolbarWrapper} >
+		<div className={toolbarWrapper}>
 			<div className={toolbar}>
 				<div className={newWrapper}>
 					{(() => {

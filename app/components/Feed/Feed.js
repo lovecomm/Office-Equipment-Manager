@@ -15,7 +15,8 @@ export default function Feed (props) {
 	return props.isFetching === true
 		? <h3 style={{textAlign: 'center', marginTop: '25%'}}>{'Getting your items...'}</h3>
 		: <div>
-			<ToolbarContainer activeView={props.activeView}/>
+			<ToolbarContainer
+				activeView={props.activeView}/>
 			<div className={list}>
 				{(() => {
 					switch (props.activeView) {

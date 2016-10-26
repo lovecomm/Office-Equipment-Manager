@@ -1,7 +1,7 @@
 import { addListener } from 'redux/modules/listeners'
 import { listenToFeed } from 'helpers/api'
 import { prepItemsForFeed } from 'redux/modules/items'
-import { prepPeopleForFeed } from 'redux/modules/people'
+import { prepPeopleForFeed } from 'redux/modules/peopleFeed'
 import { prepHardwaresForFeed } from 'redux/modules/hardwares'
 
 const SETTING_FEED_LISTENER = 'SETTING_FEED_LISTENER'
@@ -82,15 +82,13 @@ function updateSortStatus (sortStatus) {
 }
 
 export function setAndHandleFeedListener () {
-	let initialFetch = true
+	// let initialFetch = true
 	return function (dispatch, getState) {
-		if (getState().listeners.feed === true) {
-			return
-		}
+		if (getState().listeners.feed === true) return
 		dispatch(settingFeedListener())
 		dispatch(addListener('feed'))
-		dispatch(addListener('people'))
-		dispatch(addListener('hardwares'))
+		// dispatch(addListener('people'))
+		// dispatch(addListener('hardwares'))
 		listenToFeed(({
 			items,
 			sortedItemIds,
@@ -102,27 +100,15 @@ export function setAndHandleFeedListener () {
 			.then(() => dispatch(prepItemsForFeed(items)))
 			.then(() => {
 				buildFilterOptions(dispatch, getState)
-				if (initialFetch === true) {
-					dispatch(settingFeedListenerSuccessItems(sortedItemIds))
-					dispatch(settingFeedListenerSuccessPeople(getSortedPeopleIds(people)))
-					dispatch(settingFeedListenerSuccessHardware(getSortedHardwareIds(hardwares)))
-				}
-				initialFetch = false
+				// if (initialFetch === true) {
+				dispatch(settingFeedListenerSuccessItems(sortedItemIds))
+				// dispatch(settingFeedListenerSuccessPeople(Object.keys(people)))
+				dispatch(settingFeedListenerSuccessHardware(Object.keys(hardwares)))
+				// }
+				// initialFetch = false
 			})
 		}, (error) => dispatch(settingFeedListenerError(error)))
 	}
-}
-
-function getSortedPeopleIds (people) {
-	let sortedPersonIds = []
-	Object.keys(people).forEach((personId) => sortedPersonIds.push(personId))
-	return sortedPersonIds
-}
-
-function getSortedHardwareIds (hardwares) {
-	let sortedHardwareIds = []
-	Object.keys(hardwares).forEach((hardwareId) => sortedHardwareIds.push(hardwareId))
-	return sortedHardwareIds
 }
 
 function getActiveItems (getState, sortStatus) {
@@ -131,7 +117,7 @@ function getActiveItems (getState, sortStatus) {
 		let activeIds = getState().feed.itemIds
 		let itemsArray = []
 		if (sortStatus === 'peopleLastName' || sortStatus === 'peopleFirstName') {
-			const people = getState().people
+			const people = getState().peopleFeed.people
 			for (let i in activeIds) {
 				const itemId = activeIds[i]
 				for (let i in items) {
@@ -426,7 +412,7 @@ export function updateAndHandleFilter (nameId) {
 function findFilterNameAndType (getState, nameId) {
 	return new Promise((resolve, reject) => {
 		const items = getState().items
-		const people = getState().people
+		const people = getState().peopleFeed.people
 		const hardwares = getState().hardwares
 		for (const i in items) {
 			if (items[i].itemId === nameId[0]) {
@@ -449,7 +435,7 @@ function findFilterNameAndType (getState, nameId) {
 export function buildFilterOptions (dispatch, getState) {
 	const items = getState().items
 	const sortedItems = getState().feed.itemIds
-	const people = getState().people
+	const people = getState().peopleFeed.people
 	const hardwares = getState().hardwares
 	let options = {}
 	if (sortedItems.length === 0) { // when the app first loads, it won't have the sortedIds yet. However, when we do things like delete items, we want this list to be based on those sorted items that are getting updated after something is deleted.
@@ -515,7 +501,6 @@ const initialState = {
 	isFetching: false,
 	error: '',
 	itemIds: [],
-	personIds: [],
 	hardwareIds: [],
 	activeView: '/',
 	sortStatus: 'dateCreated',

@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Person } from 'components'
 import { bindActionCreators } from 'redux'
-import * as personActionCreators from 'redux/modules/people'
+import * as personActionCreators from 'redux/modules/peopleFeed'
 
 const PersonContainer = React.createClass({
 	propTypes: {
@@ -23,7 +23,7 @@ const PersonContainer = React.createClass({
 	},
 })
 
-function mapStateToProps ({people, items, hardwares}, props) {
+function mapStateToProps ({peopleFeed, items, hardwares}, props) {
 	// not all items are used at once, so this needs to get only the items on the feed.itemIds
 	let personsItems = {}
 	let itemIds = []
@@ -35,7 +35,7 @@ function mapStateToProps ({people, items, hardwares}, props) {
 			itemIds.push(itemId)
 		}
 	})
-	const person = people[props.personId]
+	const person = peopleFeed.people[props.personId]
 	return {
 		personId: person.personId,
 		firstName: person.firstName,

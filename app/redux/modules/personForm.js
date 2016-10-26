@@ -89,7 +89,7 @@ function updatePersonFormPhotoName (photoName) {
 
 function activateCurrentPerson (dispatch, getState, personId) {
 	return new Promise((resolve, reject) => {
-		const person = getState().people[personId]
+		const person = getState().peopleFeed.people[personId]
 		dispatch(updatePersonFormEditing())
 		dispatch(updatePersonFormPersonId(person.personId))
 		dispatch(updatePersonFormFirstName(person.firstName))
@@ -110,7 +110,7 @@ export function initiatePersonForm (personId) {
 
 export function newPersonFanout (person) {
 	return function (dispatch, getState) {
-		saveNewPerson(getState().people, person, getState().users.authedId)
+		saveNewPerson(getState().peopleFeed.people, person, getState().users.authedId)
 		.then((personWithId) => {
 			dispatch(PersonFormAddPerson(personWithId))
 			dispatch(closePersonForm())
@@ -124,7 +124,7 @@ export function newPersonFanout (person) {
 
 export function updatePersonFanout (person) {
 	return function (dispatch, getState) {
-		saveUpdatedPerson(getState().people, person, getState().users.authedId)
+		saveUpdatedPerson(getState().peopleFeed.people, person, getState().users.authedId)
 		.then(() => dispatch(closePersonForm()))
 		.catch((error) => {
 			dispatch(updatePersonFormIsSubmitting(false))

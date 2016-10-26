@@ -18,13 +18,13 @@ const FeedContainer = React.createClass({
 	},
 })
 
-function mapStateToProps ({feed}) {
-	const { isFetching, error, itemIds, personIds, hardwareIds, activeView } = feed
+function mapStateToProps ({feed, peopleFeed}) {
+	const { isFetching, error, itemIds, hardwareIds, activeView } = feed
 	return {
 		isFetching,
 		error,
 		itemIds,
-		personIds,
+		personIds: peopleFeed.feedIds,
 		hardwareIds,
 		activeView,
 	}

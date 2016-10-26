@@ -23,13 +23,13 @@ const HardwareContainer = React.createClass({
 	},
 })
 
-function mapStateToProps ({items, hardwares, people}, props) {
+function mapStateToProps ({items, hardwares, peopleFeed}, props) {
 	// not all items are used at once, so this needs to get only the items on the feed.itemIds
 	let hardwaresItems = {}
 	let itemIds = []
 	Object.keys(items).forEach((itemId) => {
 		if (items[itemId].hardwareId === props.hardwareId) {
-			const itemsPerson = people[items[itemId].personId]
+			const itemsPerson = peopleFeed.people[items[itemId].personId]
 			const itemsWithPeople = Object.assign(items[itemId], {person: itemsPerson})
 			hardwaresItems = Object.assign(hardwaresItems, {[itemId]: itemsWithPeople})
 			itemIds.push(itemId)

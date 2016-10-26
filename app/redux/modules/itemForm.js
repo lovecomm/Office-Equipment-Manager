@@ -22,7 +22,7 @@ const UPDATE_ITEM_FORM_EDITING = 'UPDATE_ITEM_FORM_EDITING'
 function activateCurrentItem (dispatch, getState, itemId) {
 	return new Promise((resolve, reject) => {
 		const item = getState().items[itemId]
-		const person = getState().people[item.personId]
+		const person = getState().peopleFeed.people[item.personId]
 		const hardware = getState().hardwares[item.hardwareId]
 		dispatch(updateItemFormEditing())
 		dispatch(updateItemFormItemId(item.itemId))
@@ -131,7 +131,7 @@ function updateItemFormPersonId (personId) {
 
 export function updateItemFormPersonInfo (personId) {
 	return function (dispatch, getState) {
-		const person = getState().people[personId]
+		const person = getState().peopleFeed.people[personId]
 		const personName = `${person.firstName} ${person.lastName}`
 		dispatch(updateItemFormPerson(personName))
 		dispatch(updateItemFormPersonId(personId))

@@ -9,3 +9,12 @@
 		width: 80%;
 	}
 }
+
+.list {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+	height: auto;
+	width: 100%;
+}
