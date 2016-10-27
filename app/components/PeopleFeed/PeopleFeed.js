@@ -5,7 +5,7 @@ import { list } from 'sharedStyles/layout'
 
 PeopleFeed.propTypes = {
 	isFetching: PropTypes.bool.isRequired,
-	feedIds: PropTypes.array.isRequired,
+	peopleFeed: PropTypes.object.isRequired,
 }
 
 export default function PeopleFeed (props) {
@@ -18,7 +18,7 @@ export default function PeopleFeed (props) {
 				sortMenu={<PeopleSortMenuContainer />}/>
 			<div className={list}>
 				{(() => {
-					return props.feedIds.map((id) => (
+					return props.peopleFeed.feedIds.map((id) => (
 						<PersonContainer
 							personId={id}
 							key={id} />

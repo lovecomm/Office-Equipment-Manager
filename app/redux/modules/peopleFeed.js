@@ -1,7 +1,7 @@
 import { getUrl } from 'helpers/api'
+import { getFeedIdsSortByPeople } from 'helpers/sorting'
 
-const ADD_PEOPLE_TO_FEED = 'ADD_PEOPLE_TO_FEED'
-const SETTING_FEED_LISTENER_SUCCESS_PEOPLE = 'SETTING_FEED_LISTENER_SUCCESS_PEOPLE'
+const UPDATE_PEOPLE_FEED_PEOPLE = 'UPDATE_PEOPLE_FEED_PEOPLE'
 const UPDATE_PEOPLE_FEED_INITIAL_FETCH = 'UPDATE_PEOPLE_FEED_INITIAL_FETCH'
 const UPDATE_PERSON_PHOTO_URL = 'UPDATE_PERSON_PHOTO_URL'
 const UPDATE_PERSON_COLLAPSED = 'UPDATE_PERSON_COLLAPSED'
@@ -10,12 +10,15 @@ const UPDATE_PEOPLE_FILTER_NAME_AND_TYPE = 'UPDATE_PEOPLE_FILTER_NAME_AND_TYPE'
 const UPDATE_IS_FILTERING_PEOPLE = 'UPDATE_IS_FILTERING_PEOPLE'
 const UPDATE_PEOPLE_SORT_ORDER = 'UPDATE_PEOPLE_SORT_ORDER'
 const UPDATE_PEOPLE_SORT_STATUS = 'UPDATE_PEOPLE_SORT_STATUS'
+const UPDATE_PEOPLE_FEED_IDS = 'UPDATE_PEOPLE_FEED_IDS'
 
 // THUNKS & HELPERS
 export function prepPeopleForFeed (people) {
 	return function (dispatch, getState) {
 		return new Promise((resolve, reject) => {
-			dispatch(addPeopleToFeed(people))
+			dispatch(updatePeopleFeedPeople(people))
+			dispatch(updatePeopleFeedIds(Object.keys(people)))
+			dispatch(sortFeedByName('firstName'))
 			if (getState().peopleFeed.initialFetch === true) {
 				dispatch(getPeopleUrlFromFirebase(people))
 				dispatch(updatePeopleFeedInitialFetch(false))
@@ -72,10 +75,10 @@ export function disableIsFilteringPeople () {
 		// 		applySortStatusByDate(dispatch, getState, 'purchasedDate')
 		// 		return
 		// 	case 'peopleLastName':
-		// 		applySortStatusPeople(dispatch, getState, 'peopleLastName', 'lastName')
+		// 		getFeedIdsSortByPeople(dispatch, getState, 'peopleLastName', 'lastName')
 		// 		return
 		// 	case 'peopleFirstName':
-		// 		applySortStatusPeople(dispatch, getState, 'peoplefirstName', 'firstName')
+		// 		getFeedIdsSortByPeople(dispatch, getState, 'peoplefirstName', 'firstName')
 		// 		return
 		// 	case 'hardwares':
 		// 		applySortStatusHardware(dispatch, getState, 'hardwares')
@@ -99,9 +102,9 @@ export function changeSortOrder () {
 		// 	} else if (sortStatus === 'hardwares') {
 		// 		applySortStatusHardware(dispatch, getState, sortStatus)
 		// 	} else if (sortStatus === 'peopleLastName') {
-		// 		applySortStatusPeople(dispatch, getState, sortStatus, 'lastName')
+		// 		getFeedIdsSortByPeople(dispatch, getState, sortStatus, 'lastName')
 		// 	} else if (sortStatus === 'peopleFirstName') {
-		// 		applySortStatusPeople(dispatch, getState, sortStatus, 'firstName')
+		// 		getFeedIdsSortByPeople(dispatch, getState, sortStatus, 'firstName')
 		// 	}
 		// })
 	}
@@ -113,25 +116,34 @@ export function sortFeedCreationDate () {
 	}
 }
 
-export function sortFeedLastName () {
+export function sortFeedByName (nameType) {
 	return function (dispatch, getState) {
-		// applySortStatusPeople(dispatch, getState, 'peopleLastName', 'lastName')
-	}
-}
-
-export function sortFeedFirstName () {
-	return function (dispatch, getState) {
-		// applySortStatusPeople(dispatch, getState, 'peopleFirstName', 'firstName')
+		dispatch(updatePeopleSortStatus(nameType))
+		getFeedIdsSortByPeople(getState().peopleFeed, nameType)
+		.then((sortedFeedIds) => dispatch(updatePeopleFeedIds(sortedFeedIds)))
 	}
 }
 // END SORTING FUNCTIONS
 
 // ACTIONS
-function addPeopleToFeed (people) {
+function updatePeopleFeedIds (feedIds) {
 	return {
-		type: ADD_PEOPLE_TO_FEED,
+		type: UPDATE_PEOPLE_FEED_IDS,
+		feedIds,
+	}
+}
+
+function updatePeopleSortStatus (sortStatus) {
+	return {
+		type: UPDATE_PEOPLE_SORT_STATUS,
+		sortStatus,
+	}
+}
+
+function updatePeopleFeedPeople (people) {
+	return {
+		type: UPDATE_PEOPLE_FEED_PEOPLE,
 		people,
-		feedIds: Object.keys(people),
 	}
 }
 
@@ -231,7 +243,7 @@ function filterPeople (state, action) {
 }
 
 function sortingPeople (state, action) {
-	switch (action) {
+	switch (action.type) {
 	case UPDATE_PEOPLE_SORT_STATUS:
 		return {
 			...state,
@@ -242,12 +254,13 @@ function sortingPeople (state, action) {
 			...state,
 			sortOrder: action.sortOrder,
 		}
+	default:
+		return state
 	}
 }
 
 const initialState = {
 	initialFetch: true,
-	isFetching: false,
 	feedIds: [],
 	people: {},
 	filter: {
@@ -264,21 +277,20 @@ const initialState = {
 
 export default function peopleFeed (state = initialState, action) {
 	switch (action.type) {
-	case SETTING_FEED_LISTENER_SUCCESS_PEOPLE:
-		return {
-			...state,
-			isFetching: true,
-		}
 	case UPDATE_PEOPLE_FEED_INITIAL_FETCH:
 		return {
 			...state,
 			initialFetch: action.initialFetch,
 		}
-	case ADD_PEOPLE_TO_FEED:
+	case UPDATE_PEOPLE_FEED_PEOPLE:
+		return {
+			...state,
+			people: action.people,
+		}
+	case UPDATE_PEOPLE_FEED_IDS:
 		return {
 			...state,
 			feedIds: action.feedIds,
-			people: action.people,
 		}
 	case UPDATE_PERSON_PHOTO_URL:
 	case UPDATE_PERSON_COLLAPSED:

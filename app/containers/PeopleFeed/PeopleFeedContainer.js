@@ -7,26 +7,30 @@ import { setAndHandleFeedListener } from 'redux/modules/feed'
 
 const PeopleFeedContainer = React.createClass({
 	propTypes: {
-		feedIds: PropTypes.array.isRequired,
+		peopleFeed: PropTypes.object.isRequired,
 		isFetching: PropTypes.bool.isRequired,
 		setAndHandleFeedListener: PropTypes.func.isRequired,
 	},
 	componentDidMount () {
 		this.props.setAndHandleFeedListener()
 	},
+	componentDidUpdate () {
+		// console.log('new props.feedIds', this.props.feedIds)
+	},
 	render () {
+		// console.log('this.props.peopleFeed', this.props.peopleFeed)
 		return (
 			<PeopleFeed
-				feedIds={this.props.feedIds}
+				peopleFeed={this.props.peopleFeed}
 				isFetching={this.props.isFetching}/>
 		)
 	},
 })
 
-function mapStateToProps ({peopleFeed}) {
+function mapStateToProps ({peopleFeed, feed}) {
 	return {
-		isFetching: peopleFeed.isFetching,
-		feedIds: peopleFeed.feedIds,
+		isFetching: feed.isFetching,
+		peopleFeed: peopleFeed,
 	}
 }
 
