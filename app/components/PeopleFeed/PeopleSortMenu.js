@@ -4,8 +4,7 @@ import { sortWrapperIcon, sortWrapper } from 'sharedStyles/actionBar.scss'
 
 PeopleSortMenu.propTypes = {
 	changeSortOrder: PropTypes.func.isRequired,
-	sortFeedCreationDate: PropTypes.func.isRequired,
-	sortFeedByName: PropTypes.func.isRequired,
+	sortPeopleFeedBy: PropTypes.func.isRequired,
 }
 
 export default function PeopleSortMenu (props) {
@@ -17,8 +16,8 @@ export default function PeopleSortMenu (props) {
 		iconRipple={false}>
 		<MenuItem icon='cached' caption='Reverse Sort Order' onClick={props.changeSortOrder}/>
 		<MenuDivider />
-		<MenuItem icon='event' caption='Date Created' onClick={props.sortFeedCreationDate}/>
-		<MenuItem icon='first_page' caption='First Name' onClick={() => props.sortFeedByName('firstName')}/>
-		<MenuItem icon='last_page' caption='Last Name' onClick={() => props.sortFeedByName('lastName')}/>
+		<MenuItem icon='event' caption='Date Created' onClick={() => props.sortPeopleFeedBy('dateCreated')}/>
+		<MenuItem icon='first_page' caption='First Name' onClick={() => props.sortPeopleFeedBy('firstName')}/>
+		<MenuItem icon='last_page' caption='Last Name' onClick={() => props.sortPeopleFeedBy('lastName')}/>
 	</IconMenu>)
 }

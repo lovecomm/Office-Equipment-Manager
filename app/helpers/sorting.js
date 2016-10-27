@@ -1,32 +1,32 @@
-export function getFeedIdsSortByPeople (peopleFeed, nameType) {
+export function getSortedFeedIds (feed, feedObjectsType, sortStatus) {
 	return new Promise((resolve, reject) => {
-		const people = peopleFeed.people
-		let peopleIds = peopleFeed.feedIds // need to be sorting people.person.firstName, people.person.lastName
-		if (peopleFeed.sorting.sortOrder === 'asc') {
-			peopleIds.sort(function (a, b) {
-				const personA = people[a][nameType]
-				const personB = people[b][nameType]
-				if (personA > personB) {
+		const feedObjects = feed[feedObjectsType]
+		let feedIds = feed.feedIds
+		if (feed.sorting.sortOrder === 'asc') {
+			feedIds.sort(function (a, b) {
+				const feedObjectA = feedObjects[a][sortStatus]
+				const feedObjectB = feedObjects[b][sortStatus]
+				if (feedObjectA > feedObjectB) {
 					return 1
-				} else if (personA < personB) {
+				} else if (feedObjectA < feedObjectB) {
 					return -1
 				} else {
 					return 0
 				}
 			})
 		} else { // getState().feed.sortOrder === 'dec'
-			peopleIds.sort(function (a, b) {
-				const personA = people[a][nameType]
-				const personB = people[b][nameType]
-				if (personA < personB) {
+			feedIds.sort(function (a, b) {
+				const feedObjectA = feedObjects[a][sortStatus]
+				const feedObjectB = feedObjects[b][sortStatus]
+				if (feedObjectA < feedObjectB) {
 					return 1
-				} else if (personA > personB) {
+				} else if (feedObjectA > feedObjectB) {
 					return -1
 				} else {
 					return 0
 				}
 			})
 		}
-		resolve(peopleIds)
+		resolve(feedIds)
 	})
 }

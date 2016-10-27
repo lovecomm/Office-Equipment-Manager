@@ -1,5 +1,5 @@
 import { getUrl } from 'helpers/api'
-import { getFeedIdsSortByPeople } from 'helpers/sorting'
+import { getSortedFeedIds, applySortStatusByDate } from 'helpers/sorting'
 
 const UPDATE_PEOPLE_FEED_PEOPLE = 'UPDATE_PEOPLE_FEED_PEOPLE'
 const UPDATE_PEOPLE_FEED_INITIAL_FETCH = 'UPDATE_PEOPLE_FEED_INITIAL_FETCH'
@@ -18,7 +18,7 @@ export function prepPeopleForFeed (people) {
 		return new Promise((resolve, reject) => {
 			dispatch(updatePeopleFeedPeople(people))
 			dispatch(updatePeopleFeedIds(Object.keys(people)))
-			dispatch(sortFeedByName('firstName'))
+			dispatch(sortPeopleFeedBy('firstName'))
 			if (getState().peopleFeed.initialFetch === true) {
 				dispatch(getPeopleUrlFromFirebase(people))
 				dispatch(updatePeopleFeedInitialFetch(false))
@@ -75,10 +75,10 @@ export function disableIsFilteringPeople () {
 		// 		applySortStatusByDate(dispatch, getState, 'purchasedDate')
 		// 		return
 		// 	case 'peopleLastName':
-		// 		getFeedIdsSortByPeople(dispatch, getState, 'peopleLastName', 'lastName')
+		// 		getSortedFeedIds(dispatch, getState, 'peopleLastName', 'lastName')
 		// 		return
 		// 	case 'peopleFirstName':
-		// 		getFeedIdsSortByPeople(dispatch, getState, 'peoplefirstName', 'firstName')
+		// 		getSortedFeedIds(dispatch, getState, 'peoplefirstName', 'firstName')
 		// 		return
 		// 	case 'hardwares':
 		// 		applySortStatusHardware(dispatch, getState, 'hardwares')
@@ -102,25 +102,30 @@ export function changeSortOrder () {
 		// 	} else if (sortStatus === 'hardwares') {
 		// 		applySortStatusHardware(dispatch, getState, sortStatus)
 		// 	} else if (sortStatus === 'peopleLastName') {
-		// 		getFeedIdsSortByPeople(dispatch, getState, sortStatus, 'lastName')
+		// 		getSortedFeedIds(dispatch, getState, sortStatus, 'lastName')
 		// 	} else if (sortStatus === 'peopleFirstName') {
-		// 		getFeedIdsSortByPeople(dispatch, getState, sortStatus, 'firstName')
+		// 		getSortedFeedIds(dispatch, getState, sortStatus, 'firstName')
 		// 	}
 		// })
 	}
 }
 
-export function sortFeedCreationDate () {
+export function sortPeopleFeedBy (sortType) {
 	return function (dispatch, getState) {
-		// applySortStatusByDate(dispatch, getState, 'dateCreated')
-	}
-}
-
-export function sortFeedByName (nameType) {
-	return function (dispatch, getState) {
-		dispatch(updatePeopleSortStatus(nameType))
-		getFeedIdsSortByPeople(getState().peopleFeed, nameType)
-		.then((sortedFeedIds) => dispatch(updatePeopleFeedIds(sortedFeedIds)))
+		dispatch(updatePeopleSortStatus(sortType))
+		switch (sortType) {
+		case 'lastName':
+		case 'firstName':
+			getSortedFeedIds(getState().peopleFeed, 'people', sortType)
+			.then((sortedFeedIds) => dispatch(updatePeopleFeedIds(sortedFeedIds)))
+			break
+		case 'dateCreated':
+			getSortedFeedIds(getState().peopleFeed, 'people', 'dateCreated')
+			.then((sortedFeedIds) => dispatch(updatePeopleFeedIds(sortedFeedIds)))
+			break
+		default:
+			return
+		}
 	}
 }
 // END SORTING FUNCTIONS
