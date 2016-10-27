@@ -3,7 +3,7 @@ import { IconMenu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu'
 import { sortWrapperIcon, sortWrapper } from 'sharedStyles/actionBar.scss'
 
 PeopleSortMenu.propTypes = {
-	changeSortOrder: PropTypes.func.isRequired,
+	reversePeopleSortOrder: PropTypes.func.isRequired,
 	sortPeopleFeedBy: PropTypes.func.isRequired,
 }
 
@@ -14,7 +14,7 @@ export default function PeopleSortMenu (props) {
 		position='topRight'
 		className={sortWrapper}
 		iconRipple={false}>
-		<MenuItem icon='cached' caption='Reverse Sort Order' onClick={props.changeSortOrder}/>
+		<MenuItem icon='cached' caption='Reverse Sort Order' onClick={props.reversePeopleSortOrder}/>
 		<MenuDivider />
 		<MenuItem icon='event' caption='Date Created' onClick={() => props.sortPeopleFeedBy('dateCreated')}/>
 		<MenuItem icon='first_page' caption='First Name' onClick={() => props.sortPeopleFeedBy('firstName')}/>

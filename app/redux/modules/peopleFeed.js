@@ -1,5 +1,5 @@
 import { getUrl } from 'helpers/api'
-import { getSortedFeedIds, applySortStatusByDate } from 'helpers/sorting'
+import { getSortedFeedIds } from 'helpers/sorting'
 
 const UPDATE_PEOPLE_FEED_PEOPLE = 'UPDATE_PEOPLE_FEED_PEOPLE'
 const UPDATE_PEOPLE_FEED_INITIAL_FETCH = 'UPDATE_PEOPLE_FEED_INITIAL_FETCH'
@@ -92,40 +92,30 @@ export function disableIsFilteringPeople () {
 }
 // END FILTER FUNCTIONS
 // START SORTING FUNCTIONS
-export function changeSortOrder () {
+export function reversePeopleSortOrder () {
 	return function (dispatch, getState) {
-		// applyNewSortOrder(dispatch, getState)
-		// .then(() => {
-		// 	const sortStatus = getState().feed.sortStatus
-		// 	if (sortStatus === 'purchasedDate' || sortStatus === 'dateCreated') {
-		// 		applySortStatusByDate(dispatch, getState, sortStatus)
-		// 	} else if (sortStatus === 'hardwares') {
-		// 		applySortStatusHardware(dispatch, getState, sortStatus)
-		// 	} else if (sortStatus === 'peopleLastName') {
-		// 		getSortedFeedIds(dispatch, getState, sortStatus, 'lastName')
-		// 	} else if (sortStatus === 'peopleFirstName') {
-		// 		getSortedFeedIds(dispatch, getState, sortStatus, 'firstName')
-		// 	}
-		// })
+		dispatch(applyNewPeopleSortOrder())
+		.then(() => dispatch(sortPeopleFeedBy(getState().peopleFeed.sorting.sortStatus)))
 	}
 }
 
-export function sortPeopleFeedBy (sortType) {
+function applyNewPeopleSortOrder () {
 	return function (dispatch, getState) {
-		dispatch(updatePeopleSortStatus(sortType))
-		switch (sortType) {
-		case 'lastName':
-		case 'firstName':
-			getSortedFeedIds(getState().peopleFeed, 'people', sortType)
-			.then((sortedFeedIds) => dispatch(updatePeopleFeedIds(sortedFeedIds)))
-			break
-		case 'dateCreated':
-			getSortedFeedIds(getState().peopleFeed, 'people', 'dateCreated')
-			.then((sortedFeedIds) => dispatch(updatePeopleFeedIds(sortedFeedIds)))
-			break
-		default:
-			return
-		}
+		return new Promise(function (resolve, reject) {
+			if (getState().peopleFeed.sorting.sortOrder === 'dec') {
+				resolve(dispatch(updatePeopleSortOrder('asc')))
+			} else {
+				resolve(dispatch(updatePeopleSortOrder('dec')))
+			}
+		})
+	}
+}
+
+export function sortPeopleFeedBy (sortStatus) {
+	return function (dispatch, getState) {
+		dispatch(updatePeopleSortStatus(sortStatus))
+		getSortedFeedIds(getState().peopleFeed, 'people', sortStatus)
+		.then((sortedFeedIds) => dispatch(updatePeopleFeedIds(sortedFeedIds)))
 	}
 }
 // END SORTING FUNCTIONS
@@ -142,6 +132,13 @@ function updatePeopleSortStatus (sortStatus) {
 	return {
 		type: UPDATE_PEOPLE_SORT_STATUS,
 		sortStatus,
+	}
+}
+
+function updatePeopleSortOrder (sortOrder) {
+	return {
+		type: UPDATE_PEOPLE_SORT_ORDER,
+		sortOrder,
 	}
 }
 
