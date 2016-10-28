@@ -393,6 +393,7 @@ export function updateAndHandleFilter (nameId) {
 	return function (dispatch, getState) {
 		return findFilterNameAndType(getState, nameId)
 		.then(({name, filterType}) => {
+			console.log('name, nameId', name, nameId)
 			dispatch(updateFilterName(name, filterType))
 			switch (filterType) {
 			case 'people':

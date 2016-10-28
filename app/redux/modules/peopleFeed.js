@@ -1,12 +1,13 @@
 import { getUrl } from 'helpers/api'
 import { getSortedFeedIds } from 'helpers/sorting'
+import { buildFilterOptions } from 'helpers/filtering'
 
 const UPDATE_PEOPLE_FEED_PEOPLE = 'UPDATE_PEOPLE_FEED_PEOPLE'
 const UPDATE_PEOPLE_FEED_INITIAL_FETCH = 'UPDATE_PEOPLE_FEED_INITIAL_FETCH'
 const UPDATE_PERSON_PHOTO_URL = 'UPDATE_PERSON_PHOTO_URL'
 const UPDATE_PERSON_COLLAPSED = 'UPDATE_PERSON_COLLAPSED'
 const ADD_PEOPLE_FILTER_OPTIONS = 'ADD_PEOPLE_FILTER_OPTIONS'
-const UPDATE_PEOPLE_FILTER_NAME_AND_TYPE = 'UPDATE_PEOPLE_FILTER_NAME_AND_TYPE'
+const UPDATE_PEOPLE_FILTER_NAME = 'UPDATE_PEOPLE_FILTER_NAME'
 const UPDATE_IS_FILTERING_PEOPLE = 'UPDATE_IS_FILTERING_PEOPLE'
 const UPDATE_PEOPLE_SORT_ORDER = 'UPDATE_PEOPLE_SORT_ORDER'
 const UPDATE_PEOPLE_SORT_STATUS = 'UPDATE_PEOPLE_SORT_STATUS'
@@ -19,6 +20,8 @@ export function prepPeopleForFeed (people) {
 			dispatch(updatePeopleFeedPeople(people))
 			dispatch(updatePeopleFeedIds(Object.keys(people)))
 			dispatch(sortPeopleFeedBy('firstName'))
+			buildFilterOptions(people, 'person', ['firstName', 'lastName'])
+			.then((filterOptions) => dispatch(addPeopleFilterOptions(filterOptions)))
 			if (getState().peopleFeed.initialFetch === true) {
 				dispatch(getPeopleUrlFromFirebase(people))
 				dispatch(updatePeopleFeedInitialFetch(false))
@@ -55,39 +58,19 @@ export function handlePersonCollapsed (personId, collapsed) {
 }
 
 // START FILTER FUNCTIONS
-export function updateAndHandlePeopleFilter (nameId) {
+export function updateAndHandlePeopleFilter (filterId) {
 	return function (dispatch, getState) {
-		// return findFilterNameAndType(getState, nameId)
-		// .then(({name, filterType}) => {
-		// 	dispatch(updateFilterName(name, filterType))
-		// 	filterByPerson(dispatch, getState, nameId[0])
-		// })
+		const person = getState().peopleFeed.people[filterId]
+		dispatch(updatePeopleFilterName(`${person.firstName} ${person.lastName}`))
+		dispatch(updatePeopleFeedIds([filterId]))
 	}
 }
 
 export function disableIsFilteringPeople () {
 	return function (dispatch, getState) {
-		// restoreAllItemsToFeed(dispatch, getState)
-		// .then(() => {
-		// 	dispatch(updateIsFiltering())
-		// 	switch (getState().feed.sortStatus) {
-		// 	case 'purchasedDate':
-		// 		applySortStatusByDate(dispatch, getState, 'purchasedDate')
-		// 		return
-		// 	case 'peopleLastName':
-		// 		getSortedFeedIds(dispatch, getState, 'peopleLastName', 'lastName')
-		// 		return
-		// 	case 'peopleFirstName':
-		// 		getSortedFeedIds(dispatch, getState, 'peoplefirstName', 'firstName')
-		// 		return
-		// 	case 'hardwares':
-		// 		applySortStatusHardware(dispatch, getState, 'hardwares')
-		// 		return
-		// 	default: // dateCreated
-		// 		applySortStatusByDate(dispatch, getState, 'dateCreated')
-		// 		return
-		// 	}
-		// })
+		dispatch(updatePeopleFeedIds(Object.keys(getState().peopleFeed.people)))
+		dispatch(sortPeopleFeedBy(getState().peopleFeed.sorting.sortStatus))
+		dispatch(updateIsFilteringPeople())
 	}
 }
 // END FILTER FUNCTIONS
@@ -125,6 +108,26 @@ function updatePeopleFeedIds (feedIds) {
 	return {
 		type: UPDATE_PEOPLE_FEED_IDS,
 		feedIds,
+	}
+}
+
+function updateIsFilteringPeople () {
+	return {
+		type: UPDATE_IS_FILTERING_PEOPLE,
+	}
+}
+
+function updatePeopleFilterName (name) {
+	return {
+		type: UPDATE_PEOPLE_FILTER_NAME,
+		name,
+	}
+}
+
+function addPeopleFilterOptions (options) {
+	return {
+		type: ADD_PEOPLE_FILTER_OPTIONS,
+		options,
 	}
 }
 
@@ -226,12 +229,11 @@ function filterPeople (state, action) {
 			...state,
 			options: action.options,
 		}
-	case UPDATE_PEOPLE_FILTER_NAME_AND_TYPE:
+	case UPDATE_PEOPLE_FILTER_NAME:
 		return {
 			...state,
 			isFiltering: true,
 			name: action.name,
-			filterType: action.filterType,
 		}
 	case UPDATE_IS_FILTERING_PEOPLE: {
 		return {
@@ -304,7 +306,7 @@ export default function peopleFeed (state = initialState, action) {
 			},
 		}
 	case ADD_PEOPLE_FILTER_OPTIONS:
-	case UPDATE_PEOPLE_FILTER_NAME_AND_TYPE:
+	case UPDATE_PEOPLE_FILTER_NAME:
 	case UPDATE_IS_FILTERING_PEOPLE:
 		return {
 			...state,

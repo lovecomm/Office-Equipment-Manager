@@ -1,4 +1,4 @@
-export function getSortedFeedIds (feed, feedObjectsType, objectProperty) {
+export function getSortedFeedIds (feed, feedObjectsType, objectProperty) { // feedObjectsType should be a string that matches 'people', 'hardwares', or 'items'. objectProperty is the property on each objectType (i.e. people) that we want to sort by
 	return new Promise((resolve, reject) => {
 		const feedObjects = feed[feedObjectsType]
 		let feedIds = feed.feedIds
