@@ -49,7 +49,6 @@ const PersonContainer = React.createClass({
 })
 
 function mapStateToProps ({peopleFeed, items, hardwares}, props) {
-	// not all items are used at once, so this needs to get only the items on the feed.itemIds
 	const person = peopleFeed.people[props.personId]
 	return {
 		personId: person.personId,

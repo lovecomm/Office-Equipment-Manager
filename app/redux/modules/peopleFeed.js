@@ -202,7 +202,6 @@ const initialPersonState = {
 	createdBy: '',
 	dateCreated: '',
 	dateLastUpdated: '',
-	itemIds: {},
 	collapsed: true,
 }
 

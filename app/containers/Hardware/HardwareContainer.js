@@ -8,7 +8,26 @@ const HardwareContainer = React.createClass({
 	propTypes: {
 		hardwareId: PropTypes.string.isRequired,
 		collapsed: PropTypes.bool.isRequired,
+		make: PropTypes.string.isRequired,
+		model: PropTypes.string.isRequired,
+		photoUrl: PropTypes.string.isRequired,
 		handleHardwareCollapsed: PropTypes.func.isRequired,
+		items: PropTypes.object.isRequired,
+		people: PropTypes.object.isRequired,
+	},
+	componentWillMount () {
+		this.hardwaresItems = {}
+		this.hardwareItemIds = []
+		const items = this.props.items
+		const people = this.props.people
+		Object.keys(items).forEach((itemId) => {
+			if (items[itemId].hardwareId === this.props.hardwareId) {
+				const itemsPerson = people[items[itemId].personId]
+				const itemsWithPeople = Object.assign(items[itemId], {person: itemsPerson})
+				this.hardwaresItems = Object.assign(this.hardwaresItems, {[itemId]: itemsWithPeople})
+				this.hardwareItemIds.push(itemId)
+			}
+		})
 	},
 	envokeHandleCollapsed () {
 		const newCollapse = !this.props.collapsed
@@ -17,32 +36,27 @@ const HardwareContainer = React.createClass({
 	render () {
 		return (
 			<Hardware
-				{...this.props}
+				hardwareId={this.props.hardwareId}
+				make={this.props.make}
+				model={this.props.model}
+				items={this.hardwareItems}
+				itemIds={this.hardwareItemIds}
+				photoUrl={this.props.photoUrl}
+				collapsed={this.props.collapsed}
 				envokeHandleCollapsed={this.envokeHandleCollapsed}/>
 		)
 	},
 })
 
-function mapStateToProps ({items, hardwares, peopleFeed}, props) {
-	// not all items are used at once, so this needs to get only the items on the feed.itemIds
-	let hardwaresItems = {}
-	let itemIds = []
-	Object.keys(items).forEach((itemId) => {
-		if (items[itemId].hardwareId === props.hardwareId) {
-			const itemsPerson = peopleFeed.people[items[itemId].personId]
-			const itemsWithPeople = Object.assign(items[itemId], {person: itemsPerson})
-			hardwaresItems = Object.assign(hardwaresItems, {[itemId]: itemsWithPeople})
-			itemIds.push(itemId)
-		}
-	})
-	const hardware = hardwares[props.hardwareId]
+function mapStateToProps ({items, hardwaresFeed, peopleFeed}, props) {
+	const hardware = hardwaresFeed.hardware[props.hardwareId]
 	return {
 		hardwareId: hardware.hardwareId,
 		make: hardware.make,
 		model: hardware.model,
 		collapsed: hardware.collapsed,
-		items: hardwaresItems,
-		itemIds,
+		items,
+		people: peopleFeed.people,
 		photoUrl: hardware.photo.url,
 	}
 }

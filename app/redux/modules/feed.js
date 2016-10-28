@@ -2,7 +2,8 @@ import { addListener } from 'redux/modules/listeners'
 import { listenToFeed } from 'helpers/api'
 import { prepItemsForFeed } from 'redux/modules/items'
 import { prepPeopleForFeed } from 'redux/modules/peopleFeed'
-import { prepHardwaresForFeed } from 'redux/modules/hardwares'
+import { prepHardwaresForFeed } from 'redux/modules/hardwaresFeed'
+// import { prepHardwaresForFeed } from 'redux/modules/hardwares'
 
 const SETTING_FEED_LISTENER = 'SETTING_FEED_LISTENER'
 const SETTING_FEED_LISTENER_ERROR = 'SETTING_FEED_LISTENER_ERROR'
@@ -103,7 +104,7 @@ export function setAndHandleFeedListener () {
 				// if (initialFetch === true) {
 				dispatch(settingFeedListenerSuccessItems(sortedItemIds))
 				// dispatch(settingFeedListenerSuccessPeople(Object.keys(people)))
-				dispatch(settingFeedListenerSuccessHardware(Object.keys(hardwares)))
+				// dispatch(settingFeedListenerSuccessHardware(Object.keys(hardwares)))
 				// }
 				// initialFetch = false
 			})
