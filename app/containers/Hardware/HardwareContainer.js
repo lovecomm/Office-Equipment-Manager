@@ -39,7 +39,7 @@ const HardwareContainer = React.createClass({
 				hardwareId={this.props.hardwareId}
 				make={this.props.make}
 				model={this.props.model}
-				items={this.hardwareItems}
+				items={this.hardwaresItems}
 				itemIds={this.hardwareItemIds}
 				photoUrl={this.props.photoUrl}
 				collapsed={this.props.collapsed}
@@ -49,7 +49,7 @@ const HardwareContainer = React.createClass({
 })
 
 function mapStateToProps ({items, hardwaresFeed, peopleFeed}, props) {
-	const hardware = hardwaresFeed.hardware[props.hardwareId]
+	const hardware = hardwaresFeed.hardwares[props.hardwareId]
 	return {
 		hardwareId: hardware.hardwareId,
 		make: hardware.make,
