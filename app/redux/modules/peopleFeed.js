@@ -14,7 +14,7 @@ const UPDATE_PEOPLE_SORT_STATUS = 'UPDATE_PEOPLE_SORT_STATUS'
 const UPDATE_PEOPLE_FEED_IDS = 'UPDATE_PEOPLE_FEED_IDS'
 
 // THUNKS & HELPERS
-export function prepPeopleForFeed (people) {
+export function prepPeopleForFeed (people, items) {
 	return function (dispatch, getState) {
 		return new Promise((resolve, reject) => {
 			dispatch(updatePeopleFeedPeople(people))
@@ -198,10 +198,13 @@ function photoPerson (state = initialPersonPhotoState, action) {
 }
 
 const initialPersonState = {
+	personId: '',
 	firstName: '',
 	lastName: '',
-	items: {},
-	numberOfItems: 0,
+	createdBy: '',
+	dateCreated: '',
+	dateLastUpdated: '',
+	itemIds: {},
 	collapsed: true,
 }
 

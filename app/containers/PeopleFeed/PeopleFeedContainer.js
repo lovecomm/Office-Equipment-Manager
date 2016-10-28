@@ -14,11 +14,7 @@ const PeopleFeedContainer = React.createClass({
 	componentDidMount () {
 		this.props.setAndHandleFeedListener()
 	},
-	componentDidUpdate () {
-		// console.log('new props.feedIds', this.props.feedIds)
-	},
 	render () {
-		// console.log('this.props.peopleFeed', this.props.peopleFeed)
 		return (
 			<PeopleFeed
 				peopleFeed={this.props.peopleFeed}

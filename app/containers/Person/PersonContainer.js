@@ -7,8 +7,27 @@ import * as personActionCreators from 'redux/modules/peopleFeed'
 const PersonContainer = React.createClass({
 	propTypes: {
 		personId: PropTypes.string.isRequired,
+		firstName: PropTypes.string.isRequired,
+		lastName: PropTypes.string.isRequired,
+		photoUrl: PropTypes.string.isRequired,
 		collapsed: PropTypes.bool.isRequired,
 		handlePersonCollapsed: PropTypes.func.isRequired,
+		items: PropTypes.object.isRequired,
+		hardwares: PropTypes.object.isRequired,
+	},
+	componentWillMount () {
+		this.personsItems = {}
+		this.personItemIds = []
+		const items = this.props.items
+		const	hardwares = this.props.hardwares
+		Object.keys(items).forEach((itemId) => {
+			if (items[itemId].personId === this.props.personId) {
+				const itemsHardware = hardwares[items[itemId].hardwareId]
+				const itemWithHardware = Object.assign(items[itemId], {hardware: itemsHardware})
+				this.personsItems = Object.assign(this.personsItems, {[itemId]: itemWithHardware})
+				this.personItemIds.push(itemId)
+			}
+		})
 	},
 	envokeHandleCollapsed () {
 		const newCollapse = !this.props.collapsed
@@ -17,7 +36,13 @@ const PersonContainer = React.createClass({
 	render () {
 		return (
 			<Person
-				{...this.props}
+				personId={this.props.personId}
+				firstName={this.props.firstName}
+				lastName={this.props.lastName}
+				photoUrl={this.props.photoUrl}
+				items={this.personsItems}
+				itemIds={this.personItemIds}
+				collapsed={this.props.collapsed}
 				envokeHandleCollapsed={this.envokeHandleCollapsed}/>
 		)
 	},
@@ -25,16 +50,6 @@ const PersonContainer = React.createClass({
 
 function mapStateToProps ({peopleFeed, items, hardwares}, props) {
 	// not all items are used at once, so this needs to get only the items on the feed.itemIds
-	let personsItems = {}
-	let itemIds = []
-	Object.keys(items).forEach((itemId) => {
-		if (items[itemId].personId === props.personId) {
-			const itemsHardware = hardwares[items[itemId].hardwareId]
-			const itemWithHardware = Object.assign(items[itemId], {hardware: itemsHardware})
-			personsItems = Object.assign(personsItems, {[itemId]: itemWithHardware})
-			itemIds.push(itemId)
-		}
-	})
 	const person = peopleFeed.people[props.personId]
 	return {
 		personId: person.personId,
@@ -42,8 +57,8 @@ function mapStateToProps ({peopleFeed, items, hardwares}, props) {
 		lastName: person.lastName,
 		collapsed: person.collapsed,
 		photoUrl: person.photo.url,
-		items: personsItems,
-		itemIds,
+		items,
+		hardwares,
 	}
 }
 
