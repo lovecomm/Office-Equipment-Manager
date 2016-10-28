@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { processImage } from 'helpers/utils'
 import { Loader } from 'components'
 import { Drawer, Input, Button } from 'react-toolbox/lib'
-import { button, headline, formWrapper, drawer, error, imageInput } from './styles.scss'
+import { button, headline, formWrapper, drawer, error, imageInput, selectedPhoto } from './styles.scss'
 
 const	{ func, bool, string, object } = PropTypes
 
@@ -33,6 +33,7 @@ export default function PersonForm (props, context) {
 			personId: props.personId,
 			firstName: props.firstName,
 			lastName: props.lastName,
+			photo: props.photo,
 		}
 		if (props.photo.name) {
 			processImage(props.photo)
@@ -86,6 +87,9 @@ export default function PersonForm (props, context) {
 					className={imageInput}/>
 				</div>
 				<br />
+				{props.photoName !== ''
+					? <div><p className={selectedPhoto}>{props.photoName}</p><br /></div>
+					: ''}
 				<Button label={(() => props.editing ? 'Update' : 'Save Person')()} type='submit' raised={true}
 					accent={true}
 					primary={false}
