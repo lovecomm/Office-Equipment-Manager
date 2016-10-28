@@ -22,10 +22,8 @@ export function prepPeopleForFeed (people, items) {
 			dispatch(sortPeopleFeedBy('firstName'))
 			buildFilterOptions(people, 'person', ['firstName', 'lastName'])
 			.then((filterOptions) => dispatch(addPeopleFilterOptions(filterOptions)))
-			if (getState().peopleFeed.initialFetch === true) {
-				dispatch(getPeopleUrlFromFirebase(people))
-				dispatch(updatePeopleFeedInitialFetch(false))
-			}
+			dispatch(getPeopleUrlFromFirebase(people))
+			if (getState().peopleFeed.initialFetch === true) dispatch(updatePeopleFeedInitialFetch(false))
 			resolve()
 		})
 	}
