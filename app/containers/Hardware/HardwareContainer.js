@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Hardware } from 'components'
 import { bindActionCreators } from 'redux'
-import * as hardwareActionCreators from 'redux/modules/hardwares'
+import * as hardwareActionCreators from 'redux/modules/hardwaresFeed'
 
 const HardwareContainer = React.createClass({
 	propTypes: {
@@ -48,14 +48,14 @@ const HardwareContainer = React.createClass({
 	},
 })
 
-function mapStateToProps ({items, hardwaresFeed, peopleFeed}, props) {
+function mapStateToProps ({itemsFeed, hardwaresFeed, peopleFeed}, props) {
 	const hardware = hardwaresFeed.hardwares[props.hardwareId]
 	return {
 		hardwareId: hardware.hardwareId,
 		make: hardware.make,
 		model: hardware.model,
 		collapsed: hardware.collapsed,
-		items,
+		items: itemsFeed.items,
 		people: peopleFeed.people,
 		photoUrl: hardware.photo.url,
 	}

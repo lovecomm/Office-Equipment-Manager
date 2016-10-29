@@ -34,7 +34,7 @@ const DeleteDataContainer = React.createClass({
 	},
 })
 
-function mapStateToProps ({items, peopleFeed, hardwares, deleteData}, ownProps) {
+function mapStateToProps ({itemsFeed, peopleFeed, hardwaresFeed, deleteData}, ownProps) {
 	const forAllProps = {
 		confirmDeleteActive: deleteData.confirmDeleteActive,
 		toDeleteType: deleteData.toDeleteType,
@@ -43,13 +43,13 @@ function mapStateToProps ({items, peopleFeed, hardwares, deleteData}, ownProps) 
 
 	switch (ownProps.type) {
 	case 'item':
-		const item = items[ownProps.id]
+		const item = itemsFeed.items[ownProps.id]
 		return {
 			...forAllProps,
 			type: ownProps.type,
 			itemId: item.itemId,
 			serial: item.serial,
-			hardware: hardwares[item.hardwareId],
+			hardware: hardwaresFeed.hardwares[item.hardwareId],
 			person: peopleFeed.people[item.personId],
 		}
 	case 'person':
@@ -60,7 +60,7 @@ function mapStateToProps ({items, peopleFeed, hardwares, deleteData}, ownProps) 
 			person,
 		}
 	case 'hardware':
-		const hardware = hardwares[ownProps.id]
+		const hardware = hardwaresFeed.hardwares[ownProps.id]
 		return {
 			...forAllProps,
 			type: ownProps.type,

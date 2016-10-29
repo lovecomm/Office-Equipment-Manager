@@ -48,7 +48,7 @@ const PersonContainer = React.createClass({
 	},
 })
 
-function mapStateToProps ({peopleFeed, items, hardwares}, props) {
+function mapStateToProps ({peopleFeed, itemsFeed, hardwaresFeed}, props) {
 	const person = peopleFeed.people[props.personId]
 	return {
 		personId: person.personId,
@@ -56,8 +56,8 @@ function mapStateToProps ({peopleFeed, items, hardwares}, props) {
 		lastName: person.lastName,
 		collapsed: person.collapsed,
 		photoUrl: person.photo.url,
-		items,
-		hardwares,
+		items: itemsFeed.items,
+		hardwares: hardwaresFeed.hardwares,
 	}
 }
 
