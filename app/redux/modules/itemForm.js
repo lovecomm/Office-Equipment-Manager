@@ -21,9 +21,9 @@ const UPDATE_ITEM_FORM_EDITING = 'UPDATE_ITEM_FORM_EDITING'
 // ACTIONS
 function activateCurrentItem (dispatch, getState, itemId) {
 	return new Promise((resolve, reject) => {
-		const item = getState().items[itemId]
+		const item = getState().itemsFeed.items[itemId]
 		const person = getState().peopleFeed.people[item.personId]
-		const hardware = getState().hardwares[item.hardwareId]
+		const hardware = getState().hardwaresFeed.hardwares[item.hardwareId]
 		dispatch(updateItemFormEditing())
 		dispatch(updateItemFormItemId(item.itemId))
 		dispatch(updateItemFormSerial(item.serial))
@@ -154,7 +154,7 @@ export function updateItemFormHardwareId (hardwareId) {
 
 export function updateItemFormHardwareInfo (hardwareId) {
 	return function (dispatch, getState) {
-		const hardware = getState().hardwares[hardwareId]
+		const hardware = getState().hardwaresFeed.hardwares[hardwareId]
 		const hardwareName = `${hardware.make} ${hardware.model}`
 		dispatch(updateItemFormHardware(hardwareName))
 		dispatch(updateItemFormHardwareId(hardwareId))
@@ -170,8 +170,8 @@ function updateItemFormError (error) {
 
 export function newItemFanout (item) {
 	return function (dispatch, getState) {
-		const associatedHardware = getState().hardwares[item.hardwareId]
-		saveNewItem(getState().items, item, getState().users.authedId, associatedHardware)
+		const associatedHardware = getState().hardwaresFeed.hardwares[item.hardwareId]
+		saveNewItem(getState().itemsFeed.items, item, getState().users.authedId, associatedHardware)
 		.then((itemWithId) => {
 			dispatch(addNewItemToFeed(itemWithId.itemId))
 			dispatch(closeItemForm())
@@ -182,8 +182,8 @@ export function newItemFanout (item) {
 
 export function updateItemFanout (item) {
 	return function (dispatch, getState) {
-		const associatedHardware = getState().hardwares[item.hardwareId]
-		saveUpdatedItem(getState().items, item, getState().users.authedId, associatedHardware)
+		const associatedHardware = getState().hardwaresFeed.hardwares[item.hardwareId]
+		saveUpdatedItem(getState().itemsFeed.items, item, getState().users.authedId, associatedHardware)
 		.then((itemWithId) => dispatch(closeItemForm()))
 		.catch((err) => dispatch(updateItemFormError(err.toString())))
 	}

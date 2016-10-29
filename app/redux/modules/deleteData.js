@@ -37,7 +37,7 @@ export function confirmDeleteData () {
 	return function (dispatch, getState) {
 		const dataType = getState().deleteData.toDeleteType
 		const dataId = getState().deleteData.toDeleteId
-		const items = getState().items
+		const items = getState().itemsFeed.items
 		// Delete from Firebase Storage
 		deleteDataDB(dataType, dataId, items, getState().peopleFeed.people)
 		// Delete from Redux state tree

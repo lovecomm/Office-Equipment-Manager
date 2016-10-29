@@ -105,7 +105,7 @@ function updateHardwareFormPhotoName (photoName) {
 
 function activateCurrentHardware (dispatch, getState, hardwareId) {
 	return new Promise((resolve, reject) => {
-		const hardware = getState().hardwares[hardwareId]
+		const hardware = getState().hardwaresFeed.hardwares[hardwareId]
 		dispatch(hardwareFormupdateHardwareFormEditing())
 		dispatch(updateHardwareFormHardwareId(hardware.hardwareId))
 		dispatch(updateHardwareFormIsComputer(hardware.isComputer))
@@ -128,7 +128,7 @@ export function initiateHardwareForm (hardwareId) {
 
 export function newHardwareFanout (hardware) {
 	return function (dispatch, getState) {
-		saveNewHardware(getState().hardwares, hardware, getState().users.authedId)
+		saveNewHardware(getState().hardwaresFeed.hardwares, hardware, getState().users.authedId)
 		.then((hardwareWithId) => {
 			dispatch(hardwareFormAddHardware(hardwareWithId))
 			dispatch(closeHardwareForm())
@@ -142,7 +142,7 @@ export function newHardwareFanout (hardware) {
 
 export function updateHardwareFanout (hardware) {
 	return function (dispatch, getState) {
-		saveUpdatedHardware(getState().hardwares, hardware, getState().users.authedId, getState().items)
+		saveUpdatedHardware(getState().hardwaresFeed.hardwares, hardware, getState().users.authedId, getState().itemsFeed.items)
 		.then(() => dispatch(closeHardwareForm()))
 		.catch((error) => {
 			dispatch(updateHardwareFormIsSubmitting(false))
