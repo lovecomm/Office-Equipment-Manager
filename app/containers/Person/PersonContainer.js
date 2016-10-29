@@ -16,8 +16,6 @@ const PersonContainer = React.createClass({
 		hardwares: PropTypes.object.isRequired,
 	},
 	componentWillMount () {
-		this.personsItems = {}
-		this.personItemIds = []
 		this.attachRelatedData()
 	},
 	componentWillReceiveProps () {
@@ -26,6 +24,8 @@ const PersonContainer = React.createClass({
 	attachRelatedData () {
 		const items = this.props.items
 		const	hardwares = this.props.hardwares
+		this.personsItems = {}
+		this.personItemIds = []
 		Object.keys(items).forEach((itemId) => {
 			if (items[itemId].personId === this.props.personId) {
 				const itemsHardware = hardwares[items[itemId].hardwareId]

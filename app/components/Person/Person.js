@@ -23,7 +23,7 @@ export default function Person (props) {
 				title={(() => `${props.firstName} ${props.lastName}`)()} />
 			<CardText className={chips}>
 				{(() => props.itemIds.map((id) => (
-					<span key={id}>{props.items[id].serial}</span>
+					<span key={`person_card_text${id}`}>{props.items[id].serial}</span>
 				)))()}
 			</CardText>
 			{(() => {
