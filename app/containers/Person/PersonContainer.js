@@ -18,6 +18,12 @@ const PersonContainer = React.createClass({
 	componentWillMount () {
 		this.personsItems = {}
 		this.personItemIds = []
+		this.attachRelatedData()
+	},
+	componentWillReceiveProps () {
+		this.attachRelatedData()
+	},
+	attachRelatedData () {
 		const items = this.props.items
 		const	hardwares = this.props.hardwares
 		Object.keys(items).forEach((itemId) => {
