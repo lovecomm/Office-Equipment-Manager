@@ -14,7 +14,7 @@ const UPDATE_HARDWARES_SORT_STATUS = 'UPDATE_HARDWARES_SORT_STATUS'
 const UPDATE_HARDWARES_FEED_IDS = 'UPDATE_HARDWARES_FEED_IDS'
 
 // THUNKS & HELPERS
-export function prepHardwaresForFeed (hardwares, items) {
+export function prepHardwaresForFeed (hardwares) {
 	return function (dispatch, getState) {
 		return new Promise((resolve, reject) => {
 			dispatch(updateHardwaresFeedHardwares(hardwares))

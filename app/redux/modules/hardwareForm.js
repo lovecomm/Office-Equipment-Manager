@@ -1,6 +1,4 @@
 import { saveNewHardware, saveUpdatedHardware } from 'helpers/api'
-// import { determineItemHasSubContent } from 'helpers/utils'
-// import { updateItemHasSubContent } from 'redux/modules/items'
 
 const HARDWARE_FORM_ADD_HARDWARE = 'HARDWARE_FORM_ADD_HARDWARE'
 const OPEN_HARDWARE_FORM = 'OPEN_HARDWARE_FORM'

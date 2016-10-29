@@ -14,10 +14,10 @@ export default function PeopleSortMenu (props) {
 		position='topRight'
 		className={sortWrapper}
 		iconRipple={false}>
-		<MenuItem icon='cached' caption='Reverse Sort Order' onClick={props.reversePeopleSortOrder}/>
-		<MenuDivider />
-		<MenuItem icon='event' caption='Date Created' onClick={() => props.sortPeopleFeedBy('dateCreated')}/>
 		<MenuItem icon='first_page' caption='First Name' onClick={() => props.sortPeopleFeedBy('firstName')}/>
 		<MenuItem icon='last_page' caption='Last Name' onClick={() => props.sortPeopleFeedBy('lastName')}/>
+		<MenuItem icon='event' caption='Date Created' onClick={() => props.sortPeopleFeedBy('dateCreated')}/>
+		<MenuDivider />
+		<MenuItem icon='cached' caption='Reverse Sort Order' onClick={props.reversePeopleSortOrder}/>
 	</IconMenu>)
 }

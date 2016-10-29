@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Item } from 'components'
 import { bindActionCreators } from 'redux'
-import * as itemActionCreators from 'redux/modules/items'
+import * as itemActionCreators from 'redux/modules/itemsFeed'
 
 const ItemContainer = React.createClass({
 	propTypes: {
@@ -40,9 +40,9 @@ const ItemContainer = React.createClass({
 	},
 })
 
-function mapStateToProps ({items, peopleFeed, hardwares}, props) {
+function mapStateToProps ({itemsFeed, peopleFeed, hardwares}, props) {
 	// not all items are used at once, so this needs to get only the items on the feed.itemIds
-	const item = items[props.itemId]
+	const item = itemsFeed.items[props.itemId]
 	return {
 		serial: item.serial,
 		hasSubContent: item.hasSubContent,

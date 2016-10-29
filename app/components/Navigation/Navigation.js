@@ -10,22 +10,13 @@ function MenuItems (props) {
 		if (window.outerWidth <= 900) { // dropdown/mobile menu
 			return (<IconMenu className={menuItems} icon='reorder' menuRipple={true}>
 				<MenuItem caption={'Items'}
-					onClick={() => {
-						props.router.push('/')
-						props.changeActiveView('/')
-					}}
+					onClick={() => props.router.push('/')}
 					className={(() => props.activeView === '/' ? 'active' : '')()} icon='view_agenda' />
 				<MenuItem caption={'People'}
-					onClick={() => {
-						props.router.push('/people')
-						props.changeActiveView('/people')
-					}}
+					onClick={() => props.router.push('/people')}
 					className={(() => props.activeView === '/people' ? 'active' : '')()} icon='people' />
 				<MenuItem caption={'Hardware'}
-					onClick={() => {
-						props.router.push('/hardware')
-						props.changeActiveView('/hardware')
-					}}
+					onClick={() => props.router.push('/hardware')}
 					className={(() => props.activeView === '/hardware' ? 'active' : '')()} icon='laptop' />
 				<MenuDivider />
 				<MenuItem icon='close' caption={'Sign Out'}
@@ -34,22 +25,13 @@ function MenuItems (props) {
 		} else { // desktop menu
 			return (<div className={menuItemsDesktop}>
 				<MenuItem caption={'Items'}
-					onClick={() => {
-						props.router.push('/')
-						props.changeActiveView('/')
-					}}
+					onClick={() => props.router.push('/')}
 					className={(() => props.activeView === '/' ? 'active' : '')()}/>
 				<MenuItem caption={'People'}
-					onClick={() => {
-						props.router.push('/people')
-						props.changeActiveView('/people')
-					}}
+					onClick={() => props.router.push('/people')}
 					className={(() => props.activeView === '/people' ? 'active' : '')()}/>
 				<MenuItem caption={'Hardware'}
-					onClick={() => {
-						props.router.push('/hardware')
-						props.changeActiveView('/hardware')
-					}}
+					onClick={() => props.router.push('/hardware')}
 					className={(() => props.activeView === '/hardware' ? 'active' : '')()}/>
 				<MenuItem caption={'Sign Out'}
 					onClick={() => props.router.push('/logout')} />
@@ -73,14 +55,6 @@ export default function Navigation (props, context) {
 
 Navigation.propTypes = {
 	isAuthed: PropTypes.bool.isRequired,
-	changeSortOrder: PropTypes.func.isRequired,
-	sortFeedCreationDate: PropTypes.func.isRequired,
-	sortFeedPurchaseDate: PropTypes.func.isRequired,
-	sortFeedLastName: PropTypes.func.isRequired,
-	sortFeedFirstName: PropTypes.func.isRequired,
-	sortFeedHardware: PropTypes.func.isRequired,
-	changeActiveView: PropTypes.func.isRequired,
-	activeView: PropTypes.string.isRequired,
 }
 
 MenuItems.propTypes = {

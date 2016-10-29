@@ -14,10 +14,10 @@ export default function HardwaresSortMenu (props) {
 		position='topRight'
 		className={sortWrapper}
 		iconRipple={false}>
-		<MenuItem icon='cached' caption='Reverse Sort Order' onClick={props.reverseHardwaresSortOrder}/>
-		<MenuDivider />
-		<MenuItem icon='event' caption='Date Created' onClick={() => props.sortHardwaresFeedBy('dateCreated')}/>
 		<MenuItem icon='devices_other' caption='Make' onClick={() => props.sortHardwaresFeedBy('make')}/>
 		<MenuItem icon='tv' caption='Model' onClick={() => props.sortHardwaresFeedBy('model')}/>
+		<MenuItem icon='event' caption='Date Created' onClick={() => props.sortHardwaresFeedBy('dateCreated')}/>
+		<MenuDivider />
+		<MenuItem icon='cached' caption='Reverse Sort Order' onClick={props.reverseHardwaresSortOrder}/>
 	</IconMenu>)
 }

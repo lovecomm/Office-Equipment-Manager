@@ -7,20 +7,10 @@ import * as feedActionCreators from 'redux/modules/feed'
 const NavigationContainer = React.createClass({
 	propTypes: {
 		isAuthed: PropTypes.bool.isRequired,
-		changeSortOrder: PropTypes.func.isRequired,
-		sortFeedCreationDate: PropTypes.func.isRequired,
-		sortFeedPurchaseDate: PropTypes.func.isRequired,
-		sortFeedLastName: PropTypes.func.isRequired,
-		sortFeedFirstName: PropTypes.func.isRequired,
-		sortFeedHardware: PropTypes.func.isRequired,
-		updateActiveView: PropTypes.func.isRequired,
-	},
-	changeActiveView (newView) {
-		this.props.updateActiveView(newView)
 	},
 	render () {
 		return (
-			<Navigation {...this.props} changeActiveView={this.changeActiveView}/>
+			<Navigation {...this.props} />
 		)
 	},
 })

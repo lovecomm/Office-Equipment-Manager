@@ -14,7 +14,7 @@ const UPDATE_PEOPLE_SORT_STATUS = 'UPDATE_PEOPLE_SORT_STATUS'
 const UPDATE_PEOPLE_FEED_IDS = 'UPDATE_PEOPLE_FEED_IDS'
 
 // THUNKS & HELPERS
-export function prepPeopleForFeed (people, items) {
+export function prepPeopleForFeed (people) {
 	return function (dispatch, getState) {
 		return new Promise((resolve, reject) => {
 			dispatch(updatePeopleFeedPeople(people))

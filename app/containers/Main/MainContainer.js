@@ -17,7 +17,6 @@ const MainContainer = React.createClass({
 		authUser: PropTypes.func.isRequired,
 		fetchingUserSuccess: PropTypes.func.isRequired,
 		removeFetchingUser: PropTypes.func.isRequired,
-		updateActiveView: PropTypes.func.isRequired,
 	},
 	contextTypes: {
 		router: PropTypes.object.isRequired,
@@ -33,10 +32,6 @@ const MainContainer = React.createClass({
 				this.props.removeFetchingUser()
 			}
 		})
-		// Set current active view
-		if (this.context.router.isActive('/people')) {
-			this.props.updateActiveView('/people')
-		} else if (this.context.router.isActive('/hardware')) this.props.updateActiveView('/hardware')
 	},
 	render () {
 		return this.props.isFetching === true

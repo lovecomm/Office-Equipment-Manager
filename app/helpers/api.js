@@ -1,5 +1,5 @@
 import { ref, imagesRef } from 'config/constants'
-import { determineItemHasSubContent, processImage } from 'helpers/utils'
+import { determineItemHasSubContent } from 'helpers/utils'
 
 // START General Firebase API Calls
 export function listenToFeed (cb, errorCB) {
