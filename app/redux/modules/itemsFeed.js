@@ -19,8 +19,6 @@ export function prepItemsForFeed (items) {
 		return new Promise((resolve, reject) => {
 			dispatch(updateItemsFeedItems(items, Object.keys(items)))
 			dispatch(sortItemsFeedBy('serial'))
-			buildFilterOptions(items, 'item', ['serial'])
-			.then((filterOptions) => dispatch(addItemsFilterOptions(filterOptions)))
 			dispatch(getItemsUrlFromFirebase(items))
 			if (getState().itemsFeed.initialFetch === true) dispatch(updateItemsFeedInitialFetch(false))
 			resolve()
@@ -43,6 +41,17 @@ function getItemsUrlFromFirebase (items) {
 			resolve()
 		})
 		.catch((err) => console.warn(`Error in getting ItemsUrlFromFirebase, ${err}`))
+	}
+}
+
+export function setFilterOptions (buildOptions) {
+	return function (dispatch, getState) {
+		if (buildOptions) {
+			buildFilterOptions(getState().itemsFeed.items, 'item', ['serial'])
+			.then((filterOptions) => dispatch(addItemsFilterOptions(filterOptions)))
+		} else {
+			dispatch(addItemsFilterOptions({}))
+		}
 	}
 }
 

@@ -20,8 +20,6 @@ export function prepPeopleForFeed (people) {
 			dispatch(updatePeopleFeedPeople(people))
 			dispatch(updatePeopleFeedIds(Object.keys(people)))
 			dispatch(sortPeopleFeedBy('firstName'))
-			buildFilterOptions(people, 'person', ['firstName', 'lastName'])
-			.then((filterOptions) => dispatch(addPeopleFilterOptions(filterOptions)))
 			dispatch(getPeopleUrlFromFirebase(people))
 			if (getState().peopleFeed.initialFetch === true) dispatch(updatePeopleFeedInitialFetch(false))
 			resolve()
@@ -42,6 +40,17 @@ function getPeopleUrlFromFirebase (people) {
 			resolve()
 		})
 		.catch((err) => `Error in getPeopleUrlFromFirebase, ${err}`)
+	}
+}
+
+export function setFilterOptions (buildOptions) {
+	return function (dispatch, getState) {
+		if (buildOptions) {
+			buildFilterOptions(getState().peopleFeed.people, 'person', ['firstName', 'lastName'])
+			.then((filterOptions) => dispatch(addPeopleFilterOptions(filterOptions)))
+		} else {
+			dispatch(addPeopleFilterOptions({}))
+		}
 	}
 }
 

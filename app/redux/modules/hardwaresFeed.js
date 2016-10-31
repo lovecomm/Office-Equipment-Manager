@@ -20,8 +20,6 @@ export function prepHardwaresForFeed (hardwares) {
 			dispatch(updateHardwaresFeedHardwares(hardwares))
 			dispatch(updateHardwaresFeedIds(Object.keys(hardwares)))
 			dispatch(sortHardwaresFeedBy('make'))
-			buildFilterOptions(hardwares, 'hardware', ['make', 'model'])
-			.then((filterOptions) => dispatch(addHardwaresFilterOptions(filterOptions)))
 			dispatch(getHardwaresUrlFromFirebase(hardwares))
 			if (getState().hardwaresFeed.initialFetch === true) dispatch(updateHardwaresFeedInitialFetch(false))
 			resolve()
@@ -42,6 +40,17 @@ function getHardwaresUrlFromFirebase (hardwares) {
 			resolve()
 		})
 		.catch((err) => `Error in getHardwaresUrlFromFirebase, ${err}`)
+	}
+}
+
+export function setFilterOptions (buildOptions) {
+	return function (dispatch, getState) {
+		if (buildOptions) {
+			buildFilterOptions(getState().hardwaresFeed.hardwares, 'hardware', ['make', 'model'])
+			.then((filterOptions) => dispatch(addHardwaresFilterOptions(filterOptions)))
+		} else {
+			dispatch(addHardwaresFilterOptions({}))
+		}
 	}
 }
 
