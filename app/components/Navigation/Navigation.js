@@ -11,13 +11,13 @@ function MenuItems (props) {
 			return (<IconMenu className={menuItems} icon='reorder' menuRipple={true}>
 				<MenuItem caption={'Items'}
 					onClick={() => props.router.push('/')}
-					className={(() => props.activeView === '/' ? 'active' : '')()} icon='view_agenda' />
+					className={(() => props.activePath === '/' ? 'active' : '')()} icon='view_agenda' />
 				<MenuItem caption={'People'}
 					onClick={() => props.router.push('/people')}
-					className={(() => props.activeView === '/people' ? 'active' : '')()} icon='people' />
+					className={(() => props.activePath === '/people' ? 'active' : '')()} icon='people' />
 				<MenuItem caption={'Hardware'}
 					onClick={() => props.router.push('/hardware')}
-					className={(() => props.activeView === '/hardware' ? 'active' : '')()} icon='laptop' />
+					className={(() => props.activePath === '/hardware' ? 'active' : '')()} icon='laptop' />
 				<MenuDivider />
 				<MenuItem icon='close' caption={'Sign Out'}
 					onClick={() => props.router.push('/logout')} />
@@ -26,13 +26,13 @@ function MenuItems (props) {
 			return (<div className={menuItemsDesktop}>
 				<MenuItem caption={'Items'}
 					onClick={() => props.router.push('/')}
-					className={(() => props.activeView === '/' ? 'active' : '')()}/>
+					className={(() => props.activePath === '/' ? 'active' : '')()}/>
 				<MenuItem caption={'People'}
 					onClick={() => props.router.push('/people')}
-					className={(() => props.activeView === '/people' ? 'active' : '')()}/>
+					className={(() => props.activePath === '/people' ? 'active' : '')()}/>
 				<MenuItem caption={'Hardware'}
 					onClick={() => props.router.push('/hardware')}
-					className={(() => props.activeView === '/hardware' ? 'active' : '')()}/>
+					className={(() => props.activePath === '/hardware' ? 'active' : '')()}/>
 				<MenuItem caption={'Sign Out'}
 					onClick={() => props.router.push('/logout')} />
 			</div>)

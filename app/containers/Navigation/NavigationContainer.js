@@ -10,19 +10,17 @@ const NavigationContainer = React.createClass({
 	},
 	render () {
 		return (
-			<Navigation {...this.props} />
+			<Navigation
+				{...this.props}/>
 		)
 	},
 })
 
-function mapStateToProps ({feed}) {
-	const { isFetching, error, itemIds, filter, activeView } = feed
+function mapStateToProps ({feed, routing}) {
 	return {
-		isFetching,
-		error,
-		itemIds,
-		filter,
-		activeView,
+		isFetching: feed.isFetching,
+		error: feed.error,
+		activePath: routing.locationBeforeTransitions.pathname,
 	}
 }
 
