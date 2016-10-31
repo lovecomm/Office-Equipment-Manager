@@ -17,8 +17,7 @@ const UPDATE_ITEMS_FEED_IDS = 'UPDATE_ITEMS_FEED_IDS'
 export function prepItemsForFeed (items) {
 	return function (dispatch, getState) {
 		return new Promise((resolve, reject) => {
-			dispatch(updateItemsFeedItems(items))
-			dispatch(updateItemsFeedIds(Object.keys(items)))
+			dispatch(updateItemsFeedItems(items, Object.keys(items)))
 			dispatch(sortItemsFeedBy('serial'))
 			buildFilterOptions(items, 'item', ['serial'])
 			.then((filterOptions) => dispatch(addItemsFilterOptions(filterOptions)))
@@ -26,6 +25,7 @@ export function prepItemsForFeed (items) {
 			if (getState().itemsFeed.initialFetch === true) dispatch(updateItemsFeedInitialFetch(false))
 			resolve()
 		})
+		.catch((err) => `Error in prepItemsForFeed, ${err}`)
 	}
 }
 
@@ -55,6 +55,7 @@ export function handleItemCollapsed (itemId, collapsed) {
 			resolve()
 		})
 		.then(() => dispatch(updateItemCollapsed(itemId, collapsed)))
+		.catch((err) => `Error in handleItemCollapsed, ${err}`)
 	}
 }
 
@@ -92,6 +93,7 @@ function applyNewItemsSortOrder () {
 				resolve(dispatch(updateItemsSortOrder('dec')))
 			}
 		})
+		.catch((err) => `Error in applyNewItemsSortOrder, ${err}`)
 	}
 }
 
@@ -146,10 +148,11 @@ function updateItemsSortOrder (sortOrder) {
 	}
 }
 
-function updateItemsFeedItems (items) {
+function updateItemsFeedItems (items, feedIds) {
 	return {
 		type: UPDATE_ITEMS_FEED_ITEMS,
 		items,
+		feedIds,
 	}
 }
 
@@ -298,6 +301,7 @@ export default function itemsFeed (state = initialState, action) {
 		return {
 			...state,
 			items: action.items,
+			feedIds: action.feedIds,
 		}
 	case UPDATE_ITEMS_FEED_IDS:
 		return {

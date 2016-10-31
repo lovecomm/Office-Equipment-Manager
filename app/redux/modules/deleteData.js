@@ -1,4 +1,7 @@
 import { deleteDataDB } from 'helpers/api'
+import { prepItemsForFeed } from 'redux/modules/itemsFeed'
+import { prepPeopleForFeed } from 'redux/modules/peopleFeed'
+import { prepHardwaresForFeed } from 'redux/modules/hardwaresFeed'
 
 const UPDATE_CONFIRM_DELETE_ACTIVE = 'UPDATE_CONFIRM_DELETE_ACTIVE'
 const UPDATE_TO_DELETE_ID = 'UPDATE_TO_DELETE_ID'
@@ -38,27 +41,7 @@ export function confirmDeleteData () {
 		const dataType = getState().deleteData.toDeleteType
 		const dataId = getState().deleteData.toDeleteId
 		const items = getState().itemsFeed.items
-		// Delete from Firebase Storage
 		deleteDataDB(dataType, dataId, items, getState().peopleFeed.people)
-		// Delete from Redux state tree
-		// switch (dataType) {
-		// case 'people':
-		// 	buildFilterOptions(dispatch, getState)
-		// 	break
-		// case 'hardwares':
-		// 	const newHardwareItemIds = getState().feed.itemIds.filter((itemId) => {
-		// 		return items[itemId].hardwareId !== dataId
-		// 	})
-		// 	dispatch(settingFeedListenerSuccessItems(newHardwareItemIds))
-		// 	buildFilterOptions(dispatch, getState)
-		// 	break
-		// default: // items
-		// 	const newItemIds = getState().feed.itemIds.filter((id) => {
-		// 		return id !== dataId
-		// 	})
-		// 	dispatch(settingFeedListenerSuccessItems(newItemIds))
-		// 	buildFilterOptions(dispatch, getState)
-		// }
 	}
 }
 

@@ -6,9 +6,6 @@ import { prepHardwaresForFeed } from 'redux/modules/hardwaresFeed'
 
 const SETTING_FEED_LISTENER = 'SETTING_FEED_LISTENER'
 const SETTING_FEED_LISTENER_ERROR = 'SETTING_FEED_LISTENER_ERROR'
-const SETTING_FEED_LISTENER_SUCCESS_ITEMS = 'SETTING_FEED_LISTENER_SUCCESS_ITEMS'
-const SETTING_FEED_LISTENER_SUCCESS_PEOPLE = 'SETTING_FEED_LISTENER_SUCCESS_PEOPLE'
-const SETTING_FEED_LISTENER_SUCCESS_HARDWARE = 'SETTING_FEED_LISTENER_SUCCESS_HARDWARE'
 const SETTING_FEED_LISTENER_ALLSUCCESS = 'SETTING_FEED_LISTENER_ALLSUCCESS'
 
 // ACTIONS
@@ -69,23 +66,6 @@ export default function feed (state = initialState, action) {
 			...state,
 			isFetching: false,
 			error: action.error,
-		}
-	case SETTING_FEED_LISTENER_SUCCESS_ITEMS:
-		return {
-			...state,
-			isFetching: false,
-			error: '',
-			itemIds: action.itemIds,
-		}
-	case SETTING_FEED_LISTENER_SUCCESS_PEOPLE:
-		return {
-			...state,
-			personIds: action.personIds,
-		}
-	case SETTING_FEED_LISTENER_SUCCESS_HARDWARE:
-		return {
-			...state,
-			hardwareIds: action.hardwareIds,
 		}
 	case SETTING_FEED_LISTENER_ALLSUCCESS:
 		return {

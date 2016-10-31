@@ -26,6 +26,7 @@ export function prepPeopleForFeed (people) {
 			if (getState().peopleFeed.initialFetch === true) dispatch(updatePeopleFeedInitialFetch(false))
 			resolve()
 		})
+		.catch((err) => `Error in prepPeopleForFeed, ${err}`)
 	}
 }
 
@@ -40,6 +41,7 @@ function getPeopleUrlFromFirebase (people) {
 			})
 			resolve()
 		})
+		.catch((err) => `Error in getPeopleUrlFromFirebase, ${err}`)
 	}
 }
 
@@ -52,6 +54,7 @@ export function handlePersonCollapsed (personId, collapsed) {
 			resolve()
 		})
 		.then(() => dispatch(updatePersonCollapsed(personId, collapsed)))
+		.catch((err) => `Error in handlePersonCollapsed, ${err}`)
 	}
 }
 
@@ -89,6 +92,7 @@ function applyNewPeopleSortOrder () {
 				resolve(dispatch(updatePeopleSortOrder('dec')))
 			}
 		})
+		.catch((err) => `Error in applyNewPeopleSortOrder, ${err}`)
 	}
 }
 

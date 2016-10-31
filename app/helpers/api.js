@@ -22,23 +22,30 @@ export function getUrl (imageFolder, photoName) {
 }
 
 export function deleteDataDB (dataType, dataId, items, people) {
-	switch (dataType) {
-	case 'people':
-		return ref.child(`feed/people/${dataId}`).remove() // remove person, but need to assign all associated items to INVENTORY
-		.then(() => assignToInventory(items, people, dataId))
-		.catch((err) => `Error in deleteDataDB, case 'people': ${err}`)
-	case 'hardwares':
-		return ref.child(`feed/hardwares/${dataId}`).remove()
-		.then(() => {
-			Object.keys(items).forEach((itemId) => {
-				if (items[itemId].hardwareId === dataId) return ref.child(`feed/items/${itemId}`).remove() // delete all items that use this hardware
+	return new Promise((resolve, reject) => {
+		switch (dataType) {
+		case 'people':
+			return ref.child(`feed/people/${dataId}`).remove() // remove person, but need to assign all associated items to INVENTORY
+			.then(() => assignToInventory(items, people, dataId))
+			.then(() => resolve())
+			.catch((err) => `Error in deleteDataDB, case 'people': ${err}`)
+		case 'hardwares':
+			return ref.child(`feed/hardwares/${dataId}`).remove()
+			.then(() => {
+				Object.keys(items).forEach((itemId) => {
+					if (items[itemId].hardwareId === dataId) return ref.child(`feed/items/${itemId}`).remove() // delete all items that use this hardware
+				})
 			})
-		})
-		.catch((err) => `Error in deleteDataDB, case 'hardwares': ${err}`)
-	default: // items
-		return ref.child(`feed/items/${dataId}`).remove()
-		.catch((err) => `Error in deleteDataDB, case 'default' - items: ${err}`)
-	}
+			.then(() => resolve())
+			.catch((err) => `Error in deleteDataDB, case 'hardwares': ${err}`)
+		case 'items':
+			return ref.child(`feed/items/${dataId}`).remove()
+			.then(() => resolve())
+			.catch((err) => `Error in deleteDataDB, case 'default' - items: ${err}`)
+		default:
+			reject(`Sorry, but "dataType" must be people, hardwares, or items in deleteDataDB. You passed in, ${dataType}`)
+		}
+	})
 }
 
 function assignToInventory (items, people, deletedPersonId) {

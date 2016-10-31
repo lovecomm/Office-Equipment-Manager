@@ -26,6 +26,7 @@ export function prepHardwaresForFeed (hardwares) {
 			if (getState().hardwaresFeed.initialFetch === true) dispatch(updateHardwaresFeedInitialFetch(false))
 			resolve()
 		})
+		.catch((err) => `Error in prepHardwaresForFeed, ${err}`)
 	}
 }
 
@@ -40,6 +41,7 @@ function getHardwaresUrlFromFirebase (hardwares) {
 			})
 			resolve()
 		})
+		.catch((err) => `Error in getHardwaresUrlFromFirebase, ${err}`)
 	}
 }
 
@@ -52,6 +54,7 @@ export function handleHardwareCollapsed (hardwareId, collapsed) {
 			resolve()
 		})
 		.then(() => dispatch(updateHardwareCollapsed(hardwareId, collapsed)))
+		.catch((err) => `Error in handleHardwareCollapsed, ${err}`)
 	}
 }
 
@@ -89,6 +92,7 @@ function applyNewHardwaresSortOrder () {
 				resolve(dispatch(updateHardwaresSortOrder('dec')))
 			}
 		})
+		.catch((err) => `Error in applyNewHardwaresSortOrder, ${err}`)
 	}
 }
 
