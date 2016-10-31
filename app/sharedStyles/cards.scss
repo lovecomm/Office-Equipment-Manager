@@ -32,6 +32,8 @@ div[data-react-toolbox="card"] {
 		background: $palette-grey-200;
 		display: flex;
 
+		.iconButtons { display: flex; }
+
 		&[data-content="true"] { justify-content: space-between; }
 		&[data-content="false"] { justify-content: flex-end; }
 	}

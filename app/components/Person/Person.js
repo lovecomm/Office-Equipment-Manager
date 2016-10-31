@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Card, CardTitle, CardActions, CardText } from 'react-toolbox/lib/card'
 import { Button } from 'react-toolbox/lib'
-import { cardActions, subCardActions, chips } from 'sharedStyles/cards.scss'
+import { cardActions, subCardActions, chips, iconButtons } from 'sharedStyles/cards.scss'
 import { DeleteDataContainer, PersonFormToggleContainer, ItemFormToggleContainer } from 'containers'
 
 Person.propTypes = {
@@ -46,8 +46,10 @@ export default function Person (props) {
 				{props.itemIds.length > 0
 				? <Button primary={true} label={(() => props.collapsed ? 'Show Items' : 'Hide Items')()} onClick={props.envokeHandleCollapsed}/>
 				: ''}
-				<PersonFormToggleContainer personId={props.personId} editing={true}/>
-				<DeleteDataContainer id={props.personId} type='person' />
+				<div className={iconButtons}>
+					<PersonFormToggleContainer personId={props.personId} editing={true}/>
+					<DeleteDataContainer id={props.personId} type='person' />
+				</div>
 			</CardActions>
 		</Card>
 	)

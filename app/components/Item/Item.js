@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Button } from 'react-toolbox/lib'
 import { Card, CardMedia, CardTitle, CardText, CardActions } from 'react-toolbox/lib/card'
-import { statusWarning, statusReplace, status, chips, fullWidthPhoto, cardActions } from 'sharedStyles/cards.scss'
+import { statusWarning, statusReplace, status, chips, fullWidthPhoto, cardActions, iconButtons } from 'sharedStyles/cards.scss'
 import { DeleteDataContainer, ItemFormToggleContainer } from 'containers'
 
 Item.propTypes = {
@@ -66,8 +66,10 @@ export default function Item (props) {
 					{props.hasSubContent
 					? <Button primary={true} label={(() => props.collapsed ? 'Show More' : 'Show Less')()} onClick={props.envokeHandleCollapsed}/>
 					: ''}
-					<ItemFormToggleContainer itemId={props.itemId} editing={true}/>
-					<DeleteDataContainer id={props.itemId} type='item' />
+					<div className={iconButtons}>
+						<ItemFormToggleContainer itemId={props.itemId} editing={true}/>
+						<DeleteDataContainer id={props.itemId} type='item' />
+					</div>
 				</CardActions>
 		</Card>
 	)
