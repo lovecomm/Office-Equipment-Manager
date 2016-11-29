@@ -22,22 +22,30 @@ const store = createStore(
 )
 const history = syncHistoryWithStore(hashHistory, store)
 
-function checkAuth (nextState, replace) {
-	if (store.getState().users.isFetching === true) {
-		return
-	}
+function checkAuth (nextState, replace, callback) {
+	// console.log('something')
+	if (store.getState().users.isFetching === true) callback()
+	// console.log('something else')
 
-	const isAuthed = checkIfAuthed(store)
-	const nextPathName = nextState.location.pathname
-	if (nextPathName === '/auth') {
-		if (isAuthed === true) {
-			replace('/')
-		}
-	} else {
-		if (isAuthed !== true) {
+	checkIfAuthed(store)
+	.then((isAuthed) => {
+		// const isAuthed = store.getState().users.isAuthed
+		const nextPathName = nextState.location.pathname
+		console.log('isAuthed, ', isAuthed)
+		if (nextPathName === '/auth') {
+			if (isAuthed === true) {
+				console.log('should be going to /')
+				replace('/')
+				callback()
+			} else {
+				callback()
+			}
+		} else if (isAuthed !== true) {
+			console.log('should be going to /auth')
 			replace('/auth')
-		}
-	}
+			callback()
+		} else { callback() }
+	})
 }
 
 ReactDOM.render(

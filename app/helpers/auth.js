@@ -5,7 +5,9 @@ export default function auth (email, password) {
 }
 
 export function checkIfAuthed (store) {
-	return store.getState().users.isAuthed === true
+	return new Promise((resolve, reject) => {
+		setTimeout(() => resolve(store.getState().users.isAuthed === true), 200)
+	})
 }
 
 export function logout () {
