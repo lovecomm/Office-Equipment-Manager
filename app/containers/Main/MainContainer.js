@@ -5,7 +5,7 @@ import * as userActionCreators from 'redux/modules/users'
 import * as feedActionCreators from 'redux/modules/feed'
 import { firebaseAuth } from 'config/constants'
 import { Loader } from 'components'
-import { FormsDrawersContainer, NavigationContainer } from 'containers'
+import { FormsDrawersContainer, NavigationContainer, ImportDataContainer } from 'containers'
 import { ThemeProvider } from 'react-css-themr'
 import { container } from 'sharedStyles/layout.scss'
 
@@ -43,6 +43,7 @@ const MainContainer = React.createClass({
 						{this.props.children}
 					</div>
 					<FormsDrawersContainer />
+					<ImportDataContainer />
 				</div>
 			</ThemeProvider>
 		)

@@ -2,12 +2,12 @@ import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import { IconMenu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu'
 import { AppBar } from 'react-toolbox/lib/app_bar'
-import { title, menuItems, menuItemsDesktop, appBar } from './styles.scss'
+import { title, menuItems, menuItemsDesktop, appBar, controlMenu } from './styles.scss'
 import { container } from 'sharedStyles/layout'
 
 function MenuItems (props) {
 	if (props.isAuthed) {
-		if (window.outerWidth <= 900) { // dropdown/mobile menu
+		if (window.matchMedia('(max-width: 900px)').matches) { // dropdown/mobile menu
 			return (<IconMenu className={menuItems} icon='reorder' menuRipple={true}>
 				<MenuItem caption={'Items'}
 					onClick={() => props.router.push('/')}
@@ -42,11 +42,27 @@ function MenuItems (props) {
 	}
 }
 
+function ControlMenu (props) {
+	if (props.isAuthed) {
+		return (
+			<IconMenu icon='more_vert' position='topLeft' menuRipple={true} className={controlMenu}>
+		    <MenuItem value='import' icon='file_upload' caption='Import' onClick={() => props.toggleImportdataFormIsShowing()}/>
+		    <MenuItem value='export' icon='file_download' caption='Export' onClick={() => console.log('exporting')}/>
+		  </IconMenu>
+		)
+	} else {
+		return <span></span>
+	}
+}
+
 export default function Navigation (props, context) {
 	return (
 		<AppBar className={appBar}>
 			<div className={container}>
-				<Link to='/' className={title}>{'Equipment Manager'}</Link>
+				<div>
+					<ControlMenu {...props} />
+					<Link to='/' className={title}>{'Equipment Manager'}</Link>
+				</div>
 				<MenuItems {...props} router={context.router} />
 			</div>
 		</AppBar>

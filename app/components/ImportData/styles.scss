@@ -1,0 +1,24 @@
+.button {
+	display: block !important;
+	position: relative;
+	margin-right: 10px;
+}
+
+.imageInput {
+  cursor: pointer;
+  position: absolute;
+	display: block;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+	max-width: 137px;
+  opacity: 0;
+}
+
+.snackBarContentWrapper {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	text-align: left;
+}

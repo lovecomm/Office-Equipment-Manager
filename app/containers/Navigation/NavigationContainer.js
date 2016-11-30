@@ -3,6 +3,7 @@ import { Navigation } from 'components'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as feedActionCreators from 'redux/modules/feed'
+import * as importActionCreators from 'redux/modules/importData'
 
 const NavigationContainer = React.createClass({
 	propTypes: {
@@ -16,7 +17,7 @@ const NavigationContainer = React.createClass({
 	},
 })
 
-function mapStateToProps ({feed, routing}) {
+function mapStateToProps ({feed, routing, importData}) {
 	return {
 		isFetching: feed.isFetching,
 		error: feed.error,
@@ -26,5 +27,5 @@ function mapStateToProps ({feed, routing}) {
 
 export default connect(
 	mapStateToProps,
-	(dispatch) => bindActionCreators(feedActionCreators, dispatch)
+	(dispatch) => bindActionCreators({...feedActionCreators, ...importActionCreators}, dispatch)
 )(NavigationContainer)

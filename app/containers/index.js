@@ -20,3 +20,4 @@ export HardwaresSortMenuContainer from './HardwaresFeed/HardwaresSortMenuContain
 export ItemsFeedContainer from './ItemsFeed/ItemsFeedContainer'
 export ItemsFilterContainer from './ItemsFeed/ItemsFilterContainer'
 export ItemsSortMenuContainer from './ItemsFeed/ItemsSortMenuContainer'
+export ImportDataContainer from './ImportData/ImportDataContainer'
