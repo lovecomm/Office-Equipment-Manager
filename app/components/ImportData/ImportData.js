@@ -1,22 +1,37 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import { Button, Snackbar } from 'react-toolbox'
-import { button, imageInput, snackBarContentWrapper } from './styles.scss'
+import { button, imageInput, snackBarContentWrapper, error, submitSuccessfulSnackbar } from './styles.scss'
+
+ImportData.propTypes = {
+	formIsShowing: PropTypes.bool.isRequired,
+	selectedFileName: PropTypes.string.isRequired,
+	error: PropTypes.string.isRequired,
+	submitSuccessful: PropTypes.bool.isRequired,
+	handleFileSelect: PropTypes.func.isRequired,
+	handleFileSubmit: PropTypes.func.isRequired,
+}
 
 export default function ImportData (props) {
-	return (
+	return (<div>
 		<Snackbar
-			active={true}
-      action='Import'
-      onClick={() => console.log('clicked')}
-      type='accept'>
+			active={props.formIsShowing}
+			action='Import'
+			onClick={() => props.handleFileSubmit()}
+			type='accept'>
 			<div className={snackBarContentWrapper}>
 				<div className={button}>
-					<Button raised={true} label='Select .csv file' primary={true}></Button>
-					<input type='file' required={true} className={imageInput} onChange={(e) => console.log(e.target.files[0])}/>
+					<Button raised={true} label='Select .csv file' primary={true} />
+					<input type='file' required={true} className={imageInput}
+						onChange={(e) => props.handleFileSelect(e)}/>
 				</div>
-				<span>{'Filename goes here'}</span>
+				<span>{props.selectedFileName}</span>
+				{(() => props.error !== '' ? (<span className={error}>{props.error}</span>) : '')()}
 			</div>
 		</Snackbar>
-  )
+		<Snackbar
+			active={props.submitSuccessful}
+			className={submitSuccessfulSnackbar}
+			label='Congrats! Your data was imported successfully'>
+		</Snackbar>
+	</div>)
 }
-//props.updateHardwareFormPhoto(e.target.files[0])
