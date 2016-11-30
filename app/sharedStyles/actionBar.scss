@@ -42,6 +42,8 @@
 		align-self: flex-end;
 		padding: 0.25em 0;
 		position: absolute;
+
+		.sortWrapperIcon { display: flex; }
 	}
 
 	.newWrapper, .sortWrapper { width: 50%; }
