@@ -43,7 +43,7 @@ const ImportDataContainer = React.createClass({
 	},
 	submitSuccessful () {
 		this.props.toggleImportdataFormIsShowing() // hide import form snackbar
-		this.props.updateImportdataFormSubmitSuccessful() // show "submitSuccessful message"
+		this.props.updateImportdataFormSubmitSuccessful() // show "submitSuccessful message" (different Snackbar)
 		setTimeout(() => this.props.clearImportdataForm(), 5000) // reset importData back to initialState
 	},
 	render () {
