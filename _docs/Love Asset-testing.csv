@@ -1,9 +1,9 @@
 Serial,Purchase Year,Purchase Month,Notes,First Name,Last Name,Make,Model,Description,Computer
 501,,,Intern East,Love,Office,Dell,Inspiron ,"i5-3300 3GHz 8GB ram, Windows 7 Pro 64bit, 1TB drive",yes
 502,,,Intern East,Love,Office,Acer,al1916W monitor,,no
-574,,,"Intern East, Spare",Inventory,,Acer,al1912 Square monitor,,no
-504,,,"Was this being donated?  It is slow, but has a fresh install of Windows Home.",Inventory,,Dell,Optiplex 790 Desktop,"13-2120 3.3GHz, 4GB ram, Windows 7 Home 64bit, 250GB drive",yes
-505,,,Old Front desk PC,Inventory,,Black Desktop,N/A,"13-3220 3.3GHz, 4GB ram, Windows 7 Pro 64bit, 5000GB drive",yes
+574,,,"Intern East, Spare",Inventory,N/A,Acer,al1912 Square monitor,,no
+504,,,"Was this being donated?  It is slow, but has a fresh install of Windows Home.",Inventory,N/A,Dell,Optiplex 790 Desktop,"13-2120 3.3GHz, 4GB ram, Windows 7 Home 64bit, 250GB drive",yes
+505,,,Old Front desk PC,Inventory,N/A,Black Desktop,N/A,"13-3220 3.3GHz, 4GB ram, Windows 7 Pro 64bit, 5000GB drive",yes
 506,2016,1,C1MRG1ESG944,John,Youngren,Apple,Mac Air 2016,,yes
 507,,,,John,Youngren,Acer,x223w,,no
 508,2016,1,sn# C2QPX06QGKJT,Brian,Short,Apple,Mac Air 2016,"Early 2015 i5 1.6Ghz 4GB ram, os10.11, 120Gb ssd",yes
@@ -20,10 +20,10 @@ Serial,Purchase Year,Purchase Month,Notes,First Name,Last Name,Make,Model,Descri
 519,,,,Jaime,Alcock,N/A,Black Desktop,i5 ,yes
 520,,,,Jaime,Alcock,ViewSonic,Va2212m-LED,,no
 521,,,,Jaime,Alcock,ViewSonic,Va2212m-LED,,no
-522,2014,1,"SN# c2qn70kng4fy, in Server Room",Inventory,,Apple,"Mac Air 11  early 2014""""ac Air 11""  """"c """,15 1.4GHz 4GB ram 128 SSD ,yes
+522,2014,1,"SN# c2qn70kng4fy, in Server Room",Inventory,N/A,Apple,"Mac Air 11  early 2014""""ac Air 11""  """"c """,15 1.4GHz 4GB ram 128 SSD ,yes
 523,,,,Mark,Stevenett,Acer,27 led g227hl,,no
-524,,,In Server Room,Inventory,,Asus,23 VH238H,,no
-525,,,"SN#R9-028ZBA 14/06, in Server Room",Inventory,,Lenovo,15 Laptop,i5-4200M 2.5GHz 8GB Ram 500GB HD,yes
+524,,,In Server Room,Inventory,N/A,Asus,23 VH238H,,no
+525,,,"SN#R9-028ZBA 14/06, in Server Room",Inventory,N/A,Lenovo,15 Laptop,i5-4200M 2.5GHz 8GB Ram 500GB HD,yes
 526,,,Service Tag 3n2mxg1,Peggy,Conway,Dell,Latitude e5500,Core2Duo 2.26GHz 4GB 120GB HD,yes
 527,,,,Peggy,Conway,Acer,LED g276hl,,no
 528,,,,Megan,Griffin,N/A,Black Desktop,"13-3220 3.3GHz, 4GB ram, Windows 7 Pro 64bit, 5000GB drive",yes
@@ -31,9 +31,9 @@ Serial,Purchase Year,Purchase Month,Notes,First Name,Last Name,Make,Model,Descri
 529,,,,Megan,Griffin,Asus,22 led VS228,,no
 530,,,,Aaron,Evans,N/A,Lian Li desktop,,yes
 531,,,,Aaron,Evans,Acer,v276hl,,no
-533,,,sn ,Inventory,,Acer,Veriton n282g,1.8GHz Atom 2GB 150GB HD,yes
-534,,,,Inventory,,Benq,fp93gx,,no
-535,,,,Inventory,,Belkin,Switch,,no
+533,,,sn ,Inventory,N/A,Acer,Veriton n282g,1.8GHz Atom 2GB 150GB HD,yes
+534,,,,Inventory,N/A,Benq,fp93gx,,no
+535,,,,Inventory,N/A,Belkin,Switch,,no
 536,,,,Love,Office,N/A,Black Desktop,"13-3220 3.3GHz, 4GB ram, Windows 7 Pro 64bit, 5000GB drive",yes
 537,,,,Love,Office,Acer,x223w,,no
 538,,,,Rich,Love,HP,EliteBook 8460p,i5 4GB 500GB HD,yes
@@ -88,8 +88,8 @@ Serial,Purchase Year,Purchase Month,Notes,First Name,Last Name,Make,Model,Descri
 601,2015,6,,Steve,Wright,Apple,27 inch Imac,,yes
 602,,,,Steve,Wright,Asus,24 inch monitor,,no
 603,,,,Steve,Wright,Wacom,Tablet,,no
-604,,,In Steve's Office,Inventory,,Apple,27 inch imac back table,,yes
-605,,,In Steve's Office,Inventory,,Acer,24 inch monitor,,no
+604,,,In Steve's Office,Inventory,N/A,Apple,27 inch imac back table,,yes
+605,,,In Steve's Office,Inventory,N/A,Acer,24 inch monitor,,no
 606,,,,Love,Office,HP,1018 printer,,no
 607,,,,Love,Office,HP,1606 printer,,no
 608,,,,Love,Office,Apple,mac mini,,yes
