@@ -12,6 +12,7 @@ export default function handleFileImport (file) {
 				validateHeaders(results.data)
 				.then(({data, headers}) => validateColumns(data, headers))
 				.then(({data, headers}) => checkForDuplicateItems(data, headers))
+				.then(({data, headers, duplicates}) => console.log(data, headers, duplicates))
 				.catch((error) => reject(error))
 			},
 			error: (err, file, inputElem, reason) => {
@@ -26,14 +27,37 @@ export default function handleFileImport (file) {
 // Start Firebase API functions
 function checkForDuplicateItems (data, headers) {
 	return new Promise((resolve, reject) => {
-		data.forEach((row) => {
-			console.log(row)
-		})
+		getStoredItems()
+		.then((storedItems) => {
+			let duplicates = []
+			data.forEach((row) => {
+				const serial = row[headers.serial]
+				checkIfDuplicateItem(storedItems, serial)
+				.then((duplicate) => {
+					if (duplicate) {
+						data.splice(data.indexOf(row), 1)
+						duplicates.push(serial)
+					}
+				}).catch((error) => reject(error))
+			})
+			resolve({data, headers, duplicates})
+		}).catch((error) => reject(error))
 	})
 }
 
-function checkIfDuplicateItem () {
+function checkIfDuplicateItem(storedItems, serial) {
+	return new Promise((resolve) => {
+		Object.keys(storedItems).forEach((key) => {
+			const storedItem = storedItems[key]
+			if (storedItem.serial === serial) resolve(true)
+		})
+		resolve(false)
+	})
+}
 
+function getStoredItems () {
+	return ref.child('feed/items').once('value')
+	.then((snapshot) => snapshot.val())
 }
 // END Firebase API functions
 
