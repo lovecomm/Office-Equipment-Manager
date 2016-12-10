@@ -26,8 +26,14 @@ export default function handleFileImport (file) {
 // Start Firebase API functions
 function checkForDuplicateItems (data, headers) {
 	return new Promise((resolve, reject) => {
-		console.log(data, headers)
+		data.forEach((row) => {
+			console.log(row)
+		})
 	})
+}
+
+function checkIfDuplicateItem () {
+
 }
 // END Firebase API functions
 
@@ -47,6 +53,7 @@ function validateColumns (data, headers) {
 				columnsToValidate.push(validateColumn(data, headers[header]))
 			}
 		})
+		data.shift() // we don't need the first row (headers), b/c now we have the headers object that lets us know they key for each header, within each row.
 		Promise.all(columnsToValidate)
 		.then(() => resolve({data, headers}))
 		.catch((error) => reject(error))
@@ -87,6 +94,7 @@ function validateColumn (data, column) {
 				? error = `Error! There was a problem with column, ${columnName}, in the following rows: ${r + 1}`
 				: error = `${error}, ${r + 1}`
 			}
+			if (row === undefined) data.splice(r, 1) // remove any empty rows from the data set
 		}
 		error === ''
 		? resolve()
