@@ -60,6 +60,7 @@ function assignToInventory (items, people, deletedPersonId) {
 		resolve(true)
 	})
 }
+
 // END General Firebase API Calls
 // START Hardwares related Firebase API Calls
 export function saveNewHardware (hardwares, hardware, uid) {
@@ -205,11 +206,23 @@ function getHardwarePromise (hardwareId) {
 export function saveNewPerson (people, person, uid) {
 	return new Promise((resolve, reject) => {
 		let newPerson
+		let defaultPhoto = true
 		const personId = ref.child('feed/people').push().key
-		const personPhotoRef = imagesRef.child(`people/${person.photo.name}`)
+		if (person.photo === undefined) {
+			var personPhotoRef = imagesRef.child('people/default.jpg')
+			person.photo = {
+				size: 4.48,
+				type: 'image/jpeg',
+			}
+		} else {
+			var personPhotoRef = imagesRef.child(`people/${person.photo.name}`)
+			defaultPhoto = false
+		}
 		return verifyNewPerson(people, person)
 		.then((isVerified) => {
-			return personPhotoRef.put(person.photo)
+			return defaultPhoto !== true
+			? personPhotoRef.put(person.photo)
+			: personPhotoRef
 		})
 		.then((photoSnapshot) => {
 			newPerson = {
