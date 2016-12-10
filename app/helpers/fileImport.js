@@ -1,4 +1,5 @@
 import Papa from 'papaparse' // http://papaparse.com/docs
+import { ref } from 'config/constants'
 
 String.prototype.toTitleCase = function () {
     return this.replace(/\w\S*/g, (txt) => { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase() })
@@ -6,11 +7,11 @@ String.prototype.toTitleCase = function () {
 
 export default function handleFileImport (file) {
 	return new Promise((resolve, reject) => {
-		let columns = {}
 		Papa.parse(file, {
 			complete: (results) => {
 				validateHeaders(results.data)
-				.then((columnHeaders) => validateColumns(results.data, columnHeaders))
+				.then(({data, headers}) => validateColumns(data, headers))
+				.then(({data, headers}) => checkForDuplicateItems(data, headers))
 				.catch((error) => reject(error))
 			},
 			error: (err, file, inputElem, reason) => {
@@ -20,21 +21,34 @@ export default function handleFileImport (file) {
 	})
 }
 
-function validateColumns (data, columnHeaders) {
+
+
+// Start Firebase API functions
+function checkForDuplicateItems (data, headers) {
+	return new Promise((resolve, reject) => {
+		console.log(data, headers)
+	})
+}
+// END Firebase API functions
+
+
+
+// Start Initial Import Validation functions
+function validateColumns (data, headers) {
 	return new Promise((resolve, reject) => {
 		let columnsToValidate = []
-		Object.keys(columnHeaders).forEach((columnHeader) => {
-			if (columnHeader === 'serial' ||
-				columnHeader === 'first_name' ||
-				columnHeader === 'last_name' ||
-				columnHeader === 'make' ||
-				columnHeader === 'model' ||
-				columnHeader === 'computer') { // these are the columns that need to be validated ... only checking to see if content exists
-				columnsToValidate.push(validateColumn(data, columnHeaders[columnHeader]))
+		Object.keys(headers).forEach((header) => {
+			if (header === 'serial' ||
+				header === 'first_name' ||
+				header === 'last_name' ||
+				header === 'make' ||
+				header === 'model' ||
+				header === 'computer') { // these are the columns that need to be validated ... only checking to see if content exists
+				columnsToValidate.push(validateColumn(data, headers[header]))
 			}
 		})
 		Promise.all(columnsToValidate)
-		.then(() => resolve())
+		.then(() => resolve({data, headers}))
 		.catch((error) => reject(error))
 	})
 }
@@ -57,7 +71,7 @@ function validateHeaders (data) {
 			}
 		})
 		missingHeaders === ''
-		? resolve(headers)
+		? resolve({data, headers})
 		: reject(`Error! It looks like you're missing the following column(s): ${missingHeaders}`)
 	})
 }
@@ -68,9 +82,9 @@ function validateColumn (data, column) {
 		for (let r = 1; r <= data.length - 1; r++) {
 			const row = data[r][column]
 			const columnName = data[0][column]
-			if (row.length === 0) {
+			if (row !== undefined && row !== '' && row.length === 0) {
 				error === ''
-				? error = `Error! There was a problem with column, ${columnName}, in the following rows, ${r + 1}`
+				? error = `Error! There was a problem with column, ${columnName}, in the following rows: ${r + 1}`
 				: error = `${error}, ${r + 1}`
 			}
 		}
@@ -79,3 +93,4 @@ function validateColumn (data, column) {
 		: reject(error)
 	})
 }
+// End Initial Import Validation functions
