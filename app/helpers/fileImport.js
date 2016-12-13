@@ -1,6 +1,7 @@
 import Papa from 'papaparse' // http://papaparse.com/docs
 import { ref } from 'config/constants'
 import { saveNewPerson } from 'helpers/api'
+import { saveNewHardware } from 'helpers/api'
 
 let storedPeople
 let storedHardwares
@@ -76,7 +77,7 @@ function checkIfPeopleAndHardwaresExist () {
 				)
 			})
 			doSynchronousLoop(hardwareAndPersonPromises.length, hardwareAndPersonPromises, () => {
-				console.log('done')
+				console.log('handle merging newRows into Data', newRows)
 			})
 		})
 		.catch((err) => reject(err))
@@ -85,11 +86,9 @@ function checkIfPeopleAndHardwaresExist () {
 }
 
 function doSynchronousLoop (iterator, data, done) {
-	console.log('iterator', iterator, 'data.length', data.length)
 	if (iterator >= 0) {
 		let promiseFunction = data[data.length - iterator]
 		if (promiseFunction !== undefined) {
-			console.log(data.length - iterator)
 			iterator--
 			promiseFunction()
 			.then(() => doSynchronousLoop(iterator, data, done))
@@ -110,11 +109,16 @@ function handleHardwaresExists (storedHardwares, row) { // checks if hardware ex
 				resolve(row)
 			} else {
 				resolve(row)
-				// saveNewHardware(storedHardwares, row.hardware, 100000)
-				// .then((newHardware) => {
-				// 	row.hardware.hardwareId = hardware.hardwareId
-				// 	resolve(row)
-				// })
+				saveNewHardware(storedHardwares, row.hardware, 100000)
+				.then((newHardware) => {
+					storedHardwares[newHardware.hardwareId] = {
+						make: newHardware.make,
+						model: newHardware.model,
+						hardwareId: newHardware.id,
+					}
+					row.hardware.hardwareId = newHardware.hardwareId
+					resolve(row)
+				})
 			}
 		})
 	})
@@ -151,7 +155,6 @@ function handlePersonExists (storedPeople, row) { // checks if person exists, if
 						personId: newPerson.personId,
 					}
 					row.person.personId = newPerson.personId
-					console.log('storedPeople end of else')
 					resolve(row)
 				})
 			}

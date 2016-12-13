@@ -66,11 +66,23 @@ function assignToInventory (items, people, deletedPersonId) {
 export function saveNewHardware (hardwares, hardware, uid) {
 	return new Promise((resolve, reject) => {
 		let newHardware
+		let defaultPhoto = true
 		const hardwareId = ref.child('feed/hardwares').push().key
-		const hardwarePhotoRef = imagesRef.child(`hardwares/${hardware.photo.name}`)
+		if (hardware.photo === undefined) {
+			var hardwarePhotoRef = imagesRef.child('hardwares/default.jpg')
+			hardware.photo = {
+				size: 3.52,
+				type: 'image/jpeg',
+			}
+		} else {
+			var hardwarePhotoRef = imagesRef.child(`hardwares/${hardware.photo.name}`)
+			defaultPhoto = false
+		}
 		verifyNewHardware(hardwares, hardware)
 		.then((isVerified) => {
-			return hardwarePhotoRef.put(hardware.photo) // Store photo to firebase
+			return defaultPhoto !== true
+			? hardwarePhotoRef.put(hardware.photo) // Store photo to firebase
+			: hardwarePhotoRef
 		})
 		.then((photoSnapshot) => {
 			const createdHardware = {
