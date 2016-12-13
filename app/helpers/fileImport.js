@@ -3,10 +3,12 @@ import { ref } from 'config/constants'
 import { saveNewPerson } from 'helpers/api'
 import { saveNewHardware } from 'helpers/api'
 
-let storedPeople
-let storedHardwares
-let duplicates = []
-let newRows
+let storedPeople // used to know what's already in firebase, so that we don't create duplicates
+let storedHardwares // used to know what's already in firebase, so that we don't create duplicates
+let duplicates = [] // this is where items that were already found in firebase, and in the .csv upload file will be added... we will eventually display this list to the user so that they are aware of which items were already in the system
+let headers // this will become an object with each of the column headers from the csv, with the value being their index in a row... that way if someone uploads a csv with columns in a different order, it bother us here
+let data // just the data received from the CSV, unformatted
+let newRows // this is created/structured data based on the 'data' variable. It is what we will use to store all our person/hardware/itemIds, and ultimately what we use to upload these things to firebase
 
 export default function handleFileImport (file) {
 	return new Promise((resolve, reject) => {
