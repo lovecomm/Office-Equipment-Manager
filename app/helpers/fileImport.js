@@ -2,9 +2,10 @@ import Papa from 'papaparse' // http://papaparse.com/docs
 import { ref } from 'config/constants'
 import { saveNewPerson } from 'helpers/api'
 
-String.prototype.toTitleCase = function () {
-    return this.replace(/\w\S*/g, (txt) => { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase() })
-}
+let storedPeople
+let storedHardwares
+let duplicates = []
+let newRows
 
 export default function handleFileImport (file) {
 	return new Promise((resolve, reject) => {
@@ -13,8 +14,8 @@ export default function handleFileImport (file) {
 				validateHeaders(results.data)
 				.then(({data, headers}) => validateColumns(data, headers))
 				.then(({data, headers}) => checkForDuplicateItems(data, headers))
-				.then(({data, headers, duplicates}) => convertDataArrayToObject(data, headers, duplicates))
-				.then(({rows, duplicates}) => checkIfPeopleAndHardwaresExist(rows))
+				.then(({data, headers}) => convertDataArrayToObject(data, headers))
+				.then(() => checkIfPeopleAndHardwaresExist())
 				.catch((error) => reject(error))
 			},
 			error: (err, file, inputElem, reason) => {
@@ -23,8 +24,6 @@ export default function handleFileImport (file) {
 		})
 	})
 }
-
-
 
 // Start Misc Helper functions
 function convertDataArrayToObject (data, headers, duplicates) {
@@ -50,17 +49,15 @@ function convertDataArrayToObject (data, headers, duplicates) {
 				}
 			}
 		})
-		resolve({rows, duplicates})
+		newRows = rows
+		resolve(duplicates)
 	})
 }
 // End Misc Helper functions
 
-
 // Start Firebase API functions
-function checkIfPeopleAndHardwaresExist (rows) {
+function checkIfPeopleAndHardwaresExist () {
 	return new Promise((resolve, reject) => {
-		let storedPeople
-		let storedHardwares
 		getStoredData('people')
 		.then((stored_people) => {
 			storedPeople = stored_people
@@ -70,24 +67,71 @@ function checkIfPeopleAndHardwaresExist (rows) {
 			storedHardwares = stored_hardwares
 			// need each row's person and hardwars to combine after
 			// if new hardwares or people are created, need subsequent rows to know about it (synchronous)
-			console.log('people', storedPeople)
-			Object.keys(rows).forEach((key) => {
-				const row = rows[key]
-				handlePersonExists(storedPeople, row)
-				.then((row) => {
-					console.log(row)
-				})
-				// Promise.all([
-				// 	checkIfPersonExists(storedPeople, row),
-				// 	checkIfHardwareExists(storedHardwares, row)
-				// ])
-				// .then((results) => {
-				// 	console.log(results)
-				// })
+			let hardwareAndPersonPromises = []
+			Object.keys(newRows).forEach((key) => {
+				const row = newRows[key]
+				hardwareAndPersonPromises.push(
+					() => handlePersonExists(storedPeople, row),
+					() => handleHardwaresExists(storedHardwares, row)
+				)
+			})
+			doSynchronousLoop(hardwareAndPersonPromises.length, hardwareAndPersonPromises, () => {
+				console.log('done')
 			})
 		})
 		.catch((err) => reject(err))
 		resolve()
+	})
+}
+
+function doSynchronousLoop (iterator, data, done) {
+	console.log('iterator', iterator, 'data.length', data.length)
+	if (iterator >= 0) {
+		let promiseFunction = data[data.length - iterator]
+		if (promiseFunction !== undefined) {
+			console.log(data.length - iterator)
+			iterator--
+			promiseFunction()
+			.then(() => doSynchronousLoop(iterator, data, done))
+		} else {
+			done()
+		}
+	} else {
+		done()
+	}
+}
+
+function handleHardwaresExists (storedHardwares, row) { // checks if hardware exists, if does then adds hardwareId to row, if not creates the hardware and then adds hardwareId to row
+	return new Promise((resolve, reject) => {
+		checkIfHardwareExists(storedHardwares, row)
+		.then(({hardwareExists, storedHardwareId}) => {
+			if (hardwareExists) {
+				row.hardware.hardwareId = storedHardwareId
+				resolve(row)
+			} else {
+				resolve(row)
+				// saveNewHardware(storedHardwares, row.hardware, 100000)
+				// .then((newHardware) => {
+				// 	row.hardware.hardwareId = hardware.hardwareId
+				// 	resolve(row)
+				// })
+			}
+		})
+	})
+}
+
+function checkIfHardwareExists (storedHardwares, row) {
+	return new Promise((resolve, reject) => {
+		let hardwareExists = false
+		let storedHardwareId = ''
+		Object.keys(storedHardwares).forEach((key) => {
+			const storedHardware = storedHardwares[key]
+			if (storedHardware.make.toLowerCase() === row.hardware.make.toLowerCase() && storedHardware.model.toLowerCase() === row.hardware.model.toLowerCase()) {
+				hardwareExists = true
+				storedHardwareId = storedHardware.hardwareId
+			}
+		})
+		resolve ({hardwareExists, storedHardwareId})
 	})
 }
 
@@ -100,7 +144,16 @@ function handlePersonExists (storedPeople, row) { // checks if person exists, if
 				resolve(row)
 			} else {
 				saveNewPerson(storedPeople, row.person, 100000)
-				.then((newPerson) => console.log('newPerson', newPerson))
+				.then((newPerson) => {
+					storedPeople[newPerson.personId] = {
+						firstName: newPerson.firstName,
+						lastName: newPerson.lastName,
+						personId: newPerson.personId,
+					}
+					row.person.personId = newPerson.personId
+					console.log('storedPeople end of else')
+					resolve(row)
+				})
 			}
 		})
 	})
@@ -112,7 +165,7 @@ function checkIfPersonExists (storedPeople, row) {
 		let storedPersonId = ''
 		Object.keys(storedPeople).forEach((key) => {
 			const storedPerson = storedPeople[key]
-			if (storedPerson.firstName === row.person.firstName && storedPerson.lastName === row.person.lastName) {
+			if (storedPerson.firstName.toLowerCase() === row.person.firstName.toLowerCase() && storedPerson.lastName.toLowerCase() === row.person.lastName.toLowerCase()) {
 				personExists = true
 				storedPersonId = storedPerson.personId
 			}
@@ -125,7 +178,6 @@ function checkForDuplicateItems (data, headers) {
 	return new Promise((resolve, reject) => {
 		getStoredData('items')
 		.then((storedItems) => {
-			let duplicates = []
 			data.forEach((row) => {
 				const serial = row[headers.serial]
 				checkIfDuplicateItem(storedItems, serial)
@@ -136,7 +188,7 @@ function checkForDuplicateItems (data, headers) {
 					}
 				}).catch((error) => reject(error))
 			})
-			resolve({data, headers, duplicates})
+			resolve({data, headers})
 		}).catch((error) => reject(error))
 	})
 }
@@ -156,8 +208,6 @@ function getStoredData (path) {
 	.then((snapshot) => snapshot.val())
 }
 // END Firebase API functions
-
-
 
 // Start Initial Import Validation functions
 function validateColumns (data, headers) {
@@ -222,3 +272,8 @@ function validateColumn (data, column) {
 	})
 }
 // End Initial Import Validation functions
+
+
+String.prototype.toTitleCase = function () {
+    return this.replace(/\w\S*/g, (txt) => { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase() })
+}
