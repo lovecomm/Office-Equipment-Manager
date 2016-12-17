@@ -43,28 +43,25 @@ function storeItems () {
 		let saveItemsPromises = []
 		Object.keys(newRows).forEach((key) => {
 			const row = newRows[key]
-			getStoredData(`hardwares/${row.hardware.hardwareId}`)
-			.then((hardware) => {
-				const item = {
-					serial: row.item.serial,
-					personId: row.person.personId,
-					hardwareId: row.hardware.hardwareId,
-					note: row.item.note,
-					purchasedDate: row.item.purchase_month && row.item.purchase_year ? new Date(row.item.purchase_year, row.item.purchase_month) : 'N/A',
-					photo: {}
-				}
-				return saveNewItem(storedItems, item, 10000000, hardware)
-				// return saveItemsPromises.push(() => saveNewItem(storedItems, item, 10000000, hardware))
-			})
+			const today = new Date()
+			const purchasedDate = row.item.purchase_month && row.item.purchase_year ? new Date(row.item.purchase_year, row.item.purchase_month) : today
+			const noteIsEmpty = row.item.notes === ''
+			if (today === purchasedDate) {
+				const message = ' ...This item was uploaded without a purchase date, so the date given is according to the day it was uploaded.'
+				noteIsEmpty === true ? row.item.notes = message : row.item.notes += message
+			}
+			const item = {
+				serial: row.item.serial,
+				personId: row.person.personId,
+				hardwareId: row.hardware.hardwareId,
+				note: row.item.notes,
+				purchasedDate: purchasedDate,
+				photo: {}
+			}
+			saveNewItem(storedItems, item, 10000000, row.hardware)
 		})
-		// console.log('saveItemsPromises 1', saveItemsPromises)
-		// setTimeout(() => console.log('saveItemsPromises', saveItemsPromises), 1000)
-		// console.log('saveItemsPromises', saveItemsPromises)
-		// Promise.all(saveItemsPromises)
-		// .then((returnedValues) => {
-		// 	console.log(returnedValues)
-		// resolve()
-		// })
+		console.log('AFTER LOOP')
+		resolve()
 	})
 }
 

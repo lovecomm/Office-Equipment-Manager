@@ -416,7 +416,7 @@ export function saveNewItem (items, item, uid, hardware) {
 			return ref.child(`feed/items/${itemId}`).set(newItem)
 		})
 		.then(() => resolve(newItem))
-		.catch((err) => err)
+		.catch((err) => console.warn(err))
 	})
 }
 
