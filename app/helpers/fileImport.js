@@ -144,10 +144,13 @@ function handleHardwaresExists (row) { // checks if hardware exists, if does the
 				resolve(row)
 				saveNewHardware(storedHardwares, row.hardware, 100000)
 				.then((newHardware) => {
-					storedHardwares[newHardware.hardwareId] = {
-						make: newHardware.make,
-						model: newHardware.model,
-						hardwareId: newHardware.id,
+					storedHardwares = {
+						...storedHardwares,
+						[newHardware.hardwareId]: {
+							make: newHardware.make,
+							model: newHardware.model,
+							hardwareId: newHardware.id,
+						}
 					}
 					row.hardware.hardwareId = newHardware.hardwareId
 					resolve(row)
@@ -184,10 +187,13 @@ function handlePersonExists (row) { // checks if person exists, if does then add
 			} else {
 				saveNewPerson(storedPeople, row.person, 100000)
 				.then((newPerson) => {
-					storedPeople[newPerson.personId] = {
-						firstName: newPerson.firstName,
-						lastName: newPerson.lastName,
-						personId: newPerson.personId,
+					storedPeople = {
+						...storedPeople,
+						[newPerson.personId]: {
+							firstName: newPerson.firstName,
+							lastName: newPerson.lastName,
+							personId: newPerson.personId,
+						}
 					}
 					row.person.personId = newPerson.personId
 					resolve(row)
