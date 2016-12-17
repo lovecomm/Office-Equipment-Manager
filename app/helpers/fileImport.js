@@ -15,11 +15,18 @@ export default function handleFileImport (file) {
 		Papa.parse(file, {
 			complete: (results) => {
 				validateHeaders(results.data)
-				.then(({data, headers}) => validateColumns(data, headers))
-				.then(({data, headers}) => checkForDuplicateItems(data, headers))
-				.then(({data, headers}) => convertDataArrayToObject(data, headers))
-				.then(() => checkIfPeopleAndHardwaresExist())
-				.catch((error) => reject(error))
+				.then(({initialData, generatedHeaders}) => {
+					data = initialData
+					headers = generatedHeaders
+					return validateColumns()
+				})
+				.then(() => checkForDuplicateItems())
+				.then(() => convertDataArrayToObject())
+				.then(() => resolveImportedPeopleAndHardware())
+				.catch((error) => {
+					console.warn(error)
+					// reject(error)
+				})
 			},
 			error: (err, file, inputElem, reason) => {
 				reject('Error! There was a problem with the data in you CSV file. Please be sure it is formatted correctly and try again. If you continue to receive this error, contact the Interactive department.')
@@ -59,7 +66,7 @@ function convertDataArrayToObject (data, headers, duplicates) {
 // End Misc Helper functions
 
 // Start Firebase API functions
-function checkIfPeopleAndHardwaresExist () {
+function resolveImportedPeopleAndHardware () {
 	return new Promise((resolve, reject) => {
 		getStoredData('people')
 		.then((stored_people) => {
@@ -179,7 +186,7 @@ function checkIfPersonExists (storedPeople, row) {
 	})
 }
 
-function checkForDuplicateItems (data, headers) {
+function checkForDuplicateItems () {
 	return new Promise((resolve, reject) => {
 		getStoredData('items')
 		.then((storedItems) => {
@@ -215,7 +222,7 @@ function getStoredData (path) {
 // END Firebase API functions
 
 // Start Initial Import Validation functions
-function validateColumns (data, headers) {
+function validateColumns () {
 	return new Promise((resolve, reject) => {
 		let columnsToValidate = []
 		Object.keys(headers).forEach((header) => {
@@ -252,8 +259,10 @@ function validateHeaders (data) {
 				: missingHeaders = `${missingHeaders}, ${neededColumn.toTitleCase()}`
 			}
 		})
+		const initialData = data
+		const generatedHeaders = headers
 		missingHeaders === ''
-		? resolve({data, headers})
+		? resolve({initialData, generatedHeaders})
 		: reject(`Error! It looks like you're missing the following column(s): ${missingHeaders}`)
 	})
 }
