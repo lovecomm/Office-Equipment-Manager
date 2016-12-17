@@ -1,10 +1,10 @@
 import Papa from 'papaparse' // http://papaparse.com/docs
 import { ref } from 'config/constants'
-import { saveNewPerson } from 'helpers/api'
-import { saveNewHardware } from 'helpers/api'
+import { saveNewPerson, saveNewHardware, saveNewItem } from 'helpers/api'
 
 let storedPeople // used to know what's already in firebase, so that we don't create duplicates
 let storedHardwares // used to know what's already in firebase, so that we don't create duplicates
+let storedItems // used to know what's already in firebase, so that we don't create duplicates
 let duplicates = [] // this is where items that were already found in firebase, and in the .csv upload file will be added... we will eventually display this list to the user so that they are aware of which items were already in the system
 let headers // this will become an object with each of the column headers from the csv, with the value being their index in a row... that way if someone uploads a csv with columns in a different order, it bother us here
 let data // just the data received from the CSV, unformatted
@@ -23,9 +23,11 @@ export default function handleFileImport (file) {
 				.then(() => checkForDuplicateItems())
 				.then(() => convertDataArrayToObject())
 				.then(() => resolveImportedPeopleAndHardware())
+				.then(() => storeItems())
+				.then(() => resolve())
 				.catch((error) => {
 					console.warn(error)
-					// reject(error)
+					reject(error)
 				})
 			},
 			error: (err, file, inputElem, reason) => {
@@ -35,8 +37,39 @@ export default function handleFileImport (file) {
 	})
 }
 
+function storeItems () {
+	return new Promise((resolve, reject) => {
+		console.log('something', newRows)
+		let saveItemsPromises = []
+		Object.keys(newRows).forEach((key) => {
+			const row = newRows[key]
+			getStoredData(`hardwares/${row.hardware.hardwareId}`)
+			.then((hardware) => {
+				const item = {
+					serial: row.item.serial,
+					personId: row.person.personId,
+					hardwareId: row.hardware.hardwareId,
+					note: row.item.note,
+					purchasedDate: row.item.purchase_month && row.item.purchase_year ? new Date(row.item.purchase_year, row.item.purchase_month) : 'N/A',
+					photo: {}
+				}
+				return saveNewItem(storedItems, item, 10000000, hardware)
+				// return saveItemsPromises.push(() => saveNewItem(storedItems, item, 10000000, hardware))
+			})
+		})
+		// console.log('saveItemsPromises 1', saveItemsPromises)
+		// setTimeout(() => console.log('saveItemsPromises', saveItemsPromises), 1000)
+		// console.log('saveItemsPromises', saveItemsPromises)
+		// Promise.all(saveItemsPromises)
+		// .then((returnedValues) => {
+		// 	console.log(returnedValues)
+		// resolve()
+		// })
+	})
+}
+
 // Start Misc Helper functions
-function convertDataArrayToObject (data, headers, duplicates) {
+function convertDataArrayToObject () {
 	return new Promise((resolve) => {
 		let rows = {}
 		data.forEach((row) => {
@@ -75,8 +108,7 @@ function resolveImportedPeopleAndHardware () {
 		})
 		.then((stored_hardwares) => {
 			storedHardwares = stored_hardwares
-			// need each row's person and hardwars to combine after
-			// if new hardwares or people are created, need subsequent rows to know about it (synchronous)
+			// need each row's person and hardwares to combine after
 			let hardwareAndPersonPromises = []
 			Object.keys(newRows).forEach((key) => {
 				const row = newRows[key]
@@ -85,12 +117,9 @@ function resolveImportedPeopleAndHardware () {
 					() => handleHardwaresExists(storedHardwares, row)
 				)
 			})
-			doSynchronousLoop(hardwareAndPersonPromises.length, hardwareAndPersonPromises, () => {
-				console.log('handle merging newRows into Data', newRows)
-			})
+			doSynchronousLoop(hardwareAndPersonPromises.length, hardwareAndPersonPromises, () => resolve())
 		})
 		.catch((err) => reject(err))
-		resolve()
 	})
 }
 
@@ -189,7 +218,8 @@ function checkIfPersonExists (storedPeople, row) {
 function checkForDuplicateItems () {
 	return new Promise((resolve, reject) => {
 		getStoredData('items')
-		.then((storedItems) => {
+		.then((items) => {
+			storedItems = items
 			data.forEach((row) => {
 				const serial = row[headers.serial]
 				checkIfDuplicateItem(storedItems, serial)
