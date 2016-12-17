@@ -108,17 +108,22 @@ export function saveNewHardware (hardwares, hardware, uid) {
 			return ref.child(`feed/hardwares/${hardwareId}`).set(newHardware) // saving hardwares to firebase
 		})
 		.then(() => resolve(newHardware))
-		.catch((err) => reject(err))
+		.catch((err) => {
+			console.warn(err)
+			reject(err)
+		})
 	})
 }
 
 function verifyNewHardware (hardwares, hardware) {
 	return new Promise((resolve, reject) => {
-		Object.keys(hardwares).forEach((hardwareId) => {
-			const newMakeAndModel = `${hardware.make} ${hardware.model}`.toLowerCase()
-			const currenMakeAndModel = `${hardwares[hardwareId].make} ${hardwares[hardwareId].model}`.toLowerCase()
-			if (newMakeAndModel === currenMakeAndModel) reject(`Sorry, but the hardware, ${newMakeAndModel} is already registered.`)
-		})
+		if (hardwares) {
+			Object.keys(hardwares).forEach((hardwareId) => {
+				const newMakeAndModel = `${hardware.make} ${hardware.model}`.toLowerCase()
+				const currenMakeAndModel = `${hardwares[hardwareId].make} ${hardwares[hardwareId].model}`.toLowerCase()
+				if (newMakeAndModel === currenMakeAndModel) reject(`Sorry, but the hardware, ${newMakeAndModel} is already registered.`)
+			})
+		}
 		resolve(true)
 	})
 }
@@ -263,11 +268,13 @@ export function saveNewPerson (people, person, uid) {
 
 function verifyNewPerson (people, person) {
 	return new Promise((resolve, reject) => {
-		Object.keys(people).forEach((personId) => {
-			const newName = `${person.firstName} ${person.lastName}`.toLowerCase()
-			const currentName = `${people[personId].firstName} ${people[personId].lastName}`.toLowerCase()
-			if (newName === currentName) reject(`Sorry, but the person, ${currentName} is already registered.`)
-		})
+		if (people) {
+			Object.keys(people).forEach((personId) => {
+				const newName = `${person.firstName} ${person.lastName}`.toLowerCase()
+				const currentName = `${people[personId].firstName} ${people[personId].lastName}`.toLowerCase()
+				if (newName === currentName) reject(`Sorry, but the person, ${currentName} is already registered.`)
+			})
+		}
 		resolve(true)
 	})
 }
@@ -422,13 +429,15 @@ export function saveNewItem (items, item, uid, hardware) {
 
 function verifyNewItem (items, item) {
 	return new Promise((resolve, reject) => {
-		Object.keys(items).forEach((itemId) => {
-			const newSerial = item.serial.toString()
-			const currentSerial = items[itemId].serial.toString()
-			if (newSerial.toLowerCase() === currentSerial.toLowerCase()) {
-				reject(`Sorry, but the serial number, ${item.serial} is already in use.`)
-			}
-		})
+		if (items) {
+			Object.keys(items).forEach((itemId) => {
+				const newSerial = item.serial.toString()
+				const currentSerial = items[itemId].serial.toString()
+				if (newSerial.toLowerCase() === currentSerial.toLowerCase()) {
+					reject(`Sorry, but the serial number, ${item.serial} is already in use.`)
+				}
+			})
+		}
 		resolve(true)
 	})
 }

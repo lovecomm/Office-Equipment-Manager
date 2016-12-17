@@ -39,7 +39,6 @@ export default function handleFileImport (file) {
 
 function storeItems () {
 	return new Promise((resolve, reject) => {
-		console.log('something', newRows)
 		let saveItemsPromises = []
 		Object.keys(newRows).forEach((key) => {
 			const row = newRows[key]
@@ -60,7 +59,6 @@ function storeItems () {
 			}
 			saveNewItem(storedItems, item, 10000000, row.hardware)
 		})
-		console.log('AFTER LOOP')
 		resolve()
 	})
 }
@@ -110,8 +108,8 @@ function resolveImportedPeopleAndHardware () {
 			Object.keys(newRows).forEach((key) => {
 				const row = newRows[key]
 				hardwareAndPersonPromises.push(
-					() => handlePersonExists(storedPeople, row),
-					() => handleHardwaresExists(storedHardwares, row)
+					() => handlePersonExists(row),
+					() => handleHardwaresExists(row)
 				)
 			})
 			doSynchronousLoop(hardwareAndPersonPromises.length, hardwareAndPersonPromises, () => resolve())
@@ -135,9 +133,9 @@ function doSynchronousLoop (iterator, data, done) {
 	}
 }
 
-function handleHardwaresExists (storedHardwares, row) { // checks if hardware exists, if does then adds hardwareId to row, if not creates the hardware and then adds hardwareId to row
+function handleHardwaresExists (row) { // checks if hardware exists, if does then adds hardwareId to row, if not creates the hardware and then adds hardwareId to row
 	return new Promise((resolve, reject) => {
-		checkIfHardwareExists(storedHardwares, row)
+		checkIfHardwareExists(row)
 		.then(({hardwareExists, storedHardwareId}) => {
 			if (hardwareExists) {
 				row.hardware.hardwareId = storedHardwareId
@@ -159,24 +157,26 @@ function handleHardwaresExists (storedHardwares, row) { // checks if hardware ex
 	})
 }
 
-function checkIfHardwareExists (storedHardwares, row) {
+function checkIfHardwareExists (row) {
 	return new Promise((resolve, reject) => {
 		let hardwareExists = false
 		let storedHardwareId = ''
-		Object.keys(storedHardwares).forEach((key) => {
-			const storedHardware = storedHardwares[key]
-			if (storedHardware.make.toLowerCase() === row.hardware.make.toLowerCase() && storedHardware.model.toLowerCase() === row.hardware.model.toLowerCase()) {
-				hardwareExists = true
-				storedHardwareId = storedHardware.hardwareId
-			}
-		})
+		if (storedHardwares) {
+			Object.keys(storedHardwares).forEach((key) => {
+				const storedHardware = storedHardwares[key]
+				if (storedHardware.make.toLowerCase() === row.hardware.make.toLowerCase() && storedHardware.model.toLowerCase() === row.hardware.model.toLowerCase()) {
+					hardwareExists = true
+					storedHardwareId = storedHardware.hardwareId
+				}
+			})
+		}
 		resolve ({hardwareExists, storedHardwareId})
 	})
 }
 
-function handlePersonExists (storedPeople, row) { // checks if person exists, if does then adds personId to row, if not creates the person and then adds personId to row
+function handlePersonExists (row) { // checks if person exists, if does then adds personId to row, if not creates the person and then adds personId to row
 	return new Promise((resolve, reject) => {
-		checkIfPersonExists(storedPeople, row)
+		checkIfPersonExists(row)
 		.then(({personExists, storedPersonId}) => {
 			if (personExists) {
 				row.person.personId = storedPersonId
@@ -197,17 +197,19 @@ function handlePersonExists (storedPeople, row) { // checks if person exists, if
 	})
 }
 
-function checkIfPersonExists (storedPeople, row) {
+function checkIfPersonExists (row) {
 	return new Promise((resolve, reject) => {
 		let personExists = false
 		let storedPersonId = ''
-		Object.keys(storedPeople).forEach((key) => {
-			const storedPerson = storedPeople[key]
-			if (storedPerson.firstName.toLowerCase() === row.person.firstName.toLowerCase() && storedPerson.lastName.toLowerCase() === row.person.lastName.toLowerCase()) {
-				personExists = true
-				storedPersonId = storedPerson.personId
-			}
-		})
+		if (storedPeople) {
+			Object.keys(storedPeople).forEach((key) => {
+				const storedPerson = storedPeople[key]
+				if (storedPerson.firstName.toLowerCase() === row.person.firstName.toLowerCase() && storedPerson.lastName.toLowerCase() === row.person.lastName.toLowerCase()) {
+					personExists = true
+					storedPersonId = storedPerson.personId
+				}
+			})
+		}
 		resolve ({personExists, storedPersonId})
 	})
 }
@@ -219,7 +221,7 @@ function checkForDuplicateItems () {
 			storedItems = items
 			data.forEach((row) => {
 				const serial = row[headers.serial]
-				checkIfDuplicateItem(storedItems, serial)
+				checkIfDuplicateItem(serial)
 				.then((duplicate) => {
 					if (duplicate) {
 						data.splice(data.indexOf(row), 1)
@@ -232,12 +234,14 @@ function checkForDuplicateItems () {
 	})
 }
 
-function checkIfDuplicateItem(storedItems, serial) {
+function checkIfDuplicateItem(serial) {
 	return new Promise((resolve) => {
-		Object.keys(storedItems).forEach((key) => {
-			const storedItem = storedItems[key]
-			if (storedItem.serial === serial) resolve(true)
-		})
+		if (storedItems) {
+			Object.keys(storedItems).forEach((key) => {
+				const storedItem = storedItems[key]
+				if (storedItem.serial === serial) resolve(true)
+			})
+		}
 		resolve(false)
 	})
 }
