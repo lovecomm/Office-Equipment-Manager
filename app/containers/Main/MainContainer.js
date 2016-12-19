@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import * as userActionCreators from 'redux/modules/users'
 import * as feedActionCreators from 'redux/modules/feed'
 import { firebaseAuth } from 'config/constants'
-import { Loader } from 'components'
+import { Loader, PleaseWait } from 'components'
 import { FormsDrawersContainer, NavigationContainer, ImportDataContainer } from 'containers'
 import { ThemeProvider } from 'react-css-themr'
 import { container } from 'sharedStyles/layout.scss'
@@ -40,7 +40,9 @@ const MainContainer = React.createClass({
 				<div>
 					<NavigationContainer isAuthed={this.props.isAuthed} />
 					<div className={container}>
-						{this.props.children}
+						{this.props.importIsProcessing === true
+						? <PleaseWait />
+						: <PleaseWait />}
 					</div>
 					<FormsDrawersContainer />
 					<ImportDataContainer />
@@ -50,8 +52,9 @@ const MainContainer = React.createClass({
 	},
 })
 
-function mapStateToProps ({users}) {
+function mapStateToProps ({users, importData}) {
 	return {
+		importIsProcessing: importData.isProcessing,
 		isAuthed: users.isAuthed,
 		isFetching: users.isFetching,
 	}

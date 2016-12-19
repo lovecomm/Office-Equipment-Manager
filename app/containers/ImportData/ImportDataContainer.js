@@ -10,8 +10,8 @@ const ImportDataContainer = React.createClass({
 		formIsShowing: PropTypes.bool.isRequired,
 		selectedFileName: PropTypes.string.isRequired,
 		submitSuccessful: PropTypes.bool.isRequired,
-		UpdateImportdataFormSelectedFileName: PropTypes.func.isRequired,
-		UpdateImportdataFormError: PropTypes.func.isRequired,
+		updateImportdataFormSelectedFileName: PropTypes.func.isRequired,
+		updateImportdataFormError: PropTypes.func.isRequired,
 		clearImportdataForm: PropTypes.func.isRequired,
 		toggleImportdataFormIsShowing: PropTypes.func.isRequired,
 		updateImportdataFormSubmitSuccessful: PropTypes.func.isRequired,
@@ -20,28 +20,30 @@ const ImportDataContainer = React.createClass({
 	handleFileSelect (fileRaw) {
 		const file = fileRaw.target.files[0]
 		const ext = file.name.match(/\.([^\.]+)$/)
-		this.props.UpdateImportdataFormSelectedFileName(file.name)
+		this.props.updateImportdataFormSelectedFileName(file.name)
 		if (ext === null) {
-			this.props.UpdateImportdataFormError('Slow Down there! Please make sure your file has an extension!')
+			this.props.updateImportdataFormError('Slow Down there! Please make sure your file has an extension!')
 			this.selectedFile = 'empty'
 			return
 		} else if (ext[1] !== 'csv') {
-			this.props.UpdateImportdataFormError('Slow Down there! You can only import a CSV filetype!')
+			this.props.updateImportdataFormError('Slow Down there! You can only import CSV files!')
 			this.selectedFile = 'empty'
 			return
 		} else {
-			this.props.UpdateImportdataFormError('')
+			this.props.updateImportdataFormError('')
 			this.selectedFile = file
 		}
 	},
 	handleFileSubmit () {
 		if (this.selectedFile !== 'empty') {
+			this.props.updateImportdataIsProcessing(true)
 			handleFileImport(this.selectedFile)
 			.then(() => this.submitSuccessful())
-			.catch((error) => this.props.UpdateImportdataFormError(error))
+			.catch((error) => this.props.updateImportdataFormError(error))
 		}
 	},
 	submitSuccessful () {
+		this.props.updateImportdataIsProcessing(false)
 		this.props.toggleImportdataFormIsShowing() // hide import form snackbar
 		this.props.updateImportdataFormSubmitSuccessful() // show "submitSuccessful message" (different Snackbar)
 		setTimeout(() => this.props.clearImportdataForm(), 5000) // reset importData back to initialState

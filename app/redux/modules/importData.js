@@ -3,6 +3,7 @@ const UPDATE_IMPORTDATA_FORM_SELECTED_FILE_NAME = 'UPDATE_IMPORTDATA_FORM_SELECT
 const UPDATE_IMPORTDATA_ERROR = 'UPDATE_IMPORTDATA_ERROR'
 const CLEAR_IMPORTDATA_FORM = 'CLEAR_IMPORTDATA_FORM'
 const UPDATE_IMPORTDATA_FORM_SUBMIT_SUCCESSFUL = 'UPDATE_IMPORTDATA_FORM_SUBMIT_SUCCESSFUL'
+const UPDATE_IMPORTDATA_IS_PROCESSING = 'UPDATE_IMPORTDATA_IS_PROCESSING'
 
 export function toggleImportdataFormIsShowing () {
 	return {
@@ -10,14 +11,14 @@ export function toggleImportdataFormIsShowing () {
 	}
 }
 
-export function UpdateImportdataFormSelectedFileName (selectedFileName) {
+export function updateImportdataFormSelectedFileName (selectedFileName) {
 	return {
 		type: UPDATE_IMPORTDATA_FORM_SELECTED_FILE_NAME,
 		selectedFileName,
 	}
 }
 
-export function UpdateImportdataFormError (error) {
+export function updateImportdataFormError (error) {
 	return {
 		type: UPDATE_IMPORTDATA_ERROR,
 		error,
@@ -36,10 +37,19 @@ export function updateImportdataFormSubmitSuccessful () {
 	}
 }
 
+export function updateImportdataIsProcessing (isProcessing) {
+	console.log('in isprocessing action creator', isProcessing)
+	return {
+		type: UPDATE_IMPORTDATA_IS_PROCESSING,
+		isProcessing,
+	}
+}
+
 const initialState = {
 	formIsShowing: false,
 	selectedFileName: '',
 	error: '',
+	isProcessing: false,
 	submitSuccessful: false,
 }
 
@@ -66,6 +76,11 @@ export default function importData (state = initialState, action) {
 		return {
 			...state,
 			submitSuccessful: true,
+		}
+	case UPDATE_IMPORTDATA_IS_PROCESSING:
+		return {
+			...state,
+			isProcessing: action.isProcessing,
 		}
 	default:
 		return state
