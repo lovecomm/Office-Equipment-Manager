@@ -42,7 +42,7 @@ const MainContainer = React.createClass({
 					<div className={container}>
 						{this.props.importIsProcessing === true
 						? <PleaseWait />
-						: <PleaseWait />}
+						: this.props.children}
 					</div>
 					<FormsDrawersContainer />
 					<ImportDataContainer />
