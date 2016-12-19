@@ -108,29 +108,14 @@ function resolveImportedPeopleAndHardware () {
 			Object.keys(newRows).forEach((key) => {
 				const row = newRows[key]
 				hardwareAndPersonPromises.push(
-					() => handlePersonExists(row),
-					() => handleHardwaresExists(row)
+					handlePersonExists(row),
+					handleHardwaresExists(row)
 				)
 			})
-			doSynchronousLoop(hardwareAndPersonPromises.length, hardwareAndPersonPromises, () => resolve())
+			Promise.all(hardwareAndPersonPromises).then(() => resolve())
 		})
 		.catch((err) => reject(err))
 	})
-}
-
-function doSynchronousLoop (iterator, data, done) {
-	if (iterator >= 0) {
-		let promiseFunction = data[data.length - iterator]
-		if (promiseFunction !== undefined) {
-			iterator--
-			promiseFunction()
-			.then(() => doSynchronousLoop(iterator, data, done))
-		} else {
-			done()
-		}
-	} else {
-		done()
-	}
 }
 
 function handleHardwaresExists (row) { // checks if hardware exists, if does then adds hardwareId to row, if not creates the hardware and then adds hardwareId to row
@@ -141,7 +126,6 @@ function handleHardwaresExists (row) { // checks if hardware exists, if does the
 				row.hardware.hardwareId = storedHardwareId
 				resolve(row)
 			} else {
-				resolve(row)
 				saveNewHardware(storedHardwares, row.hardware, 100000)
 				.then((newHardware) => {
 					storedHardwares = {

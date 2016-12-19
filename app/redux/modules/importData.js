@@ -38,7 +38,6 @@ export function updateImportdataFormSubmitSuccessful () {
 }
 
 export function updateImportdataIsProcessing (isProcessing) {
-	console.log('in isprocessing action creator', isProcessing)
 	return {
 		type: UPDATE_IMPORTDATA_IS_PROCESSING,
 		isProcessing,
