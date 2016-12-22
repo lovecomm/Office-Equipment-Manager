@@ -11,6 +11,7 @@ export default function getRoutes (checkAuth, history) {
 				<Route path='logout' component={LogoutContainer} />
 				<Route path='people' component={PeopleFeedContainer} onEnter={checkAuth}/>
 				<Route path='hardware' component={HardwaresFeedContainer} onEnter={checkAuth}/>
+				<Route path='hardware' component={HardwaresFeedContainer} onEnter={checkAuth}/>
 			</Route>
 		</Router>
 	)

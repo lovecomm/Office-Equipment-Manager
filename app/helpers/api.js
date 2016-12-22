@@ -207,7 +207,7 @@ function updateItemsHasSubContentStatus (hardware, items) {
 	})
 }
 
-function getHardwaresBound (cb, errorCB) { // this version is for the feed, its data is bound to firebase
+export function getHardwaresBound (cb, errorCB) { // this version is for the feed, its data is bound to firebase
 	ref.child('feed/hardwares').on('value', (snapshot) => {
 		const hardware = snapshot.val() || {}
 		cb(hardware)
@@ -353,7 +353,7 @@ function updatedPersonMatchesExistingPerson (people, person) {
 	})
 }
 
-function getPeopleBound (cb, errorCB) { // this version is for the feed, its data is bounded to firebase
+export function getPeopleBound (cb, errorCB) { // this version is for the feed, its data is bounded to firebase
 	ref.child('feed/people').on('value', (snapshot) => {
 		const people = snapshot.val() || {}
 		cb(people)
@@ -512,7 +512,7 @@ function testIfSerialExists (items, item) {
 	})
 }
 
-function getItemsBound (cb, errorCB) { // this version is for the feed, its data is bounded to firebase
+export function getItemsBound (cb, errorCB) { // this version is for the feed, its data is bounded to firebase
 	ref.child('feed/items').on('value', (snapshot) => {
 		const items = snapshot.val() || {}
 		const sortedItemIds = Object.keys(items).sort((a, b) => items[b].dateCreated - items[a].dateCreated)

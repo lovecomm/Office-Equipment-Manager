@@ -4,6 +4,8 @@ import { IconMenu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu'
 import { AppBar } from 'react-toolbox/lib/app_bar'
 import { title, menuItems, menuItemsDesktop, appBar, controlMenu } from './styles.scss'
 import { container } from 'sharedStyles/layout'
+import fileExport from 'helpers/fileExport'
+import fileDownload from 'react-file-download'
 
 function MenuItems (props) {
 	if (props.isAuthed) {
@@ -42,12 +44,20 @@ function MenuItems (props) {
 	}
 }
 
+const exampleCSVData = `Serial,Purchase Year,Purchase Month,Notes,First Name,Last Name,Make,Model,Description,Computer
+100,,,,Joe,Smith,Dell,Inspiron,"i5-3300 3GHz 8GB ram, Windows 7 Pro 64bit, 1TB drive",yes
+101,1998,1,,Sally,Jones,Acer,al1916W monitor,,no
+102,,,An Item's note,Inventory,N/A,Acer,al1912 Square monitor,Random Descriptinon for this hardware,no
+401,2016,12,,Inventory,N/A,Acer,al1912 Square monitor,,no`
+
 function ControlMenu (props) {
 	if (props.isAuthed) {
 		return (
 			<IconMenu icon='more_vert' position='topLeft' menuRipple={true} className={controlMenu}>
 		    <MenuItem value='import' icon='file_upload' caption='Import' onClick={() => props.toggleImportdataFormIsShowing()}/>
-		    <MenuItem value='export' icon='file_download' caption='Export' onClick={() => console.log('exporting')}/>
+		    <MenuItem value='export' icon='file_download' caption='Export' onClick={() => fileExport()}/>
+				<MenuDivider />
+				<MenuItem value='example' icon='assessment' caption='Download Import Example' onClick={() => fileDownload(exampleCSVData, 'example.csv')}/>
 		  </IconMenu>
 		)
 	} else {
