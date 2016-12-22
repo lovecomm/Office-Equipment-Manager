@@ -37,9 +37,11 @@ const ImportDataContainer = React.createClass({
 	handleFileSubmit () {
 		if (this.selectedFile !== 'empty') {
 			this.props.updateImportdataIsProcessing(true)
-			handleFileImport(this.selectedFile)
-			.then(() => this.submitSuccessful())
-			.catch((error) => this.props.updateImportdataFormError(error))
+			setTimeout(() => {
+				handleFileImport(this.selectedFile)
+				.then(() => this.submitSuccessful())
+				.catch((error) => this.props.updateImportdataFormError(error))
+			}, 300)
 		}
 	},
 	submitSuccessful () {

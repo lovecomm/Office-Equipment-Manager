@@ -36,7 +36,6 @@ function checkAuth (nextState, replace, callback) {
 				callback()
 			}
 		} else if (isAuthed !== true) {
-			console.log('should be going to /auth')
 			replace('/auth')
 			callback()
 		} else { callback() }

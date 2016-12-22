@@ -105,9 +105,10 @@ export function saveNewHardware (hardwares, hardware, uid) {
 				},
 			}
 			newHardware = createdHardware
-			return ref.child(`feed/hardwares/${hardwareId}`).set(newHardware) // saving hardwares to firebase
+			ref.child(`feed/hardwares/${hardwareId}`).set(newHardware) // saving hardwares to firebase
+			console.log('after save hardware', newHardware)
+			resolve(newHardware)
 		})
-		.then(() => resolve(newHardware))
 		.catch((err) => {
 			console.warn(err)
 			reject(err)
@@ -259,9 +260,11 @@ export function saveNewPerson (people, person, uid) {
 					url: '', // Firebase URLs expire, so we get it each time the app loads, then store it in the redux tree
 				},
 			}
-			return ref.child(`feed/people/${personId}`).set(newPerson) // saving new person to firebase
+			// console.log('before save person')
+			ref.child(`feed/people/${personId}`).set(newPerson) // saving new person to firebase
+			// console.log('after save person')
+			resolve(newPerson)
 		})
-		.then(() => resolve(newPerson))
 		.catch((err) => `Error in savePerson: ${err}`)
 	})
 }
@@ -420,9 +423,11 @@ export function saveNewItem (items, item, uid, hardware) {
 		})
 		.then((createdItem) => {
 			newItem = createdItem
-			return ref.child(`feed/items/${itemId}`).set(newItem)
+			console.log('before save item')
+			ref.child(`feed/items/${itemId}`).set(newItem)
+			console.log('after save item')
+			resolve(newItem)
 		})
-		.then(() => resolve(newItem))
 		.catch((err) => console.warn(err))
 	})
 }

@@ -112,7 +112,8 @@ function resolveImportedPeopleAndHardware () {
 					handleHardwaresExists(row)
 				)
 			})
-			Promise.all(hardwareAndPersonPromises).then(() => resolve())
+			return Promise.all(hardwareAndPersonPromises).then(() => resolve())
+			.catch((err) => console.error(err))
 		})
 		.catch((err) => reject(err))
 	})
@@ -128,6 +129,7 @@ function handleHardwaresExists (row) { // checks if hardware exists, if does the
 			} else {
 				saveNewHardware(storedHardwares, row.hardware, 100000)
 				.then((newHardware) => {
+					console.warn('right after saveNewHardware')
 					storedHardwares = {
 						...storedHardwares,
 						[newHardware.hardwareId]: {
@@ -136,6 +138,7 @@ function handleHardwaresExists (row) { // checks if hardware exists, if does the
 							hardwareId: newHardware.id,
 						}
 					}
+					console.warn('right before handleHardwaresExists resolve')
 					row.hardware.hardwareId = newHardware.hardwareId
 					resolve(row)
 				})
@@ -171,6 +174,7 @@ function handlePersonExists (row) { // checks if person exists, if does then add
 			} else {
 				saveNewPerson(storedPeople, row.person, 100000)
 				.then((newPerson) => {
+					console.warn('right after saveNewPerson')
 					storedPeople = {
 						...storedPeople,
 						[newPerson.personId]: {
@@ -180,6 +184,7 @@ function handlePersonExists (row) { // checks if person exists, if does then add
 						}
 					}
 					row.person.personId = newPerson.personId
+					console.warn('right before handlePersonExists resolve')
 					resolve(row)
 				})
 			}
