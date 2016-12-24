@@ -1,5 +1,6 @@
 import Papa from 'papaparse' // http://papaparse.com/docs
-import { ref } from 'config/constants'
+import { ref, imagesRef } from 'config/constants'
+import { determineItemHasSubContent } from 'helpers/utils'
 import { saveNewPerson, saveNewHardware, saveNewItem } from 'helpers/api'
 
 let storedPeople // used to know what's already in firebase, so that we don't create duplicates
@@ -9,8 +10,13 @@ let duplicates = [] // this is where items that were already found in firebase, 
 let headers // this will become an object with each of the column headers from the csv, with the value being their index in a row... that way if someone uploads a csv with columns in a different order, it bother us here
 let data // just the data received from the CSV, unformatted
 let newRows // this is created/structured data based on the 'data' variable. It is what we will use to store all our person/hardware/itemIds, and ultimately what we use to upload these things to firebase
+let newPeople = {}
+let newHardwares = {}
+let newItems = {}
+let uid
 
-export default function handleFileImport (file) {
+export default function handleFileImport (file, authedId) {
+	uid = authedId
 	return new Promise((resolve, reject) => {
 		Papa.parse(file, {
 			complete: (results) => {
@@ -23,8 +29,16 @@ export default function handleFileImport (file) {
 				.then(() => checkForDuplicateItems())
 				.then(() => convertDataArrayToObject())
 				.then(() => resolveImportedPeopleAndHardware())
-				.then(() => storeItems())
-				.then(() => resolve())
+				.then(() => resolveItems())
+				.then(() => {
+					ref.child('feed/people').set(newPeople)
+					ref.child('feed/hardwares').set(newHardwares)
+					ref.child('feed/items').set(newItems)
+					console.log('newPeople', newPeople)
+					console.log('newHardwares', newHardwares)
+					console.log('newItems', newItems)
+					resolve()
+				})
 				.catch((error) => {
 					console.warn(error)
 					reject(error)
@@ -37,9 +51,8 @@ export default function handleFileImport (file) {
 	})
 }
 
-function storeItems () {
+function resolveItems () {
 	return new Promise((resolve, reject) => {
-		let saveItemsPromises = []
 		Object.keys(newRows).forEach((key) => {
 			const row = newRows[key]
 			const today = new Date()
@@ -49,15 +62,27 @@ function storeItems () {
 				const message = ' ...This item was uploaded without a purchase date, so the date given is according to the day it was uploaded.'
 				noteIsEmpty === true ? row.item.notes = message : row.item.notes += message
 			}
-			const item = {
-				serial: row.item.serial,
+			row.item = {
+				...row.item,
+				itemId: ref.child('feed/items').push().key,
 				personId: row.person.personId,
 				hardwareId: row.hardware.hardwareId,
-				note: row.item.notes,
 				purchasedDate: purchasedDate,
-				photo: {}
+				dateCreated: new Date().toString(),
+				dateLastUpdated: new Date().toString(),
+				collapsed: true,
+				createdBy: uid,
+				photo: {
+					name: '',
+					fullPath: '',
+					size: '',
+					type: '',
+					bucket: '',
+					url: ''
+				},
+				hasSubContent: determineItemHasSubContent(row.item, row.hardware.description),
 			}
-			saveNewItem(storedItems, item, 10000000, row.hardware)
+			newItems[row.item.itemId] = row.item
 		})
 		resolve()
 	})
@@ -127,21 +152,33 @@ function handleHardwaresExists (row) { // checks if hardware exists, if does the
 				row.hardware.hardwareId = storedHardwareId
 				resolve(row)
 			} else {
-				saveNewHardware(storedHardwares, row.hardware, 100000)
-				.then((newHardware) => {
-					console.warn('right after saveNewHardware')
-					storedHardwares = {
-						...storedHardwares,
-						[newHardware.hardwareId]: {
-							make: newHardware.make,
-							model: newHardware.model,
-							hardwareId: newHardware.id,
-						}
+				var hardwarePhotoRef = imagesRef.child('hardwares/default.jpg')
+				row.hardware = {
+					...row.hardware,
+					hardwareId: ref.child('feed/hardwares').push().key,
+					photo: {
+						name: hardwarePhotoRef.name,
+						fullPath: hardwarePhotoRef.fullPath,
+						size: 3.52,
+						type: 'image/jpeg',
+						bucket: hardwarePhotoRef.bucket,
+						url: ''
+					},
+					collapsed: true,
+					createdBy: uid,
+					dateCreated: new Date().toString(),
+					dateLastUpdated: new Date().toString()
+				}
+				storedHardwares = { // we want to append our new hardware to the storedHardware list, so that future items within the same import, who share this hardware, wont force the hardware to be created again.
+					...storedHardwares,
+					[row.hardware.hardwareId]: {
+						make: row.hardware.make,
+						model: row.hardware.model,
+						hardwareId: row.hardware.id,
 					}
-					console.warn('right before handleHardwaresExists resolve')
-					row.hardware.hardwareId = newHardware.hardwareId
-					resolve(row)
-				})
+				}
+				newHardwares[row.hardware.hardwareId] = row.hardware
+				resolve()
 			}
 		})
 	})
@@ -172,21 +209,33 @@ function handlePersonExists (row) { // checks if person exists, if does then add
 				row.person.personId = storedPersonId
 				resolve(row)
 			} else {
-				saveNewPerson(storedPeople, row.person, 100000)
-				.then((newPerson) => {
-					console.warn('right after saveNewPerson')
-					storedPeople = {
-						...storedPeople,
-						[newPerson.personId]: {
-							firstName: newPerson.firstName,
-							lastName: newPerson.lastName,
-							personId: newPerson.personId,
-						}
+				var personPhotoRef = imagesRef.child('people/default.jpg')
+				row.person = {
+					...row.person,
+					personId: ref.child('feed/people').push().key,
+					photo: {
+						name: personPhotoRef.name,
+						fullPath: personPhotoRef.fullPath,
+						size: 4.48,
+						type: 'image/jpeg',
+						bucket: personPhotoRef.bucket,
+						url: ''
+					},
+					dateCreated: new Date().toString(),
+					createdBy: uid,
+					dateLastUpdated: new Date().toString(),
+					collapsed: true
+				}
+				storedPeople = { // we want to append our new person to the storedPeople list, so that future items within the same import, who share this person, wont force the person to be created again.
+					...storedPeople,
+					[row.person.personId]: {
+						firstName: row.person.firstName,
+						lastName: row.person.lastName,
+						personId: row.person.personId,
 					}
-					row.person.personId = newPerson.personId
-					console.warn('right before handlePersonExists resolve')
-					resolve(row)
-				})
+				}
+				newPeople[row.person.personId] = row.person
+				resolve()
 			}
 		})
 	})

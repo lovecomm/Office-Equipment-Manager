@@ -3,7 +3,6 @@ import { ImportData } from 'components'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as importActionCreators from 'redux/modules/importData'
-import handleFileImport from 'helpers/fileImport'
 
 const ImportDataContainer = React.createClass({
 	propTypes: {
@@ -15,6 +14,7 @@ const ImportDataContainer = React.createClass({
 		clearImportdataForm: PropTypes.func.isRequired,
 		toggleImportdataFormIsShowing: PropTypes.func.isRequired,
 		updateImportdataFormSubmitSuccessful: PropTypes.func.isRequired,
+		handleFileImportThunk: PropTypes.func.isRequired,
 	},
 	selectedFile: 'empty',
 	handleFileSelect (fileRaw) {
@@ -38,7 +38,7 @@ const ImportDataContainer = React.createClass({
 		if (this.selectedFile !== 'empty') {
 			this.props.updateImportdataIsProcessing(true)
 			setTimeout(() => {
-				handleFileImport(this.selectedFile)
+				this.props.handleFileImportThunk(this.selectedFile)
 				.then(() => this.submitSuccessful())
 				.catch((error) => this.props.updateImportdataFormError(error))
 			}, 300)

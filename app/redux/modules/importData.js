@@ -1,3 +1,5 @@
+import handleFileImport from 'helpers/fileImport'
+
 const TOGGLE_IMPORTDATA_FORM_IS_SHOWING = 'TOGGLE_IMPORTDATA_FORM_IS_SHOWING'
 const UPDATE_IMPORTDATA_FORM_SELECTED_FILE_NAME = 'UPDATE_IMPORTDATA_FORM_SELECTED_FILE_NAME'
 const UPDATE_IMPORTDATA_ERROR = 'UPDATE_IMPORTDATA_ERROR'
@@ -41,6 +43,12 @@ export function updateImportdataIsProcessing (isProcessing) {
 	return {
 		type: UPDATE_IMPORTDATA_IS_PROCESSING,
 		isProcessing,
+	}
+}
+
+export function handleFileImportThunk (file) {
+	return function (dispatch, getState) {
+		return handleFileImport(file, getState().users.authedId)
 	}
 }
 
