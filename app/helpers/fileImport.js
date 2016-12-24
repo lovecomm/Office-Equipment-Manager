@@ -71,6 +71,7 @@ function resolveItems () {
 				dateCreated: new Date().toString(),
 				dateLastUpdated: new Date().toString(),
 				collapsed: true,
+				note: row.item.notes === undefined ? '' : row.item.notes,
 				createdBy: uid,
 				photo: {
 					name: '',
