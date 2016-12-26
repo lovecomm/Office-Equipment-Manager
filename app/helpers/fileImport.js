@@ -62,12 +62,13 @@ function resolveItems () {
 				const message = ' ...This item was uploaded without a purchase date, so the date given is according to the day it was uploaded.'
 				noteIsEmpty === true ? row.item.notes = message : row.item.notes += message
 			}
+			console.log('purchasedDate', purchasedDate, purchasedDate.toString())
 			row.item = {
 				...row.item,
 				itemId: ref.child('feed/items').push().key,
 				personId: row.person.personId,
 				hardwareId: row.hardware.hardwareId,
-				purchasedDate: purchasedDate,
+				purchasedDate: purchasedDate.toString(),
 				dateCreated: new Date().toString(),
 				dateLastUpdated: new Date().toString(),
 				collapsed: true,
