@@ -19,7 +19,6 @@ export function prepItemsForFeed (items) {
 		return new Promise((resolve, reject) => {
 			dispatch(updateItemsFeedItems(items, Object.keys(items)))
 			dispatch(sortItemsFeedBy('serial'))
-			dispatch(getItemsUrlFromFirebase(items))
 			if (getState().itemsFeed.initialFetch === true) dispatch(updateItemsFeedInitialFetch(false))
 			resolve()
 		})
@@ -27,22 +26,6 @@ export function prepItemsForFeed (items) {
 	}
 }
 
-function getItemsUrlFromFirebase (items) {
-	return function (dispatch, getState) {
-		return new Promise((resolve, reject) => {
-			Object.keys(items).forEach((itemId) => {
-				if (items[itemId].photo.name !== '' && items[itemId].photo.name !== undefined) {
-					getUrl('items', items[itemId].photo.name)
-					.then((downloadUrl) => {
-						dispatch(updateItemPhotoUrl(itemId, downloadUrl))
-					})
-				}
-			})
-			resolve()
-		})
-		.catch((err) => console.warn(`Error in getting ItemsUrlFromFirebase, ${err}`))
-	}
-}
 
 export function setFilterOptions (buildOptions) {
 	return function (dispatch, getState) {

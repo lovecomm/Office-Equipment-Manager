@@ -20,26 +20,10 @@ export function prepHardwaresForFeed (hardwares) {
 			dispatch(updateHardwaresFeedHardwares(hardwares))
 			dispatch(updateHardwaresFeedIds(Object.keys(hardwares)))
 			dispatch(sortHardwaresFeedBy('make'))
-			dispatch(getHardwaresUrlFromFirebase(hardwares))
 			if (getState().hardwaresFeed.initialFetch === true) dispatch(updateHardwaresFeedInitialFetch(false))
 			resolve()
 		})
 		.catch((err) => `Error in prepHardwaresForFeed, ${err}`)
-	}
-}
-
-function getHardwaresUrlFromFirebase (hardwares) {
-	return function (dispatch, getState) {
-		return new Promise((resolve, reject) => {
-			Object.keys(hardwares).forEach((hardwareId) => {
-				getUrl('hardwares', hardwares[hardwareId].photo.name)
-				.then((downloadUrl) => {
-					dispatch(updateHardwarePhotoUrl(hardwareId, downloadUrl))
-				})
-			})
-			resolve()
-		})
-		.catch((err) => `Error in getHardwaresUrlFromFirebase, ${err}`)
 	}
 }
 

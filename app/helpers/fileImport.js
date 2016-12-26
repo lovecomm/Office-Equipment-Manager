@@ -181,32 +181,35 @@ function handleHardwaresExists (row) { // checks if hardware exists, if does the
 				resolve(row)
 			} else {
 				var hardwarePhotoRef = imagesRef.child('hardwares/default.jpg')
-				row.hardware = {
-					make: row.hardware.make,
-					model: row.hardware.model,
-					hardwareId: ref.child('feed/hardwares').push().key,
-					isComputer: row.hardware.isComputer,
-					description: row.hardware.description,
-					photo: {
-						name: hardwarePhotoRef.name,
-						fullPath: hardwarePhotoRef.fullPath,
-						size: 3.52,
-						type: 'image/jpeg',
-						bucket: hardwarePhotoRef.bucket,
-						url: ''
-					},
-					collapsed: true,
-					createdBy: uid,
-					dateCreated: new Date().toString(),
-					dateLastUpdated: new Date().toString()
-				}
-				storedHardwares[row.hardware.hardwareId] = { // we want to append our new hardware to the storedHardware list, so that future items within the same import, who share this hardware, wont force the hardware to be created again.
+				hardwarePhotoRef.getDownloadURL()
+				.then((url) => {
+					row.hardware = {
 						make: row.hardware.make,
 						model: row.hardware.model,
-						hardwareId: row.hardware.hardwareId,
+						hardwareId: ref.child('feed/hardwares').push().key,
+						isComputer: row.hardware.isComputer,
+						description: row.hardware.description,
+						photo: {
+							name: hardwarePhotoRef.name,
+							fullPath: hardwarePhotoRef.fullPath,
+							size: 3.52,
+							type: 'image/jpeg',
+							bucket: hardwarePhotoRef.bucket,
+							url: url
+						},
+						collapsed: true,
+						createdBy: uid,
+						dateCreated: new Date().toString(),
+						dateLastUpdated: new Date().toString()
 					}
-				newHardwares[row.hardware.hardwareId] = row.hardware
-				resolve()
+					storedHardwares[row.hardware.hardwareId] = { // we want to append our new hardware to the storedHardware list, so that future items within the same import, who share this hardware, wont force the hardware to be created again.
+							make: row.hardware.make,
+							model: row.hardware.model,
+							hardwareId: row.hardware.hardwareId,
+						}
+					newHardwares[row.hardware.hardwareId] = row.hardware
+					resolve()
+				})
 			}
 		})
 	})
@@ -236,30 +239,33 @@ function handlePersonExists (row) { // checks if person exists, if does then add
 				resolve(row)
 			} else {
 				var personPhotoRef = imagesRef.child('people/default.jpg')
-				row.person = {
-					firstName: row.person.firstName,
-					lastName: row.person.lastName,
-					personId: ref.child('feed/people').push().key,
-					photo: {
-						name: personPhotoRef.name,
-						fullPath: personPhotoRef.fullPath,
-						size: 4.48,
-						type: 'image/jpeg',
-						bucket: personPhotoRef.bucket,
-						url: ''
-					},
-					dateCreated: new Date().toString(),
-					createdBy: uid,
-					dateLastUpdated: new Date().toString(),
-					collapsed: true
-				}
-				storedPeople[row.person.personId] = {// we want to append our new person to the storedPeople list, so that future items within the same import, who share this person, wont force the person to be created again.
+				personPhotoRef.getDownloadURL()
+				.then((url) => {
+					row.person = {
 						firstName: row.person.firstName,
 						lastName: row.person.lastName,
-						personId: row.person.personId,
+						personId: ref.child('feed/people').push().key,
+						photo: {
+							name: personPhotoRef.name,
+							fullPath: personPhotoRef.fullPath,
+							size: 4.48,
+							type: 'image/jpeg',
+							bucket: personPhotoRef.bucket,
+							url: url,
+						},
+						dateCreated: new Date().toString(),
+						createdBy: uid,
+						dateLastUpdated: new Date().toString(),
+						collapsed: true
 					}
-				newPeople[row.person.personId] = row.person
-				resolve()
+					storedPeople[row.person.personId] = {// we want to append our new person to the storedPeople list, so that future items within the same import, who share this person, wont force the person to be created again.
+							firstName: row.person.firstName,
+							lastName: row.person.lastName,
+							personId: row.person.personId,
+						}
+					newPeople[row.person.personId] = row.person
+					resolve()
+				})
 			}
 		})
 	})

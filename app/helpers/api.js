@@ -71,7 +71,8 @@ export function saveNewHardware (hardwares, hardware, uid) {
 		.then((isVerified) => {
 			return hardwarePhotoRef.put(hardware.photo) // Store photo to firebase
 		})
-		.then((photoSnapshot) => {
+		.then((photoSnapshot) => hardwarePhotoRef.getDownloadURL())
+		.then((url) => {
 			const newHardware = {
 				hardwareId: hardwareId,
 				dateCreated: new Date().toString(),
@@ -88,7 +89,7 @@ export function saveNewHardware (hardwares, hardware, uid) {
 					size: hardware.photo.size,
 					type: hardware.photo.type,
 					bucket: hardwarePhotoRef.bucket,
-					url: '', // Firebase URLs expire, so we get it each time the app loads, then store it in the redux tree
+					url: url,
 				},
 			}
 			ref.child(`feed/hardwares/${hardwareId}`).set(newHardware) // saving hardwares to firebase
@@ -148,14 +149,17 @@ export function saveUpdatedHardware (hardwares, hardware, uid, items) {
 		})
 		.then((photoSnapshot) => {
 			if (hardwarePhotoRef !== undefined || photoSnapshot !== undefined) { // new photo has been stored
-				return Object.assign(storedHardware, updatedHardwareBase, { photo: {
-					name: hardwarePhotoRef.name,
-					fullPath: hardwarePhotoRef.fullPath,
-					size: hardware.photo.size,
-					type: hardware.photo.type,
-					bucket: hardwarePhotoRef.bucket,
-					url: '',
-				}})
+				hardwarePhotoRef.getDownloadURL()
+				.then((url) => {
+					return Object.assign(storedHardware, updatedHardwareBase, { photo: {
+						name: hardwarePhotoRef.name,
+						fullPath: hardwarePhotoRef.fullPath,
+						size: hardware.photo.size,
+						type: hardware.photo.type,
+						bucket: hardwarePhotoRef.bucket,
+						url: url,
+					}})
+				})
 			} else {
 				return Object.assign(storedHardware, updatedHardwareBase)
 			}
@@ -214,7 +218,8 @@ export function saveNewPerson (people, person, uid) {
 		.then((isVerified) => {
 			return personPhotoRef.put(person.photo)
 		})
-		.then((photoSnapshot) => {
+		.then((photoSnapshot) => personPhotoRef.getDownloadURL())
+		.then((url) => {
 			let newPerson = {
 				personId,
 				dateCreated: new Date().toString(),
@@ -229,7 +234,7 @@ export function saveNewPerson (people, person, uid) {
 					size: person.photo.size,
 					type: person.photo.type,
 					bucket: personPhotoRef.bucket,
-					url: '', // Firebase URLs expire, so we get it each time the app loads, then store it in the redux tree
+					url: url, 
 				},
 			}
 			ref.child(`feed/people/${personId}`).set(newPerson) // saving new person to firebase
@@ -282,29 +287,23 @@ export function saveUpdatedPerson (people, person, uid) {
 			} else { return true }
 		})
 		.then((isVerified) => {
-			// updatedPerson = {
-			// 	personId: person.personId,
-			// 	dateCreated: new Date().toString(),
-			// 	createdBy: uid,
-			// 	dateLastUpdated: new Date().toString(),
-			// 	firstName: person.firstName,
-			// 	lastName: person.lastName,
-			// }
-			// return ref.child(`feed/people/${person.personId}`).set(updatedPerson) // saving new person to firebase
 			if (personPhotoRef) {
 				return personPhotoRef.put(person.photo)
 			} else { return undefined }
 		})
 		.then((photoSnapshot) => {
 			if (personPhotoRef !== undefined || photoSnapshot !== undefined) { // new photo has been stored
-				return Object.assign(storedPerson, updatedPersonBase, { photo: {
-					name: personPhotoRef.name,
-					fullPath: personPhotoRef.fullPath,
-					size: person.photo.size,
-					type: person.photo.type,
-					bucket: personPhotoRef.bucket,
-					url: '',
-				}})
+				personPhotoRef.getDownloadURL()
+				.then((url) => {
+					return Object.assign(storedPerson, updatedPersonBase, { photo: {
+						name: personPhotoRef.name,
+						fullPath: personPhotoRef.fullPath,
+						size: person.photo.size,
+						type: person.photo.type,
+						bucket: personPhotoRef.bucket,
+						url: url,
+					}})
+				})
 			} else {
 				return Object.assign(storedPerson, updatedPersonBase)
 			}
@@ -384,14 +383,17 @@ export function saveNewItem (items, item, uid, hardware) {
 					url: '',
 				}})
 			} else {
-				return Object.assign(newItemBase, {photo: {
-					name: itemPhotoRef.name,
-					fullPath: itemPhotoRef.fullPath,
-					size: item.photo.size,
-					type: item.photo.type,
-					bucket: itemPhotoRef.bucket,
-					url: '', // Firebase URLs expire, so we get it each time the app loads, then store it in the redux tree
-				}})
+				itemPhotoRef.getDownloadURL()
+				.then((url) => {
+					return Object.assign(newItemBase, {photo: {
+						name: itemPhotoRef.name,
+						fullPath: itemPhotoRef.fullPath,
+						size: item.photo.size,
+						type: item.photo.type,
+						bucket: itemPhotoRef.bucket,
+						url: url,
+					}})
+				})
 			}
 		})
 		.then((newItem) => {
@@ -458,14 +460,17 @@ export function saveUpdatedItem (items, item, uid, hardware) {
 		})
 		.then((photoSnapshot) => {
 			if (itemPhotoRef !== undefined || photoSnapshot !== undefined) { // new photo has been stored
-				return Object.assign(storedItem, updatedItemBase, { photo: {
-					name: itemPhotoRef.name,
-					fullPath: itemPhotoRef.fullPath,
-					size: item.photo.size,
-					type: item.photo.type,
-					bucket: itemPhotoRef.bucket,
-					url: '', // Firebase URLs expire, so we get it each time the app loads, then store it in the redux tree
-				}})
+				itemPhotoRef.getDownloadURL()
+				.then((url) => {
+					return Object.assign(storedItem, updatedItemBase, { photo: {
+						name: itemPhotoRef.name,
+						fullPath: itemPhotoRef.fullPath,
+						size: item.photo.size,
+						type: item.photo.type,
+						bucket: itemPhotoRef.bucket,
+						url: url
+					}})
+				})
 			} else {
 				return Object.assign(storedItem, updatedItemBase)
 			}

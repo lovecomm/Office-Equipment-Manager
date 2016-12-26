@@ -20,26 +20,10 @@ export function prepPeopleForFeed (people) {
 			dispatch(updatePeopleFeedPeople(people))
 			dispatch(updatePeopleFeedIds(Object.keys(people)))
 			dispatch(sortPeopleFeedBy('firstName'))
-			dispatch(getPeopleUrlFromFirebase(people))
 			if (getState().peopleFeed.initialFetch === true) dispatch(updatePeopleFeedInitialFetch(false))
 			resolve()
 		})
 		.catch((err) => `Error in prepPeopleForFeed, ${err}`)
-	}
-}
-
-function getPeopleUrlFromFirebase (people) {
-	return function (dispatch, getState) {
-		return new Promise((resolve, reject) => {
-			Object.keys(people).forEach((personId) => {
-				getUrl('people', people[personId].photo.name)
-				.then((downloadUrl) => {
-					dispatch(updatePersonPhotoUrl(personId, downloadUrl))
-				})
-			})
-			resolve()
-		})
-		.catch((err) => `Error in getPeopleUrlFromFirebase, ${err}`)
 	}
 }
 
