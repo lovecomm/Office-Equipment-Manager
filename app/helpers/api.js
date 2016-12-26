@@ -68,21 +68,11 @@ export function saveNewHardware (hardwares, hardware, uid) {
 		let newHardware
 		let defaultPhoto = true
 		const hardwareId = ref.child('feed/hardwares').push().key
-		if (hardware.photo === undefined) {
-			var hardwarePhotoRef = imagesRef.child('hardwares/default.jpg')
-			hardware.photo = {
-				size: 3.52,
-				type: 'image/jpeg',
-			}
-		} else {
-			var hardwarePhotoRef = imagesRef.child(`hardwares/${hardware.photo.name}`)
-			defaultPhoto = false
-		}
+		var hardwarePhotoRef = imagesRef.child(`hardwares/${hardware.photo.name}`)
+		defaultPhoto = false
 		verifyNewHardware(hardwares, hardware)
 		.then((isVerified) => {
-			return defaultPhoto !== true
-			? hardwarePhotoRef.put(hardware.photo) // Store photo to firebase
-			: hardwarePhotoRef
+			return hardwarePhotoRef.put(hardware.photo) // Store photo to firebase
 		})
 		.then((photoSnapshot) => {
 			const createdHardware = {
@@ -106,7 +96,6 @@ export function saveNewHardware (hardwares, hardware, uid) {
 			}
 			newHardware = createdHardware
 			ref.child(`feed/hardwares/${hardwareId}`).set(newHardware) // saving hardwares to firebase
-			console.log('after save hardware', newHardware)
 			resolve(newHardware)
 		})
 		.catch((err) => {

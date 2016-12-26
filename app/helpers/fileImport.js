@@ -31,12 +31,9 @@ export default function handleFileImport (file, authedId) {
 				.then(() => resolveImportedPeopleAndHardware())
 				.then(() => resolveItems())
 				.then(() => {
-					ref.child('feed/people').set(newPeople)
-					ref.child('feed/hardwares').set(newHardwares)
-					ref.child('feed/items').set(newItems)
-					console.log('newPeople', newPeople)
-					console.log('newHardwares', newHardwares)
-					console.log('newItems', newItems)
+					ref.child('feed').update(newPeople)
+					ref.child('feed/hardwares').update(newHardwares)
+					ref.child('feed/items').update(newItems)
 					resolve()
 				})
 				.catch((error) => {
@@ -62,9 +59,8 @@ function resolveItems () {
 				const message = ' ...This item was uploaded without a purchase date, so the date given is according to the day it was uploaded.'
 				noteIsEmpty === true ? row.item.notes = message : row.item.notes += message
 			}
-			console.log('purchasedDate', purchasedDate, purchasedDate.toString())
 			row.item = {
-				...row.item,
+				serial: row.item.serial,
 				itemId: ref.child('feed/items').push().key,
 				personId: row.person.personId,
 				hardwareId: row.hardware.hardwareId,
@@ -156,7 +152,10 @@ function handleHardwaresExists (row) { // checks if hardware exists, if does the
 			} else {
 				var hardwarePhotoRef = imagesRef.child('hardwares/default.jpg')
 				row.hardware = {
-					...row.hardware,
+					make: row.hardware.make,
+					model: row.hardware.model,
+					isComputer: row.hardware.isComputer,
+					description: row.hardware.description,
 					hardwareId: ref.child('feed/hardwares').push().key,
 					photo: {
 						name: hardwarePhotoRef.name,
@@ -213,7 +212,8 @@ function handlePersonExists (row) { // checks if person exists, if does then add
 			} else {
 				var personPhotoRef = imagesRef.child('people/default.jpg')
 				row.person = {
-					...row.person,
+					firstName: row.person.firstName,
+					lastName: row.person.lastName,
 					personId: ref.child('feed/people').push().key,
 					photo: {
 						name: personPhotoRef.name,
