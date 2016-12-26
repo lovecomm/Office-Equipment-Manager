@@ -34,11 +34,11 @@ export default function handleFileImport (file, authedId) {
 					ref.child('feed/people').update(newPeople)
 					ref.child('feed/hardwares').update(newHardwares)
 					ref.child('feed/items').update(newItems)
-					resolve()
+					resolve(duplicates) // display items that were duplicates of what was already stored, thus not imported
 				})
 				.catch((error) => {
 					console.warn(error)
-					reject(error)
+					reject(error.toString())
 				})
 			},
 			error: (err, file, inputElem, reason) => {
@@ -58,6 +58,9 @@ function resolveItems () {
 			if (today === purchasedDate) {
 				const message = ' ...This item was uploaded without a purchase date, so the date given is according to the day it was uploaded.'
 				noteIsEmpty === true ? row.item.notes = message : row.item.notes += message
+			}
+			if (row.hardware.hardwareId === undefined || row.person.personId === undefined) {
+				console.log('row in resolveItems', row)
 			}
 			row.item = {
 				serial: row.item.serial,
@@ -121,25 +124,44 @@ function resolveImportedPeopleAndHardware () {
 	return new Promise((resolve, reject) => {
 		getStoredData('people')
 		.then((stored_people) => {
-			storedPeople = stored_people
+			storedPeople = stored_people !== null ? stored_people : {}
 			return getStoredData('hardwares')
 		})
 		.then((stored_hardwares) => {
-			storedHardwares = stored_hardwares
+			storedHardwares = stored_hardwares !== null ? stored_hardwares : {}
 			// need each row's person and hardwares to combine after
 			let hardwareAndPersonPromises = []
 			Object.keys(newRows).forEach((key) => {
 				const row = newRows[key]
 				hardwareAndPersonPromises.push(
-					handlePersonExists(row),
-					handleHardwaresExists(row)
+					() => handleHardwaresExists(row),
+					() => handlePersonExists(row)
 				)
 			})
-			return Promise.all(hardwareAndPersonPromises).then(() => resolve())
-			.catch((err) => console.error(err))
+			doSynchronousLoop(hardwareAndPersonPromises, (data, i, cb) => {
+				data()
+				.then(() => cb())
+			}, () => resolve())
 		})
 		.catch((err) => reject(err))
 	})
+}
+
+function doSynchronousLoop(data, processData, done) {
+	if (data.length > 0) {
+		var loop = function(data, i, processData, done) {
+			processData(data[i], i, function() {
+				if (++i < data.length) {
+					loop(data, i, processData, done);
+				} else {
+					done();
+				}
+			});
+		};
+		loop(data, 0, processData, done);
+	} else {
+		done();
+	}
 }
 
 function handleHardwaresExists (row) { // checks if hardware exists, if does then adds hardwareId to row, if not creates the hardware and then adds hardwareId to row
@@ -154,9 +176,9 @@ function handleHardwaresExists (row) { // checks if hardware exists, if does the
 				row.hardware = {
 					make: row.hardware.make,
 					model: row.hardware.model,
+					hardwareId: ref.child('feed/hardwares').push().key,
 					isComputer: row.hardware.isComputer,
 					description: row.hardware.description,
-					hardwareId: ref.child('feed/hardwares').push().key,
 					photo: {
 						name: hardwarePhotoRef.name,
 						fullPath: hardwarePhotoRef.fullPath,
@@ -170,14 +192,11 @@ function handleHardwaresExists (row) { // checks if hardware exists, if does the
 					dateCreated: new Date().toString(),
 					dateLastUpdated: new Date().toString()
 				}
-				storedHardwares = { // we want to append our new hardware to the storedHardware list, so that future items within the same import, who share this hardware, wont force the hardware to be created again.
-					...storedHardwares,
-					[row.hardware.hardwareId]: {
+				storedHardwares[row.hardware.hardwareId] = { // we want to append our new hardware to the storedHardware list, so that future items within the same import, who share this hardware, wont force the hardware to be created again.
 						make: row.hardware.make,
 						model: row.hardware.model,
-						hardwareId: row.hardware.id,
+						hardwareId: row.hardware.hardwareId,
 					}
-				}
 				newHardwares[row.hardware.hardwareId] = row.hardware
 				resolve()
 			}
@@ -189,15 +208,13 @@ function checkIfHardwareExists (row) {
 	return new Promise((resolve, reject) => {
 		let hardwareExists = false
 		let storedHardwareId = ''
-		if (storedHardwares) {
-			Object.keys(storedHardwares).forEach((key) => {
-				const storedHardware = storedHardwares[key]
-				if (storedHardware.make.toLowerCase() === row.hardware.make.toLowerCase() && storedHardware.model.toLowerCase() === row.hardware.model.toLowerCase()) {
-					hardwareExists = true
-					storedHardwareId = storedHardware.hardwareId
-				}
-			})
-		}
+		Object.keys(storedHardwares).forEach((key) => {
+			const storedHardware = storedHardwares[key]
+			if (storedHardware.make.toLowerCase() === row.hardware.make.toLowerCase() && storedHardware.model.toLowerCase() === row.hardware.model.toLowerCase()) {
+				hardwareExists = true
+				storedHardwareId = storedHardware.hardwareId
+			}
+		})
 		resolve ({hardwareExists, storedHardwareId})
 	})
 }
@@ -228,14 +245,11 @@ function handlePersonExists (row) { // checks if person exists, if does then add
 					dateLastUpdated: new Date().toString(),
 					collapsed: true
 				}
-				storedPeople = { // we want to append our new person to the storedPeople list, so that future items within the same import, who share this person, wont force the person to be created again.
-					...storedPeople,
-					[row.person.personId]: {
+				storedPeople[row.person.personId] = {// we want to append our new person to the storedPeople list, so that future items within the same import, who share this person, wont force the person to be created again.
 						firstName: row.person.firstName,
 						lastName: row.person.lastName,
 						personId: row.person.personId,
 					}
-				}
 				newPeople[row.person.personId] = row.person
 				resolve()
 			}
@@ -247,15 +261,13 @@ function checkIfPersonExists (row) {
 	return new Promise((resolve, reject) => {
 		let personExists = false
 		let storedPersonId = ''
-		if (storedPeople) {
-			Object.keys(storedPeople).forEach((key) => {
-				const storedPerson = storedPeople[key]
-				if (storedPerson.firstName.toLowerCase() === row.person.firstName.toLowerCase() && storedPerson.lastName.toLowerCase() === row.person.lastName.toLowerCase()) {
-					personExists = true
-					storedPersonId = storedPerson.personId
-				}
-			})
-		}
+		Object.keys(storedPeople).forEach((key) => {
+			const storedPerson = storedPeople[key]
+			if (storedPerson.firstName.toLowerCase() === row.person.firstName.toLowerCase() && storedPerson.lastName.toLowerCase() === row.person.lastName.toLowerCase()) {
+				personExists = true
+				storedPersonId = storedPerson.personId
+			}
+		})
 		resolve ({personExists, storedPersonId})
 	})
 }
