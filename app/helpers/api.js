@@ -65,17 +65,14 @@ function assignToInventory (items, people, deletedPersonId) {
 // START Hardwares related Firebase API Calls
 export function saveNewHardware (hardwares, hardware, uid) {
 	return new Promise((resolve, reject) => {
-		let newHardware
-		let defaultPhoto = true
 		const hardwareId = ref.child('feed/hardwares').push().key
 		var hardwarePhotoRef = imagesRef.child(`hardwares/${hardware.photo.name}`)
-		defaultPhoto = false
 		verifyNewHardware(hardwares, hardware)
 		.then((isVerified) => {
 			return hardwarePhotoRef.put(hardware.photo) // Store photo to firebase
 		})
 		.then((photoSnapshot) => {
-			const createdHardware = {
+			const newHardware = {
 				hardwareId: hardwareId,
 				dateCreated: new Date().toString(),
 				dateLastUpdated: new Date().toString(),
@@ -94,13 +91,12 @@ export function saveNewHardware (hardwares, hardware, uid) {
 					url: '', // Firebase URLs expire, so we get it each time the app loads, then store it in the redux tree
 				},
 			}
-			newHardware = createdHardware
 			ref.child(`feed/hardwares/${hardwareId}`).set(newHardware) // saving hardwares to firebase
 			resolve(newHardware)
 		})
 		.catch((err) => {
 			console.warn(err)
-			reject(err)
+			reject('Error in saveNewHardware, ', err)
 		})
 	})
 }
@@ -212,27 +208,14 @@ function getHardwarePromise (hardwareId) {
 // START People related Firebase API Calls
 export function saveNewPerson (people, person, uid) {
 	return new Promise((resolve, reject) => {
-		let newPerson
-		let defaultPhoto = true
 		const personId = ref.child('feed/people').push().key
-		if (person.photo === undefined) {
-			var personPhotoRef = imagesRef.child('people/default.jpg')
-			person.photo = {
-				size: 4.48,
-				type: 'image/jpeg',
-			}
-		} else {
-			var personPhotoRef = imagesRef.child(`people/${person.photo.name}`)
-			defaultPhoto = false
-		}
+		var personPhotoRef = imagesRef.child(`people/${person.photo.name}`)
 		return verifyNewPerson(people, person)
 		.then((isVerified) => {
-			return defaultPhoto !== true
-			? personPhotoRef.put(person.photo)
-			: personPhotoRef
+			return personPhotoRef.put(person.photo)
 		})
 		.then((photoSnapshot) => {
-			newPerson = {
+			let newPerson = {
 				personId,
 				dateCreated: new Date().toString(),
 				createdBy: uid,
@@ -249,12 +232,13 @@ export function saveNewPerson (people, person, uid) {
 					url: '', // Firebase URLs expire, so we get it each time the app loads, then store it in the redux tree
 				},
 			}
-			// console.log('before save person')
 			ref.child(`feed/people/${personId}`).set(newPerson) // saving new person to firebase
-			// console.log('after save person')
 			resolve(newPerson)
 		})
-		.catch((err) => `Error in savePerson: ${err}`)
+		.catch((err) => {
+			console.warn(err)
+			reject('Error in savePerson, ', err);
+		})
 	})
 }
 
@@ -410,14 +394,14 @@ export function saveNewItem (items, item, uid, hardware) {
 				}})
 			}
 		})
-		.then((createdItem) => {
-			newItem = createdItem
-			console.log('before save item')
+		.then((newItem) => {
 			ref.child(`feed/items/${itemId}`).set(newItem)
-			console.log('after save item')
 			resolve(newItem)
 		})
-		.catch((err) => console.warn(err))
+		.catch((err) => {
+			console.warn(err)
+			reject('Error in saveNewItem, ', err)
+		})
 	})
 }
 
