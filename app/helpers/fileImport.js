@@ -31,7 +31,7 @@ export default function handleFileImport (file, authedId) {
 				.then(() => resolveImportedPeopleAndHardware())
 				.then(() => resolveItems())
 				.then(() => {
-					ref.child('feed').update(newPeople)
+					ref.child('feed/people').update(newPeople)
 					ref.child('feed/hardwares').update(newHardwares)
 					ref.child('feed/items').update(newItems)
 					resolve()
