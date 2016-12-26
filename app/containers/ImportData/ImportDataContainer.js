@@ -11,7 +11,7 @@ const ImportDataContainer = React.createClass({
 		submitSuccessful: PropTypes.bool.isRequired,
 		updateImportdataFormSelectedFileName: PropTypes.func.isRequired,
 		updateImportdataFormError: PropTypes.func.isRequired,
-		clearImportdataForm: PropTypes.func.isRequired,
+		handleClearImportdataForm: PropTypes.func.isRequired,
 		toggleImportdataFormIsShowing: PropTypes.func.isRequired,
 		updateImportdataFormSubmitSuccessful: PropTypes.func.isRequired,
 		handleFileImportThunk: PropTypes.func.isRequired,
@@ -48,15 +48,16 @@ const ImportDataContainer = React.createClass({
 		this.props.updateImportdataIsProcessing(false)
 		this.props.toggleImportdataFormIsShowing() // hide import form snackbar
 		this.props.updateImportdataFormSubmitSuccessful() // show "submitSuccessful message" (different Snackbar)
-		setTimeout(() => this.props.clearImportdataForm(), 5000) // reset importData back to initialState
 	},
 	render () {
 		return (<ImportData
 			formIsShowing={this.props.formIsShowing}
 			selectedFileName={this.props.selectedFileName}
 			error={this.props.error}
+			duplicateItemsIds={this.props.duplicateItemsIds}
 			handleFileSelect={this.handleFileSelect}
-			submitSuccessful ={this.props.submitSuccessful}
+			submitSuccessful={this.props.submitSuccessful}
+			handleClearImportdataForm={this.props.handleClearImportdataForm}
 			handleFileSubmit={this.handleFileSubmit}/>)
 	},
 })
@@ -67,6 +68,7 @@ function mapStateToProps ({importData}) {
 		selectedFileName: importData.selectedFileName,
 		error: importData.error,
 		submitSuccessful: importData.submitSuccessful,
+		duplicateItemsIds: importData.duplicateItemsIds,
 	}
 }
 

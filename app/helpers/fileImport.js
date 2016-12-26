@@ -34,7 +34,15 @@ export default function handleFileImport (file, authedId) {
 					ref.child('feed/people').update(newPeople)
 					ref.child('feed/hardwares').update(newHardwares)
 					ref.child('feed/items').update(newItems)
-					resolve(duplicates) // display items that were duplicates of what was already stored, thus not imported
+					let duplicateString = ''
+					duplicates.forEach((duplicate) => {
+						const index = duplicates.indexOf(duplicate)
+						const lastDuplicate = index === duplicates.length - 1
+						lastDuplicate === true
+						? duplicateString += `${duplicateString}${duplicate}`
+						: duplicateString = `${duplicateString} ${duplicate}, `
+					})
+					resolve(duplicateString) // display items that were duplicates of what was already stored, thus not imported
 				})
 				.catch((error) => {
 					console.warn(error)

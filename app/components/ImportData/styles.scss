@@ -4,6 +4,10 @@
 	margin-right: 10px;
 }
 
+.cancelButton {
+	margin-right: 10px;
+}
+
 .imageInput {
   cursor: pointer;
   position: absolute;
@@ -30,5 +34,11 @@
 }
 
 .submitSuccessfulSnackbar {
-	text-align: center;
+	text-align: left;
+
+	button { margin: 20px 0 0; }
+}
+
+.warning {
+	color: orangered;
 }
