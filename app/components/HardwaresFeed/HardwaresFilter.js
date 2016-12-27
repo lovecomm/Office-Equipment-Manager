@@ -11,6 +11,12 @@ HardwaresFilter.propTypes = {
 	filterOptions: PropTypes.func.isRequired,
 }
 
+const options = {
+	KZxxA67HyBQeU4yRgPx: "test one",
+	KZxxA67HyBQeU4yRgPd: "test two",
+	KZxxA67HyBQeU4yRgda: "test three",
+}
+
 export default function HardwaresFilter (props) {
 	return (<div className={filterWrapper}>
 		{(() => props.isFiltering

@@ -8,7 +8,7 @@ const UPDATE_ITEM_PHOTO_URL = 'UPDATE_ITEM_PHOTO_URL'
 const UPDATE_ITEM_COLLAPSED = 'UPDATE_ITEM_COLLAPSED'
 const ADD_ITEMS_FILTER_OPTIONS = 'ADD_ITEMS_FILTER_OPTIONS'
 const UPDATE_ITEMS_FILTER_NAME = 'UPDATE_ITEMS_FILTER_NAME'
-const UPDATE_IS_FILTERING_ITEMS = 'UPDATE_IS_FILTERING_ITEMS'
+const RESET_IS_FILTERING_ITEMS = 'RESET_IS_FILTERING_ITEMS'
 const UPDATE_ITEMS_SORT_ORDER = 'UPDATE_ITEMS_SORT_ORDER'
 const UPDATE_ITEMS_SORT_STATUS = 'UPDATE_ITEMS_SORT_STATUS'
 const UPDATE_ITEMS_FEED_IDS = 'UPDATE_ITEMS_FEED_IDS'
@@ -56,7 +56,7 @@ export function updateAndHandleItemsFilter (filterId) {
 	return function (dispatch, getState) {
 		const item = getState().itemsFeed.items[filterId]
 		dispatch(updateItemsFilterName(`${item.serial}`))
-		dispatch(updateItemsFeedIds([filterId]))
+		dispatch(updateItemsFeedIds(filterId))
 	}
 }
 
@@ -64,7 +64,7 @@ export function disableIsFilteringItems () {
 	return function (dispatch, getState) {
 		dispatch(updateItemsFeedIds(Object.keys(getState().itemsFeed.items)))
 		dispatch(sortItemsFeedBy(getState().itemsFeed.sorting.sortStatus))
-		dispatch(updateIsFilteringItems())
+		dispatch(resetIsFilteringItems())
 	}
 }
 // END FILTER FUNCTIONS
@@ -106,9 +106,9 @@ function updateItemsFeedIds (feedIds) {
 	}
 }
 
-function updateIsFilteringItems () {
+function resetIsFilteringItems () {
 	return {
-		type: UPDATE_IS_FILTERING_ITEMS,
+		type: RESET_IS_FILTERING_ITEMS,
 	}
 }
 
@@ -238,11 +238,8 @@ function filterItems (state, action) {
 			isFiltering: true,
 			name: action.name,
 		}
-	case UPDATE_IS_FILTERING_ITEMS: {
-		return {
-			...state,
-			isFiltering: false,
-		}
+	case RESET_IS_FILTERING_ITEMS: {
+		return initialState.filter
 	}
 	default:
 		return state
@@ -311,7 +308,7 @@ export default function itemsFeed (state = initialState, action) {
 		}
 	case ADD_ITEMS_FILTER_OPTIONS:
 	case UPDATE_ITEMS_FILTER_NAME:
-	case UPDATE_IS_FILTERING_ITEMS:
+	case RESET_IS_FILTERING_ITEMS:
 		return {
 			...state,
 			filter: filterItems(state.filter, action),

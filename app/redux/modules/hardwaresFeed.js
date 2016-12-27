@@ -8,7 +8,7 @@ const UPDATE_HARDWARE_PHOTO_URL = 'UPDATE_HARDWARE_PHOTO_URL'
 const UPDATE_HARDWARE_COLLAPSED = 'UPDATE_HARDWARE_COLLAPSED'
 const ADD_HARDWARES_FILTER_OPTIONS = 'ADD_HARDWARES_FILTER_OPTIONS'
 const UPDATE_HARDWARES_FILTER_NAME = 'UPDATE_HARDWARES_FILTER_NAME'
-const UPDATE_IS_FILTERING_HARDWARES = 'UPDATE_IS_FILTERING_HARDWARES'
+const RESET_IS_FILTERING_HARDWARES = 'RESET_IS_FILTERING_HARDWARES'
 const UPDATE_HARDWARES_SORT_ORDER = 'UPDATE_HARDWARES_SORT_ORDER'
 const UPDATE_HARDWARES_SORT_STATUS = 'UPDATE_HARDWARES_SORT_STATUS'
 const UPDATE_HARDWARES_FEED_IDS = 'UPDATE_HARDWARES_FEED_IDS'
@@ -56,15 +56,17 @@ export function updateAndHandleHardwaresFilter (filterId) {
 	return function (dispatch, getState) {
 		const hardware = getState().hardwaresFeed.hardwares[filterId]
 		dispatch(updateHardwaresFilterName(`${hardware.make} ${hardware.model}`))
-		dispatch(updateHardwaresFeedIds([filterId]))
+		dispatch(updateHardwaresFeedIds(filterId))
 	}
 }
 
 export function disableIsFilteringHardwares () {
 	return function (dispatch, getState) {
+		// dispatch(setFilterOptions(false))
 		dispatch(updateHardwaresFeedIds(Object.keys(getState().hardwaresFeed.hardwares)))
 		dispatch(sortHardwaresFeedBy(getState().hardwaresFeed.sorting.sortStatus))
-		dispatch(updateIsFilteringHardwares())
+		dispatch(resetIsFilteringHardwares())
+		
 	}
 }
 // END FILTER FUNCTIONS
@@ -106,9 +108,9 @@ function updateHardwaresFeedIds (feedIds) {
 	}
 }
 
-function updateIsFilteringHardwares () {
+function resetIsFilteringHardwares () {
 	return {
-		type: UPDATE_IS_FILTERING_HARDWARES,
+		type: RESET_IS_FILTERING_HARDWARES,
 	}
 }
 
@@ -232,11 +234,8 @@ function filterHardwares (state, action) {
 			isFiltering: true,
 			name: action.name,
 		}
-	case UPDATE_IS_FILTERING_HARDWARES: {
-		return {
-			...state,
-			isFiltering: false,
-		}
+	case RESET_IS_FILTERING_HARDWARES: {
+		return initialState.filter
 	}
 	default:
 		return state
@@ -304,7 +303,7 @@ export default function hardwaresFeed (state = initialState, action) {
 		}
 	case ADD_HARDWARES_FILTER_OPTIONS:
 	case UPDATE_HARDWARES_FILTER_NAME:
-	case UPDATE_IS_FILTERING_HARDWARES:
+	case RESET_IS_FILTERING_HARDWARES:
 		return {
 			...state,
 			filter: filterHardwares(state.filter, action),

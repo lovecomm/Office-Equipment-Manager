@@ -8,7 +8,7 @@ const UPDATE_PERSON_PHOTO_URL = 'UPDATE_PERSON_PHOTO_URL'
 const UPDATE_PERSON_COLLAPSED = 'UPDATE_PERSON_COLLAPSED'
 const ADD_PEOPLE_FILTER_OPTIONS = 'ADD_PEOPLE_FILTER_OPTIONS'
 const UPDATE_PEOPLE_FILTER_NAME = 'UPDATE_PEOPLE_FILTER_NAME'
-const UPDATE_IS_FILTERING_PEOPLE = 'UPDATE_IS_FILTERING_PEOPLE'
+const RESET_IS_FILTERING_PEOPLE = 'RESET_IS_FILTERING_PEOPLE'
 const UPDATE_PEOPLE_SORT_ORDER = 'UPDATE_PEOPLE_SORT_ORDER'
 const UPDATE_PEOPLE_SORT_STATUS = 'UPDATE_PEOPLE_SORT_STATUS'
 const UPDATE_PEOPLE_FEED_IDS = 'UPDATE_PEOPLE_FEED_IDS'
@@ -56,7 +56,7 @@ export function updateAndHandlePeopleFilter (filterId) {
 	return function (dispatch, getState) {
 		const person = getState().peopleFeed.people[filterId]
 		dispatch(updatePeopleFilterName(`${person.firstName} ${person.lastName}`))
-		dispatch(updatePeopleFeedIds([filterId]))
+		dispatch(updatePeopleFeedIds(filterId))
 	}
 }
 
@@ -64,7 +64,7 @@ export function disableIsFilteringPeople () {
 	return function (dispatch, getState) {
 		dispatch(updatePeopleFeedIds(Object.keys(getState().peopleFeed.people)))
 		dispatch(sortPeopleFeedBy(getState().peopleFeed.sorting.sortStatus))
-		dispatch(updateIsFilteringPeople())
+		dispatch(resetIsFilteringPeople())
 	}
 }
 // END FILTER FUNCTIONS
@@ -106,9 +106,9 @@ function updatePeopleFeedIds (feedIds) {
 	}
 }
 
-function updateIsFilteringPeople () {
+function resetIsFilteringPeople () {
 	return {
-		type: UPDATE_IS_FILTERING_PEOPLE,
+		type: RESET_IS_FILTERING_PEOPLE,
 	}
 }
 
@@ -232,11 +232,8 @@ function filterPeople (state, action) {
 			isFiltering: true,
 			name: action.name,
 		}
-	case UPDATE_IS_FILTERING_PEOPLE: {
-		return {
-			...state,
-			isFiltering: false,
-		}
+	case RESET_IS_FILTERING_PEOPLE: {
+		return initialState.filter
 	}
 	default:
 		return state
@@ -304,7 +301,7 @@ export default function peopleFeed (state = initialState, action) {
 		}
 	case ADD_PEOPLE_FILTER_OPTIONS:
 	case UPDATE_PEOPLE_FILTER_NAME:
-	case UPDATE_IS_FILTERING_PEOPLE:
+	case RESET_IS_FILTERING_PEOPLE:
 		return {
 			...state,
 			filter: filterPeople(state.filter, action),
