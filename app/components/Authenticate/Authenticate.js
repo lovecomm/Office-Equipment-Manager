@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import { container, title, form } from './styles.scss'
 import { AuthButton } from 'components'
 import { Input } from 'react-toolbox/lib'
+import { firebaseAuth } from 'config/constants'
 
 Authenticate.propTypes = {
 	error: PropTypes.string.isRequired,

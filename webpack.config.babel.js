@@ -84,7 +84,11 @@ const developmentConfig = {
 
 const productionConfig = {
 	devtool: 'cheap-module-source-map',
-	plugins: [HTMLWebpackPluginConfig, productionPlugin],
+	plugins: [
+		HTMLWebpackPluginConfig, 
+		new ExtractTextPlugin('bundle.css', { allChunks: true }),
+		productionPlugin,
+	],
 }
 
 export default Object.assign({}, base, isProduction === true ? productionConfig : developmentConfig)
