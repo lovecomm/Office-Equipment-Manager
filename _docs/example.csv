@@ -1,5 +1,0 @@
-Serial,Purchase Year,Purchase Month,Notes,First Name,Last Name,Make,Model,Description,Computer
-100,,,,Joe,Smith,Dell,Inspiron,"i5-3300 3GHz 8GB ram, Windows 7 Pro 64bit, 1TB drive",yes
-101,1998,1,,Sally,Jones,Acer,al1916W monitor,,no
-102,,,An Item's note,Inventory,N/A,Acer,al1912 Square monitor,Random Descriptinon for this hardware,no
-401,2016,12,,Inventory,N/A,Acer,al1912 Square monitor,,no
