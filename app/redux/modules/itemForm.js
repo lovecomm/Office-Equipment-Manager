@@ -1,6 +1,4 @@
 import { saveNewItem, saveUpdatedItem } from 'helpers/api'
-// import { addNewItemToFeed } from './feed'
-// import { updateItemInFeed } from './items'
 
 const OPEN_ITEM_FORM = 'OPEN_ITEM_FORM'
 const CLOSE_ITEM_FORM = 'CLOSE_ITEM_FORM'
@@ -172,10 +170,7 @@ export function newItemFanout (item) {
 	return function (dispatch, getState) {
 		const associatedHardware = getState().hardwaresFeed.hardwares[item.hardwareId]
 		saveNewItem(getState().itemsFeed.items, item, getState().users.authedId, associatedHardware)
-		.then((itemWithId) => {
-			// dispatch(addNewItemToFeed(itemWithId.itemId))
-			dispatch(closeItemForm())
-		})
+		.then((itemWithId) => dispatch(closeItemForm()))
 		.catch((err) => dispatch(updateItemFormError(err.toString())))
 	}
 }
