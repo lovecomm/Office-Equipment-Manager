@@ -5,7 +5,8 @@ import { list } from 'sharedStyles/layout'
 
 HardwaresFeed.propTypes = {
 	isFetching: PropTypes.bool.isRequired,
-	hardwaresFeed: PropTypes.object.isRequired,
+	hardwares: PropTypes.object.isRequired,
+	feedIds: PropTypes.array.isRequired,
 }
 
 export default function HardwaresFeed (props) {
@@ -18,11 +19,15 @@ export default function HardwaresFeed (props) {
 				sortMenu={<HardwaresSortMenuContainer />}/>
 			<div className={list}>
 				{(() => {
-					return props.hardwaresFeed.feedIds.map((id) => (
-						<HardwareContainer
-							hardwareId={id}
-							key={id} />
-					))
+					return props.feedIds.map((id) => {
+						const hardware = props.hardwares[id]
+						if (hardware) {
+							return ( <HardwareContainer
+								hardware={hardware}
+								hardwareId={id}
+								key={id} />)
+						}
+					})
 				})()}
 			</div>
 		</div>

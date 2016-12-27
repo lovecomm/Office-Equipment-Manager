@@ -23,6 +23,7 @@ export default function ItemsFeed (props) {
 						const item = props.items[id]
 						if (item) {
 							return (<ItemContainer
+									item={item}
 									itemId={id}
 									key={id} />)
 						}
