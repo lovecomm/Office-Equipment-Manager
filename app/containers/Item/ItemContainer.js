@@ -48,6 +48,7 @@ function mapStateToProps ({itemsFeed, peopleFeed, hardwaresFeed}, props) {
 		hasSubContent: item.hasSubContent,
 		itemId: item.itemId,
 		hardware: hardwaresFeed.hardwares[item.hardwareId],
+		personId: item.personId,
 		person: peopleFeed.people[item.personId],
 		note: item.note,
 		photo: item.photo,

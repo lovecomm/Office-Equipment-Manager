@@ -7,8 +7,9 @@ import { setAndHandleFeedListener } from 'redux/modules/feed'
 
 const PeopleFeedContainer = React.createClass({
 	propTypes: {
-		peopleFeed: PropTypes.object.isRequired,
+		feedIds: PropTypes.array.isRequired,
 		isFetching: PropTypes.bool.isRequired,
+		people: PropTypes.object.isRequired,
 		setAndHandleFeedListener: PropTypes.func.isRequired,
 	},
 	componentDidMount () {
@@ -17,7 +18,8 @@ const PeopleFeedContainer = React.createClass({
 	render () {
 		return (
 			<PeopleFeed
-				peopleFeed={this.props.peopleFeed}
+				feedIds={this.props.feedIds}
+				people={this.props.people}
 				isFetching={this.props.isFetching}/>
 		)
 	},
@@ -26,7 +28,8 @@ const PeopleFeedContainer = React.createClass({
 function mapStateToProps ({peopleFeed, feed}) {
 	return {
 		isFetching: feed.isFetching,
-		peopleFeed: peopleFeed,
+		feedIds: peopleFeed.feedIds,
+		people: peopleFeed.people,
 	}
 }
 

@@ -25,10 +25,10 @@ export function deleteDataDB (dataType, dataId, items, people) {
 	return new Promise((resolve, reject) => {
 		switch (dataType) {
 		case 'people':
-			return ref.child(`feed/people/${dataId}`).remove() // remove person, but need to assign all associated items to INVENTORY
-			.then(() => assignToInventory(items, people, dataId))
+			return assignToInventory(items, people, dataId) // move items assigned to soon-to-be-deleted person to Inventory
+			.then(() => ref.child(`feed/people/${dataId}`).remove())
 			.then(() => resolve())
-			.catch((err) => `Error in deleteDataDB, case 'people': ${err}`)
+			.catch((err) => console.warn('Error in deleteDataDB, case people: ', err))
 		case 'hardwares':
 			return ref.child(`feed/hardwares/${dataId}`).remove()
 			.then(() => {
@@ -37,11 +37,11 @@ export function deleteDataDB (dataType, dataId, items, people) {
 				})
 			})
 			.then(() => resolve())
-			.catch((err) => `Error in deleteDataDB, case 'hardwares': ${err}`)
+			.catch((err) => console.warn('Error in deleteDataDB, case hardwares: ' , err))
 		case 'items':
 			return ref.child(`feed/items/${dataId}`).remove()
 			.then(() => resolve())
-			.catch((err) => `Error in deleteDataDB, case 'default' - items: ${err}`)
+			.catch((err) => console.warn('Error in deleteDataDB, case default - items: ', err))
 		default:
 			reject(`Sorry, but "dataType" must be people, hardwares, or items in deleteDataDB. You passed in, ${dataType}`)
 		}
@@ -50,14 +50,17 @@ export function deleteDataDB (dataType, dataId, items, people) {
 
 function assignToInventory (items, people, deletedPersonId) {
 	return new Promise((resolve, reject) => {
+		let itemUpdatePromises = []
 		Object.keys(people).forEach((personId) => { // need to find the personId for INVENTORY
-			if (people[personId].firstName === 'INVENTORY') {
-				Object.keys(items).forEach((itemId) => {
-					if (items[itemId].personId === deletedPersonId) return ref.child(`feed/items/${itemId}`).update({personId: personId})
+			if (people[personId].firstName.toLowerCase() === 'inventory') { // found inventory's personId
+				Object.keys(items).forEach((itemId) => { // find all items that have the deletedPersonId
+					if (items[itemId].personId === deletedPersonId) {
+						itemUpdatePromises.push(ref.child(`feed/items/${itemId}`).update({personId: personId}))
+					}
 				})
 			}
 		})
-		resolve(true)
+		Promise.all(itemUpdatePromises).then(() => resolve())
 	})
 }
 
@@ -201,7 +204,7 @@ export function getHardwaresBound (cb, errorCB) { // this version is for the fee
 	ref.child('feed/hardwares').on('value', (snapshot) => {
 		const hardware = snapshot.val() || {}
 		cb(hardware)
-	}, errorCB)
+	})
 }
 
 function getHardwarePromise (hardwareId) {
@@ -332,14 +335,14 @@ export function getPeopleBound (cb, errorCB) { // this version is for the feed, 
 	ref.child('feed/people').on('value', (snapshot) => {
 		const people = snapshot.val() || {}
 		cb(people)
-	}, errorCB)
+	})
 }
 
 export function getPerson (personId, cb, errorCB) {
 	ref.child(`feed/people/${personId}`).once('value', (snapshot) => {
 		const person = snapshot.val() || {}
 		cb(person)
-	}, errorCB)
+	})
 }
 
 function getPersonPromise (personId) {
@@ -500,7 +503,7 @@ export function getItemsBound (cb, errorCB) { // this version is for the feed, i
 		const items = snapshot.val() || {}
 		const sortedItemIds = Object.keys(items).sort((a, b) => items[b].dateCreated - items[a].dateCreated)
 		cb({items, sortedItemIds})
-	}, errorCB)
+	})
 }
 
 function getItemPromise (itemId) {
