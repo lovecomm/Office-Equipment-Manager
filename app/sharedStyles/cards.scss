@@ -14,20 +14,6 @@ div[data-react-toolbox="card"] {
 		margin-top: 15px;
 	}
 
-	div[data-react-toolbox="avatar"] {
-		width: 35px;
-		height: 35px;
-		overflow: hidden;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		background-color: white;
-
-		> img {
-			width: 300px;
-		}
-	}
-
 	.cardActions {
 		background: $palette-grey-200;
 		display: flex;
