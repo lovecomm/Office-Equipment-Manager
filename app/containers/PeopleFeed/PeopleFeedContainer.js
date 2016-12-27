@@ -30,6 +30,7 @@ function mapStateToProps ({peopleFeed, feed}) {
 		isFetching: feed.isFetching,
 		feedIds: peopleFeed.feedIds,
 		people: peopleFeed.people,
+		peopleFeed: peopleFeed
 	}
 }
 
