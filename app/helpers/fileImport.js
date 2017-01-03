@@ -180,7 +180,7 @@ function handleHardwaresExists (row) { // checks if hardware exists, if does the
 				row.hardware.hardwareId = storedHardwareId
 				resolve(row)
 			} else {
-				var hardwarePhotoRef = imagesRef.child('hardwares/default.jpg')
+				var hardwarePhotoRef = imagesRef.child('defaults/hardware.jpg')
 				hardwarePhotoRef.getDownloadURL()
 				.then((url) => {
 					row.hardware = {
@@ -238,7 +238,7 @@ function handlePersonExists (row) { // checks if person exists, if does then add
 				row.person.personId = storedPersonId
 				resolve(row)
 			} else {
-				var personPhotoRef = imagesRef.child('people/default.jpg')
+				var personPhotoRef = imagesRef.child('defaults/person.jpg')
 				personPhotoRef.getDownloadURL()
 				.then((url) => {
 					row.person = {

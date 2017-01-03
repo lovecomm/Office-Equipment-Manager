@@ -14,7 +14,7 @@ export default function fileExport () {
 
 function buildCSV (items, people, hardwares) {
 	return new Promise((resolve, reject) => {
-		let csv = `Serial, Purchase Year, Purchase Month, Notes, First Name, Last Name, Make, Model, Description, Computer`
+		let csv = `Serial,Purchase Year,Purchase Month,Notes,First Name,Last Name,Make,Model,Description,Computer`
 		Object.keys(items).forEach((key) => {
 			const item = items[key]
 			const person = people[item.personId]
