@@ -6,10 +6,7 @@ node_modules
 # production
 dist
 dist/**
-build
 
 # misc
 .DS_Store
 npm-debug.log
-
-_creative
